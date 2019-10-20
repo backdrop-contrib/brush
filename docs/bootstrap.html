@@ -1,0 +1,135 @@
+<h1>The Drop Bootstrap Process</h1>
+<p>
+When preparing to run a command, drop works by "bootstrapping" 
+the Backdrop environment in very much the same way that is done 
+during a normal page request from the web server, so most drop 
+commands run in the context of a fully-initialized website.
+<p>
+For efficiency and convenience, some drop commands can work
+without first bootstrapping a Backdrop site, or by only partially
+bootstrapping a site.  This is more efficient, because there is
+sometimes a slight delay involved with bootstrapping, especially
+in some of the later stages.  It is also a matter of convenience,
+because some commands are useful to use even when you do not
+have a working Backdrop site available to bootstrap.  For example,
+you can use drop to download Backdrop with `drop dl backdrop`.  This
+obviously does not require any bootstrapping to work.
+<p>
+The drop bootstrapping process is also very closely related with
+drop configuration files.  At each bootstrap phase, drop may load
+additional configuration files that may contain additional drop
+settings.  This has two very important connotations.  First, settings
+that are only loaded in a later bootstrap phase are not available
+for commands that do not reach that bootstrap phase.  Second, it
+is possible to alter drop behavior on a per-site basis by applying
+settings in a site-specific configuration file.  See 
+`drop topic docs-configuration` for details on drop configuration
+files.
+
+<h2>DROP_BOOTSTRAP_DROP</h2>
+<p>
+Configuration files loaded during this phase:<ul>
+<li>Drop installation folder.
+<li>System wide configuration folder (e.g. /etc/drop/droprc.php).
+<li>User's .drop folder (i.e. ~/.drop/droprc.php).
+<li>In any location, as specified by the --config (-c) option.
+</ul><p>
+Only bootstrap Drop, without any Backdrop specific code.
+<p>
+Any code that operates on the Drop installation, and not specifically
+any Backdrop directory, should bootstrap to this phase.
+
+
+<h2>DROP_BOOTSTRAP_BACKDROP_ROOT</h2>
+<p>
+Configuration files loaded during this phase:<ul>
+<li>Backdrop installation root.
+</ul><p>
+Set up and test for a valid backdrop root, either through the -r/--root options,
+or evaluated based on the current working directory.
+<p>
+Any code that interacts with an entire Backdrop installation, and not a specific
+site on the Backdrop installation should use this bootstrap phase.
+
+
+<h2>DROP_BOOTSTRAP_BACKDROP_SITE</h2>
+<p>
+Configuration files loaded during this phase:<ul>
+<li>Backdrop site folder (e.g sites/{default|example.com}/droprc.php).
+</ul><p>
+Set up a Backdrop site directory and the correct environment variables to
+allow Backdrop to find the configuration file.
+<p>
+If no site is specified with the -l / --uri options, Drop will assume the
+site is 'default', which mimics Backdrop's behaviour.
+<p>
+If you want to avoid this behaviour, it is recommended that you use the
+DROP_BOOTSTRAP_BACKDROP_ROOT bootstrap phase instead.
+<p>
+Any code that needs to modify or interact with a specific Backdrop site's
+settings.php file should bootstrap to this phase.
+
+
+<h2>DROP_BOOTSTRAP_BACKDROP_CONFIGURATION</h2>
+<p>
+Load the settings from the Backdrop sites directory.
+<p>
+This phase is analagous to the BACKDROP_BOOTSTRAP_CONFIGURATION bootstrap phase in Backdrop
+itself, and this is also the first step where Backdrop specific code is included.
+<p>
+This phase is commonly used for code that interacts with the Backdrop install API,
+as both install.php and update.php start at this phase.
+
+
+<h2>DROP_BOOTSTRAP_BACKDROP_DATABASE</h2>
+<p>
+Connect to the Backdrop database using the database credentials loaded
+during the previous bootstrap phase.
+<p>
+This phase is analogous to the BACKDROP_BOOTSTRAP_DATABASE bootstrap phase in
+Backdrop.
+<p>
+Any code that needs to interact with the Backdrop database API needs to
+be bootstrapped to at least this phase.
+
+
+<h2>DROP_BOOTSTRAP_BACKDROP_FULL</h2>
+<p>
+Fully initialize Backdrop.
+<p>
+This is the default bootstrap phase all commands will try to reach,
+unless otherwise specified.
+This is analogous to the BACKDROP_BOOTSTRAP_FULL bootstrap phase in
+Backdrop.
+<p>
+Any code that interacts with the general Backdrop API should be
+bootstrapped to this phase.
+
+
+<h2>DROP_BOOTSTRAP_BACKDROP_LOGIN</h2>
+<p>
+Log in to the initialiased Backdrop site.
+<p>
+This bootstrap phase is used after the site has been
+fully bootstrapped.
+<p>
+This phase will log you in to the backdrop site with the username
+or user ID specified by the --user/ -u option.
+<p>
+Use this bootstrap phase for your command if you need to have access
+to information for a specific user, such as listing nodes that might
+be different based on who is logged in.
+
+
+<h2>DROP_BOOTSTRAP_MAX</h2>
+<p>
+This is not an actual bootstrap phase.  Commands that use
+DROP_BOOTSTRAP_MAX will cause drop to bootstrap as far
+as possible, and then run the command regardless of the
+bootstrap phase that was reached.  This is useful for drop
+commands that work without a bootstrapped site, but that
+provide additional information or capabilities in the presence
+of a bootstrapped site.  For example, `drop pm-releases modulename`
+works without a bootstrapped Backdrop site, but will include
+the version number for the installed module if a Backdrop site
+has been bootstrapped.

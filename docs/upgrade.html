@@ -1,0 +1,85 @@
+<h1>Using Drop to Upgrade Backdrop cores</h1>
+<p>
+To begin, consult the UPGRADE.txt file from the root folder of the
+version of Backdrop you are upgrading to.
+
+<h2>Upgrade a Copy of your Site</h2>
+<p>
+Drop will always upgrade <i>from</i> the specified Backdrop site
+<i>to</i> an empty Backdrop site.  It is necessary to create a
+site alias to describe the destination site.  Site aliases are
+described in `drop topic docs-aliases`.  A canonical site alias
+is adequate to define your target site for upgrade:
+<p>
+$aliases['onward'] = { <br>
+  'root' => '/path/to/upgraded/backdroproot',<br>
+  'uri' => 'http://onward.mysite.org',<br>
+}<br>
+<p>
+Optionally, you might also want to define 'db_url' to specify
+the name of your target database.  If you do not, drop will
+compose a database name for you based on the name of your site alias.
+<p>
+<h2>Running the `site-upgrade` Command</h2>
+<p>
+Drop will upgrade the current bootstrapped site, and will
+put the result in the target site specified by the argument
+to the command.  For example:
+<p>
+drop @from site-upgrade @onward
+<p>
+The site-upgrade command will perform the following operations:
+<ol>
+<li>Download the next major release of Backdrop and store the files
+in the target site.</li>
+<li>Write a new settings.php file with an appropriate databases
+structure for the new target site.</li>
+<li>Make a copy of the SQL database for the new site.</li>
+<li>The default theme for the new site will be set to "garland",
+and the admin theme will be set to "seven".</li>
+<li>All non-core extensions will be disabled in the target database,
+and updatedb will be run on Backdrop core.</li>
+<li>All of the modules disabled in the previous step will be
+downloaded again, if they have an appropriate version for the
+target Backdrop site available.</li>
+<li>updatedb will be run again to update the non-core modules.</li>
+<li>All of the non-core modules will be enabled again.</li>
+</ol>
+<p>
+Before drop begins this process, it will first print out a list
+of warnings for any modules that may not be ready to upgrade yet.
+Please read all of these messages carefully before proceding.
+Here are some of the situations you may encounter.
+<ul>
+<li>If a module has no <i>recommended</i> release, then drop
+will continue, downloading an available release for the upgrade.</li>
+<li>If a module has no release at all, then drop will skip it.
+The module's data will remain in the database.</li>
+<li>You may discover that some modules, such as date_api, might
+cause the Backdrop core updatedb to fail.  In this instance, you
+may use the --uninstall option to list the modules to uninstall
+prior to upgrade.  Modules uninstalled in this manner will have
+all of their data removed from the target database; the database
+of the source site is not affected.</li>
+</ul>
+<p>
+When drop is enabling the modules in the upgraded site, if there
+are any new dependencies, they will also be identified and downloaded
+if possible.
+<p>
+There will still be some work left to do after the site-upgrade
+command has completed; for example, you will still need to port your
+theme and any custom modules to the new version of Backdrop, and some
+contrib modules may require additional work to update their configuration
+settings.  Using site-upgrade will all the same save you a considerable
+amount of time.  There is no risk in trying it; if it does not work,
+you can always start over, or run it at a later date when more contrib
+modules have been updated.  If you do run site-upgrade a second time
+on the same site, drop will ask you if you want to replace the existing
+target site, effectively starting over from the beginning, or re-use
+the site that is already present.  In the later case, drop will use
+the existing code, but will re-copy the source database and run updatedb
+on it again.  This will all you to attempt to fix any non-working contrib
+modules yourself to get your site-upgrade working.
+<p>
+Enjoy!
