@@ -72,12 +72,11 @@ For Linux/Unix/Mac:
 
   4. Start using drop by running "drop" from your Backdrop root directory.
 
-     (or, if you did not follow step 3, by running "/path/to/drop/drop"
-      or navigating to /path/to/drop and running "./drop" )
-
-    If you have troubles, try using the -l and -r options when invoking drop. See below.
+     - If you did not follow step 3, by running `/path/to/drop/drop`or navigating to `/path/to/drop` and running `./drop`.
+     - If you have troubles, try using the `-l` and `-r` options when invoking drop. See below.
 
 For Windows:
+
   - Consider using on Linux/Unix/OSX using Virtualbox or other VM. Windows support is lacking.
   - Otherwise, try to install drop in similar ways which are recommended for drush on
     http://drupal.org/node/594744.
@@ -169,8 +168,6 @@ that drop can find it.
 
 CREDITS
 -------
-Originally developed as Drush by Arto Bendiken <http://bendiken.net/> for Drupal 4.7.
-Redesigned by Franz Heinzmann (frando) <http://unbiskant.org/> in May 2007 for Drupal 5.
-Drush versions maintained by Moshe Weitzman <http://drupal.org/moshe> with
-much help from Owen Barton, Adrian Rossouw, greg.1.anderson, jonhattan.
+Originally developed as Drush by Arto Bendiken <http://bendiken.net/> for Drupal 4.7, redesigned by Franz Heinzmann (frando) <http://unbiskant.org/> in May 2007 for Drupal 5. Drush versions maintained by Moshe Weitzman <http://drupal.org/moshe> with much help from Owen Barton, Adrian Rossouw, greg.1.anderson, jonhattan.
+
 Ported to Backdrop CMS as Drop by Alan Mels <https://github.com/alanmels> in October 2019.
