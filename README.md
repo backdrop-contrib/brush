@@ -168,6 +168,8 @@ that drop can find it.
 
 CREDITS
 -------
-Originally developed as Drush by Arto Bendiken <http://bendiken.net/> for Drupal 4.7, redesigned by Franz Heinzmann (frando) <http://unbiskant.org/> in May 2007 for Drupal 5. Drush versions maintained by Moshe Weitzman <http://drupal.org/moshe> with much help from Owen Barton, Adrian Rossouw, greg.1.anderson, jonhattan.
 
-Ported to Backdrop CMS as Drop by Alan Mels <https://github.com/alanmels> in October 2019.
+- Originally developed by Arto Bendiken <http://bendiken.net/> for Drupal 4.7.
+- Redesigned by Franz Heinzmann <http://unbiskant.org/> in May 2007 for Drupal 5.
+- Maintained by Moshe Weitzman <http://drupal.org/moshe> with much help from the folks listed at https://github.com/orgs/drush-ops/people.
+- Ported to Backdrop CMS as Drop by Alan Mels <https://github.com/alanmels> in October 2019.
