@@ -6,10 +6,10 @@
  *
  * Terminology:
  * - Request: a requested project (string or keyed array), with a name and (optionally) version.
- * - Project: a backdrop.org project (i.e backdrop.org/project/*), such as cck or zen.
- * - Extension: a backdrop.org module, theme or profile.
+ * - Project: a Backdrop project such as cck or zen.
+ * - Extension: a Backdrop module, theme or profile.
  * - Version: a requested version, such as 1.0 or 1.x-dev.
- * - Release: a specific release of a project, with associated metadata (from the backdrop.org update service).
+ * - Release: a specific release of a project, with associated metadata.
  */
 
 /**
@@ -67,9 +67,9 @@ function pm_drop_help($section) {
     case 'drop:pm-updatecode-postupdate':
       return dt("This is a helper command needed by updatecode. It is used to check for db updates in a backend process after code updated have been performed. We need to run this task in a separate process to not conflict with old code already in memory.");
       case 'drop:pm-releases':
-      return dt("View all releases for a given backdrop.org project. Useful for deciding which version to install/update.");
+      return dt("View all releases for a given Backdrop project. Useful for deciding which version to install/update.");
     case 'drop:pm-download':
-      return dt("Download Backdrop core or projects from backdrop.org (Backdrop core, modules, themes or profiles) and other sources. It will automatically figure out which project version you want based on its recommended release, or you may specify a particular version.
+      return dt("Download Backdrop core or projects from Github (Backdrop core, modules, themes or profiles) and other sources. It will automatically figure out which project version you want based on its recommended release, or you may specify a particular version.
 
 If no --destination is provided, then destination depends on the project type:
   - Profiles will be downloaded to profiles/ in your Backdrop root.
@@ -127,16 +127,12 @@ function pm_drop_command() {
     ),
     'aliases' => array('pmi'),
   );
-  // Install command is reserved for the download and enable of projects including dependencies.
-  // @see http://backdrop.org/node/112692 for more information.
-  // $items['install'] = array(
-  //     'description' => 'Download and enable one or more modules',
-  //   );
   $items['pm-uninstall'] = array(
     'description' => 'Uninstall one or more modules.',
     'arguments' => array(
       'modules' => 'A list of modules.',
     ),
+    'aliases' => array('pmu'),
     'deprecated-aliases' => array('uninstall'),
   );
   $items['pm-list'] = array(
@@ -188,7 +184,7 @@ function pm_drop_command() {
   $items['pm-releases'] = array(
     'description' => 'Print release information for given projects.',
     'arguments' => array(
-      'projects' => 'A list of backdrop.org project names. Defaults to \'backdrop\'',
+      'projects' => 'A list of Backdrop project names. Defaults to \'backdrop\'',
     ),
     'options' => array(
       'dev' => "Show only development releases.",
@@ -201,7 +197,7 @@ function pm_drop_command() {
     'bootstrap' => DROP_BOOTSTRAP_MAX,
   );
   $items['pm-download'] = array(
-    'description' => 'Download projects from backdrop.org or other sources.',
+    'description' => 'Download projects from Github or other sources.',
     'examples' => array(
       'drop dl' => 'Download latest recommended release of Backdrop core.',
       'drop dl backdrop' => 'Same as `drop dl`.',
@@ -212,7 +208,7 @@ function pm_drop_command() {
       'drop dl webform --dev' => 'Download the latest dev release of webform.',
     ),
     'arguments' => array(
-      'projects' => 'A comma delimited list of backdrop.org project names, with optional version. Defaults to \'backdrop\'',
+      'projects' => 'A comma delimited list of Backdrop project names, with optional version. Defaults to \'backdrop\'',
     ),
     'options' => array(
       'destination' => 'Path to which the project will be copied. If you\'re providing a relative path, note it is relative to the backdrop root (if bootstrapped).',
@@ -325,10 +321,6 @@ function drop_pm_classify_extensions(&$extensions, &$modules, &$themes, $extensi
  *
  * A project is considered to be 'enabled' when any of its extensions is
  * enabled.
- * If any extension lacks project information and it is found that the
- * extension was obtained from backdrop.org's cvs or git repositories, a new
- * 'vcs' attribute will be set on the extension. Example:
- *   $extensions[name]->vcs = 'cvs';
  *
  * @param array $extensions.
  *   Array of extensions as returned by drop_get_extensions().
@@ -346,7 +338,7 @@ function drop_get_projects(&$extensions = NULL) {
     // 1. the extension is part of backdrop core.
     // 2. the project was checked out from CVS/git and cvs_deploy/git_deploy
     // is not installed.
-    // 3. it is not a project hosted in backdrop.org.
+    // 3. it is not a project hosted in Github.
     if (empty($extension->info['project'])) {
       if (isset($extension->info['version']) && ($extension->info['version'] == VERSION)) {
         $project = 'backdrop';
@@ -1355,7 +1347,7 @@ function _drop_pm_download_releases_choice($xml, $project, $all = FALSE, $dev = 
  * a bootstraped site.
  *
  * @param $requests
- *   An array of backdrop.org project names optionally with a version.
+ *   An array of Backdrop project names optionally with a version.
  *
  * @see drop_pm_releases()
  */
@@ -1644,7 +1636,7 @@ function pm_parse_project_version($requests) {
       $project = trim(substr($request, 0, strlen($request) - strlen($matches[0])), ' -');
 
       if ($matches[1] == 'HEAD' || $matches[2] == 'HEAD') {
-        drop_log('DROP_PM_HEAD', 'Can\'t download HEAD releases because Backdrop.org project information only provides for numbered release nodes.', 'warning');
+        drop_log('DROP_PM_HEAD', 'Can\'t download HEAD releases because Backdrop project information only provides for numbered release nodes.', 'warning');
         continue;
       }
       if (!empty($matches[2])) {
@@ -1950,7 +1942,7 @@ function _drop_pm_get_release_history_xml($request) {
       if ($path = drop_download_file($url, drop_tempnam($request['name']), drop_get_option('cache-duration-releasexml', 24*3600))) {
         $xml = simplexml_load_file($path);
         if (!$xml) {
-          // We are not getting here since backdrop.org always serves an XML response.
+          // We are not getting here since Github always serves an XML response.
           return drop_set_error('DROP_PM_DOWNLOAD_FAILED', dt('Could not download project status information from @url', array('@url' => $url)));
         }
         if (!$xml->xpath('/error')) {
