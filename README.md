@@ -171,5 +171,6 @@ CREDITS
 
 - Originally developed by Arto Bendiken <http://bendiken.net/> for Drupal 4.7.
 - Redesigned by Franz Heinzmann <http://unbiskant.org/> in May 2007 for Drupal 5.
-- Maintained by Moshe Weitzman <http://drupal.org/moshe> with much help from the folks listed at https://github.com/orgs/drush-ops/people.
+- Drush is maintained by Moshe Weitzman <http://drupal.org/moshe> with much help from the folks listed at https://github.com/orgs/drush-ops/people.
+
 - Ported to Backdrop CMS as Drop by Alan Mels <https://github.com/alanmels> in October 2019.
