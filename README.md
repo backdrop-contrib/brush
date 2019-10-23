@@ -166,6 +166,18 @@ You can put your drop command file in a number of places:
 In any case, it is important that you end the filename with ".drop.inc", so
 that drop can find it.
 
+ISSUES
+------
+Bugs and Feature requests should be reported in the Issue Queue: https://github.com/backdrop-contrib/drop/issues
+
+Current Maintainers
+-------------------
+
+- Alan Mels (https://github.com/alanmels).
+- Alex Shapka (https://github.com/AlexShapka).
+- Nick Onom (https://github.com/nickonom).
+
+
 CREDITS
 -------
 
@@ -174,3 +186,9 @@ CREDITS
 - Drush is maintained by Moshe Weitzman <http://drupal.org/moshe> with much help from the folks listed at https://github.com/orgs/drush-ops/people.
 
 - Ported to Backdrop CMS as Drop by Alan Mels <https://github.com/alanmels> in October 2019.
+
+License
+-------
+
+This project is GPL v3 software. See the LICENSE.txt file in this directory for
+complete text.
