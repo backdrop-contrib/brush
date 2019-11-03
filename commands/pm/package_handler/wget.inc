@@ -33,8 +33,6 @@ function package_handler_validate() {
  * @param $release The release details array from backdrop.org.
  */
 function package_handler_download_project(&$request, $release) {
-  #drop_print_r($request);
-  #drop_print_r($release);
 
   // Install profiles come in several variants. User may specify which one she wants.
   if ($request['project_type'] == 'profile') {

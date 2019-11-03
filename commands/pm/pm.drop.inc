@@ -201,7 +201,7 @@ function pm_drop_command() {
     'examples' => array(
       'drop dl' => 'Download latest recommended release of Backdrop core.',
       'drop dl backdrop' => 'Same as `drop dl`.',
-      'drop dl cck zen' => 'Download latest versions of CCK and Zen projects.',
+      'drop dl devel zen' => 'Download latest versions of Devel and Zen projects.',
       'drop dl og-1.3' => 'Download a specfic version of Organic groups module for my version of Backdrop.',
       'drop dl diff-6.x-2.x' => 'Download a specific development branch of diff module for a specific Backdrop version.',
       'drop dl views --select' => 'Show a list of recent releases of the views project, prompt for which one to download.',
@@ -1936,9 +1936,10 @@ function drop_pm_download_validate() {
 function _drop_pm_get_release_history_xml($request) {
   // Backdroped.
   if (empty($request['project_version'])) {
-    for ($i=0; $i < 5; $i++) {
+    for ($i=1; $i < 10; $i++) {
       $request['project_version'] = $i.'.x';
       $url = drop_get_option('source', 'https://updates.backdropcms.org/release-history') . '/' . $request['name'] . '/' . $request['project_version'];
+
       if ($path = drop_download_file($url, drop_tempnam($request['name']), drop_get_option('cache-duration-releasexml', 24*3600))) {
         $xml = simplexml_load_file($path);
         if (!$xml) {
@@ -2004,19 +2005,23 @@ function drop_pm_download() {
     }
 
     // Determine what type of project we are to download.
-    $request['project_type'] = 'module';
-    if ($types = $xml->xpath('/project/terms/term[name="Projects" and ' . $project_types_xpath . ']')) {
-      $request['project_type'] = array_search($types[0]->value, $project_types);
+    $json = json_encode($xml);
+    $xml_array = json_decode($json,TRUE);
+    $request['version'] = $xml_array['api_version'];
+    $request['project_version'] = $xml_array['releases']['release']['version'];
+    $project_type = $xml_array['type'];
+    if ($project_type == 'project_module') {
+      $request['project_type'] = 'module';
     }
-
-    if ($request['project_type'] == 'translation') {
-      drop_set_error('DROP_PM_DOWNLOAD_TRANSLATIONS_FORBIDDEN', dt('Drop has dropped support for downloading translation projects. See l10n_update and l10n_install projects.'));
-      continue;
+    elseif ($project_type == 'project_theme')  {
+      $request['project_type'] = 'theme';
+    }
+    else {
+      drop_print_r('Not supported project type: '.$project_type);
     }
 
     // Determine the name of the directory that will contain the project.
     // We face here all the asymetries to make it smooth for package handlers.
-    // For Backdrop core: --backdrop-project-rename or backdrop-x.y
     if ($request['project_type'] == 'core') {
       // Avoid downloading core into existing core.
       if (drop_get_context('DROP_BOOTSTRAP_PHASE') >= DROP_BOOTSTRAP_BACKDROP_ROOT) {
@@ -2049,6 +2054,7 @@ function drop_pm_download() {
     // Download the project to a temporary location.
     $request['base_project_path'] = drop_tempdir();
     $request['full_project_path'] = $request['base_project_path'] .'/'. $request['project_dir'];
+
     drop_log(dt('Downloading project !name to !dir ...', array('!name' => $request['name'], '!dir' => $request['base_project_path'])));
     if (!package_handler_download_project($request, $release)) {
       drop_log('Error downloading '.$request['name']);

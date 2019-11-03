@@ -28,7 +28,11 @@ define('DROP_BACKDROP_KILOBYTE', 1024);
  * @return
  *   TRUE if the file was found and included.
  */
+
 function drop_include($path, $name, $version = NULL, $extension = 'inc') {
+  #print '**** Cal start from drop.inc:33 ****';
+  #debug_print_backtrace();
+  #print '**** Cal end from drop.inc:33 ****';
   $version = ($version) ? $version : drop_backdrop_major_version();
   $file = sprintf("%s/%s_%s.%s", $path, $name, $version, $extension);
   if (file_exists($file)) {
@@ -1194,7 +1198,9 @@ function drop_op($function) {
   if (drop_get_context('DROP_SIMULATE')) {
     return TRUE;
   }
-
+  #print_r($args);
+  #echo "<pre>".debug_print_backtrace()."</pre>";
+  #debug_backtrace();
   return call_user_func_array($function, $args);
 }
 
@@ -1765,7 +1771,13 @@ function drop_save_data_to_temp_file($data) {
      // $cwd is out of Backdrop's document root
      return sys_get_temp_dir();
    } else {
-     return config_get('system.core', 'file_temporary_path');
+     $temp_dir = config_get('system.core', 'file_temporary_path');
+     if (empty($temp_dir)) {
+       return sys_get_temp_dir();
+     }
+     else {
+       return config_get('system.core', 'file_temporary_path');
+     }
    }
  }
 
@@ -1781,7 +1793,6 @@ function drop_tempnam($pattern, $tmp_dir = NULL) {
   }
   $tmp_file = tempnam($tmp_dir, $pattern);
   drop_register_file_for_deletion($tmp_file);
-
   return $tmp_file;
 }
 

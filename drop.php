@@ -40,32 +40,33 @@ register_shutdown_function('drop_shutdown');
 
 exit(drop_main());
 
+
 /**
- * Verify that we are running PHP through the command line interface.
- *
- * This function is useful for making sure that code cannot be run via the web server,
- * such as a function that needs to write files to which the web server should not have
- * access to.
- *
- * @return
- *   A boolean value that is true when PHP is being run through the command line,
- *   and false if being run through cgi or mod_php.
- */
+* Verify that we are running PHP through the command line interface.
+*
+* This function is useful for making sure that code cannot be run via the web server,
+* such as a function that needs to write files to which the web server should not have
+* access to.
+*
+* @return
+*   A boolean value that is true when PHP is being run through the command line,
+*   and false if being run through cgi or mod_php.
+*/
 function drop_verify_cli() {
   return (php_sapi_name() == 'cli' || (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0));
 }
 
 /**
- * The main Drop function.
- *
- * - Parses the command line arguments, configuration files and environment.
- * - Prepares and executes a Backdrop bootstrap, if possible,
- * - Dispatches the given command.
- *
- * @return
- *   Whatever the given command returns.
- */
-  function drop_main() {
+* The main Drop function.
+*
+* - Parses the command line arguments, configuration files and environment.
+* - Prepares and executes a Backdrop bootstrap, if possible,
+* - Dispatches the given command.
+*
+* @return
+*   Whatever the given command returns.
+*/
+function drop_main() {
   $phases = _drop_bootstrap_phases(FALSE, TRUE);
   drop_set_context('DROP_BOOTSTRAP_PHASE', DROP_BOOTSTRAP_NONE);
 
