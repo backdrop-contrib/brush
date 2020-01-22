@@ -38,7 +38,7 @@ function brush_core_pre_site_install() {
   if (!file_exists($settingsfile)) {
     $msg[] = dt('create a @settingsfile file', array('@settingsfile' => $settingsfile));
   }
-  $msg[] = dt("BRUSH your '@db' database and then CREATE a new one.", array('@db' => $db_spec['database']));
+  $msg[] = dt("drop your '@db' database and then create a new one.", array('@db' => $db_spec['database']));
 
   if (!brush_confirm(dt('You are about to ') . implode(dt(' and '), $msg) . ' Do you want to continue?')) {
     return brush_user_abort();
