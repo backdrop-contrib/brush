@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file Drop PM CVS extension
+ * @file Brush PM CVS extension
  */
 
 /**
@@ -9,17 +9,17 @@
  */
 function package_handler_validate() {
   // Check cvs command exists. Disable possible output.
-  $debug = drop_get_context('DROP_DEBUG');
-  drop_set_context('DROP_DEBUG', FALSE);
-  $success = drop_shell_exec('cvs --version');
-  drop_set_context('DROP_DEBUG', $debug);
+  $debug = brush_get_context('BRUSH_DEBUG');
+  brush_set_context('BRUSH_DEBUG', FALSE);
+  $success = brush_shell_exec('cvs --version');
+  brush_set_context('BRUSH_DEBUG', $debug);
   if (!$success) {
-    return drop_set_error('DROP_SHELL_COMMAND_NOT_FOUND', dt('cvs executable not found.'));
+    return brush_set_error('BRUSH_SHELL_COMMAND_NOT_FOUND', dt('cvs executable not found.'));
   }
   // Check cvs_deploy is enabled. Only for bootstrapped sites.
-  if (drop_get_context('DROP_BOOTSTRAP_PHASE') >= DROP_BOOTSTRAP_BACKDROP_FULL) {
+  if (brush_get_context('BRUSH_BOOTSTRAP_PHASE') >= BRUSH_BOOTSTRAP_BACKDROP_FULL) {
     if (!module_exists('cvs_deploy')) {
-      drop_log(dt('cvs package handler needs cvs_deploy module enabled to work properly.'), 'warning');
+      brush_log(dt('cvs package handler needs cvs_deploy module enabled to work properly.'), 'warning');
     }
   }
 }
@@ -28,19 +28,19 @@ function package_handler_validate() {
  * Install a project.
  *
  * @param $project The project array with name, base and full (final) paths.
- * @param $release The release details array from backdrop.org
+ * @param $release The release details array from drupal.org
  */
 function package_handler_download_project(&$project, $release) {
   // Check it out.
-  drop_pm_cvs($project, $release);
+  brush_pm_cvs($project, $release);
 
-  if (!drop_get_context('DROP_SIMULATE')) {
+  if (!brush_get_context('BRUSH_SIMULATE')) {
     if (is_dir($project['full_project_path'])) {
-      drop_log("Checking out " . $project['name'] . " was successful.");
+      brush_log("Checking out " . $project['name'] . " was successful.");
       return TRUE;
     }
     else {
-      return drop_set_error('DROP_PM_CVS_CHECKOUT_PROBLEMS', dt("Unable to check out !project to !destination from cvs.backdrop.org", array('!project' => $project['name'], '!destination' => $project['full_project_path'])));
+      return brush_set_error('BRUSH_PM_CVS_CHECKOUT_PROBLEMS', dt("Unable to check out !project to !destination from cvs.drupal.org", array('!project' => $project['name'], '!destination' => $project['full_project_path'])));
     }
   }
 }
@@ -49,20 +49,20 @@ function package_handler_download_project(&$project, $release) {
  * Update a project (so far, only modules are supported).
  *
  * @param $project The project array with name, base and full (final) paths.
- * @param $release The release details array from backdrop.org
+ * @param $release The release details array from drupal.org
  */
 function package_handler_update_project(&$project, $release) {
-  drop_log('Updating project ' . $project['name'] . ' ...');
+  brush_log('Updating project ' . $project['name'] . ' ...');
 
   // Check out a fresh copy, or update an existing one.
-  drop_pm_cvs($project, $release);
+  brush_pm_cvs($project, $release);
 
-  if (is_dir($project['full_project_path']) && !drop_get_context('DROP_SIMULATE')) {
-    drop_log("Updating of " . $project['name'] . " was successful.");
+  if (is_dir($project['full_project_path']) && !brush_get_context('BRUSH_SIMULATE')) {
+    brush_log("Updating of " . $project['name'] . " was successful.");
     return TRUE;
   }
   else {
-    return drop_set_error('DROP_PM_CVS_UPDATE_PROBLEMS', dt("Unable to update !project from cvs.backdrop.org", array('!project' => $project['name'])));
+    return brush_set_error('BRUSH_PM_CVS_UPDATE_PROBLEMS', dt("Unable to update !project from cvs.drupal.org", array('!project' => $project['name'])));
   }
 }
 
@@ -70,21 +70,21 @@ function package_handler_update_project(&$project, $release) {
  * General CVS helper function.
  *
  * @param $project The project array with name, base and full (final) paths.
- * @param $release The release details array from backdrop.org
+ * @param $release The release details array from drupal.org
  */
-function drop_pm_cvs(&$project, $release) {
+function brush_pm_cvs(&$project, $release) {
   // Build the cvs command to execute.
   $command = array('cvs');
 
   // Global options.
   $command[] = '-z6';
   // cvs root.
-  $cvsroot = '-d:pserver:' . drop_get_option('cvscredentials', 'anonymous:anonymous') . '@cvs.backdrop.org:/cvs/';
+  $cvsroot = '-d:pserver:' . brush_get_option('cvscredentials', 'anonymous:anonymous') . '@cvs.drupal.org:/cvs/';
   $cvsroot .= ($project['project_type'] == 'core')?'backdrop':'backdrop-contrib';
   $command[] = $cvsroot;
 
   // CVS command ("cvs method").
-  $cvsmethod = drop_get_option('cvsmethod', FALSE);
+  $cvsmethod = brush_get_option('cvsmethod', FALSE);
   if (empty($cvsmethod)) {
     $cvsmethod = 'checkout';
      // If we have an existing working copy we update.
@@ -95,7 +95,7 @@ function drop_pm_cvs(&$project, $release) {
   $command[] = $cvsmethod;
 
   // CVS command options.
-  $cvsparams = drop_get_option('cvsparams', FALSE);
+  $cvsparams = brush_get_option('cvsparams', FALSE);
   // common options for any command.
   $command[] = '-r '. $release['tag'];
   // command specific options.
@@ -117,7 +117,7 @@ function drop_pm_cvs(&$project, $release) {
       // existing CVS checkout that is version controlled then the default is
       // to update in place, which will attempt to merge changes but we assume
       // anyone using a VCS is competent enough to deal with this!
-      $reserved_files = drop_version_control_reserved_files();
+      $reserved_files = brush_version_control_reserved_files();
       $overwrite = TRUE;
       foreach ($reserved_files as $file) {
         if (file_exists($project['full_project_path'] . '/' . $file)) {
@@ -133,8 +133,8 @@ function drop_pm_cvs(&$project, $release) {
 
   // CVS only accepts relative paths. We will cd in the checkout path right
   // before running the cvs command.
-  if (!drop_shell_cd_and_exec($project['base_project_path'], implode(' ', $command))) {
-    return drop_set_error('DROP_PM_UNABLE_CHECKOUT', dt('Unable to !op !project from cvs.backdrop.org.', array('!op' => $cvsmethod, '!project' => $project['name'])));
+  if (!brush_shell_cd_and_exec($project['base_project_path'], implode(' ', $command))) {
+    return brush_set_error('BRUSH_PM_UNABLE_CHECKOUT', dt('Unable to !op !project from cvs.drupal.org.', array('!op' => $cvsmethod, '!project' => $project['name'])));
   }
 }
 

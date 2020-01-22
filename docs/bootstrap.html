@@ -1,46 +1,46 @@
-<h1>The Drop Bootstrap Process</h1>
+<h1>The Brush Bootstrap Process</h1>
 <p>
-When preparing to run a command, drop works by "bootstrapping" 
+When preparing to run a command, brush works by "bootstrapping" 
 the Backdrop environment in very much the same way that is done 
-during a normal page request from the web server, so most drop 
+during a normal page request from the web server, so most brush 
 commands run in the context of a fully-initialized website.
 <p>
-For efficiency and convenience, some drop commands can work
+For efficiency and convenience, some brush commands can work
 without first bootstrapping a Backdrop site, or by only partially
 bootstrapping a site.  This is more efficient, because there is
 sometimes a slight delay involved with bootstrapping, especially
 in some of the later stages.  It is also a matter of convenience,
 because some commands are useful to use even when you do not
 have a working Backdrop site available to bootstrap.  For example,
-you can use drop to download Backdrop with `drop dl backdrop`.  This
+you can use brush to download Backdrop with `brush dl backdrop`.  This
 obviously does not require any bootstrapping to work.
 <p>
-The drop bootstrapping process is also very closely related with
-drop configuration files.  At each bootstrap phase, drop may load
-additional configuration files that may contain additional drop
+The brush bootstrapping process is also very closely related with
+brush configuration files.  At each bootstrap phase, brush may load
+additional configuration files that may contain additional brush
 settings.  This has two very important connotations.  First, settings
 that are only loaded in a later bootstrap phase are not available
 for commands that do not reach that bootstrap phase.  Second, it
-is possible to alter drop behavior on a per-site basis by applying
+is possible to alter brush behavior on a per-site basis by applying
 settings in a site-specific configuration file.  See 
-`drop topic docs-configuration` for details on drop configuration
+`brush topic docs-configuration` for details on brush configuration
 files.
 
-<h2>DROP_BOOTSTRAP_DROP</h2>
+<h2>BRUSH_BOOTSTRAP_DROP</h2>
 <p>
 Configuration files loaded during this phase:<ul>
-<li>Drop installation folder.
-<li>System wide configuration folder (e.g. /etc/drop/droprc.php).
-<li>User's .drop folder (i.e. ~/.drop/droprc.php).
+<li>Brush installation folder.
+<li>System wide configuration folder (e.g. /etc/brush/droprc.php).
+<li>User's .brush folder (i.e. ~/.brush/droprc.php).
 <li>In any location, as specified by the --config (-c) option.
 </ul><p>
-Only bootstrap Drop, without any Backdrop specific code.
+Only bootstrap Brush, without any Backdrop specific code.
 <p>
-Any code that operates on the Drop installation, and not specifically
+Any code that operates on the Brush installation, and not specifically
 any Backdrop directory, should bootstrap to this phase.
 
 
-<h2>DROP_BOOTSTRAP_BACKDROP_ROOT</h2>
+<h2>BRUSH_BOOTSTRAP_BACKDROP_ROOT</h2>
 <p>
 Configuration files loaded during this phase:<ul>
 <li>Backdrop installation root.
@@ -52,7 +52,7 @@ Any code that interacts with an entire Backdrop installation, and not a specific
 site on the Backdrop installation should use this bootstrap phase.
 
 
-<h2>DROP_BOOTSTRAP_BACKDROP_SITE</h2>
+<h2>BRUSH_BOOTSTRAP_BACKDROP_SITE</h2>
 <p>
 Configuration files loaded during this phase:<ul>
 <li>Backdrop site folder (e.g sites/{default|example.com}/droprc.php).
@@ -60,17 +60,17 @@ Configuration files loaded during this phase:<ul>
 Set up a Backdrop site directory and the correct environment variables to
 allow Backdrop to find the configuration file.
 <p>
-If no site is specified with the -l / --uri options, Drop will assume the
+If no site is specified with the -l / --uri options, Brush will assume the
 site is 'default', which mimics Backdrop's behaviour.
 <p>
 If you want to avoid this behaviour, it is recommended that you use the
-DROP_BOOTSTRAP_BACKDROP_ROOT bootstrap phase instead.
+BRUSH_BOOTSTRAP_BACKDROP_ROOT bootstrap phase instead.
 <p>
 Any code that needs to modify or interact with a specific Backdrop site's
 settings.php file should bootstrap to this phase.
 
 
-<h2>DROP_BOOTSTRAP_BACKDROP_CONFIGURATION</h2>
+<h2>BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION</h2>
 <p>
 Load the settings from the Backdrop sites directory.
 <p>
@@ -81,7 +81,7 @@ This phase is commonly used for code that interacts with the Backdrop install AP
 as both install.php and update.php start at this phase.
 
 
-<h2>DROP_BOOTSTRAP_BACKDROP_DATABASE</h2>
+<h2>BRUSH_BOOTSTRAP_BACKDROP_DATABASE</h2>
 <p>
 Connect to the Backdrop database using the database credentials loaded
 during the previous bootstrap phase.
@@ -93,7 +93,7 @@ Any code that needs to interact with the Backdrop database API needs to
 be bootstrapped to at least this phase.
 
 
-<h2>DROP_BOOTSTRAP_BACKDROP_FULL</h2>
+<h2>BRUSH_BOOTSTRAP_BACKDROP_FULL</h2>
 <p>
 Fully initialize Backdrop.
 <p>
@@ -106,7 +106,7 @@ Any code that interacts with the general Backdrop API should be
 bootstrapped to this phase.
 
 
-<h2>DROP_BOOTSTRAP_BACKDROP_LOGIN</h2>
+<h2>BRUSH_BOOTSTRAP_BACKDROP_LOGIN</h2>
 <p>
 Log in to the initialiased Backdrop site.
 <p>
@@ -121,15 +121,15 @@ to information for a specific user, such as listing nodes that might
 be different based on who is logged in.
 
 
-<h2>DROP_BOOTSTRAP_MAX</h2>
+<h2>BRUSH_BOOTSTRAP_MAX</h2>
 <p>
 This is not an actual bootstrap phase.  Commands that use
-DROP_BOOTSTRAP_MAX will cause drop to bootstrap as far
+BRUSH_BOOTSTRAP_MAX will cause brush to bootstrap as far
 as possible, and then run the command regardless of the
-bootstrap phase that was reached.  This is useful for drop
+bootstrap phase that was reached.  This is useful for brush
 commands that work without a bootstrapped site, but that
 provide additional information or capabilities in the presence
-of a bootstrapped site.  For example, `drop pm-releases modulename`
+of a bootstrapped site.  For example, `brush pm-releases modulename`
 works without a bootstrapped Backdrop site, but will include
 the version number for the installed module if a Backdrop site
 has been bootstrapped.

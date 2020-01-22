@@ -1,5 +1,0 @@
-type = module
-name = Drop
-description = Drop is a command line shell and Unix scripting interface for Backdrop CMS.
-package = Development
-backdrop = 1.x

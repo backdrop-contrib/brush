@@ -3,15 +3,15 @@
 class commandCase extends Drop_TestCase {
   public function testInvoke() {
     $expected = array(
-      'unit_drop_init',
-      'drop_unit_invoke_init',
-      'drop_unit_invoke_validate',
-      'drop_unit_pre_unit_invoke',
-      'drop_unit_invoke',
-      'drop_unit_post_unit_invoke',
-      'drop_unit_post_unit_invoke_rollback',
-      'drop_unit_pre_unit_invoke_rollback',
-      'drop_unit_invoke_validate_rollback',
+      'unit_brush_init',
+      'brush_unit_invoke_init',
+      'brush_unit_invoke_validate',
+      'brush_unit_pre_unit_invoke',
+      'brush_unit_invoke',
+      'brush_unit_post_unit_invoke',
+      'brush_unit_post_unit_invoke_rollback',
+      'brush_unit_pre_unit_invoke_rollback',
+      'brush_unit_invoke_validate_rollback',
     );
     
     // We expect a return code of 1 so just call execute() directly.
@@ -27,9 +27,9 @@ class commandCase extends Drop_TestCase {
    * it's alias (dl) to assure that those aliases are built as expected.
    */ 
   public function testGetCommands() {
-    $eval = '$commands = drop_get_commands();';
+    $eval = '$commands = brush_get_commands();';
     $eval .= 'print json_encode($commands[\'dl\'])';
-    $this->drop('php-eval', array($eval));
+    $this->brush('php-eval', array($eval));
     $command = json_decode($this->getOutput());
     
     $this->assertEquals('dl', current($command->aliases));
@@ -38,7 +38,7 @@ class commandCase extends Drop_TestCase {
     $this->assertObjectHasAttribute('package_handler', $command->engines);
     $this->assertEquals('pm-download', $command->command);
     $this->assertEquals('pm', $command->commandfile);
-    $this->assertEquals('drop_command', $command->callback);
+    $this->assertEquals('brush_command', $command->callback);
     $this->assertObjectHasAttribute('examples', $command->sections);
     $this->assertTrue($command->is_alias);
   }

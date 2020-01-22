@@ -2,7 +2,7 @@
 
 /*
  * @file
- *   Tests for archive.drop.inc
+ *   Tests for archive.brush.inc
  */
 class archiveDumpCase extends Drop_TestCase {
 
@@ -32,7 +32,7 @@ class archiveDumpCase extends Drop_TestCase {
       'yes' => NULL,
       'destination' => 'dump.tar.gz',
     );
-    $this->drop('archive-dump', array('@archivedump'), $options);
+    $this->brush('archive-dump', array('@archivedump'), $options);
     $exec = sprintf('file %s/%s', UNISH_SANDBOX, $dump_dest);
     $this->execute($exec);
     $output = $this->getOutput();

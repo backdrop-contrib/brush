@@ -2,7 +2,7 @@
 
 /*
  * @file
- *   Tests for field.drop.inc
+ *   Tests for field.brush.inc
  */
 class fieldCase extends Drop_TestCase {
 
@@ -14,7 +14,7 @@ class fieldCase extends Drop_TestCase {
       'uri' => 'dev',
     );
     // Create two field instances on article content type.
-    $this->drop('field-create', array('user', 'city,text,text_textfield', 'subtitle,text,text_textfield'), $options + array('entity_type' => 'user'));
+    $this->brush('field-create', array('user', 'city,text,text_textfield', 'subtitle,text,text_textfield'), $options + array('entity_type' => 'user'));
     $output = $this->getOutput();
     list($city, $subtitle) = explode(' ', $output);
     $url = parse_url($subtitle);
@@ -24,22 +24,22 @@ class fieldCase extends Drop_TestCase {
     $this->verifyInstance('subtitle', $options);
 
     // Assure that field update URL looks correct.
-    $this->drop('field-update', array('subtitle'), $options);
+    $this->brush('field-update', array('subtitle'), $options);
     $output = $this->getOutput();
     $url = parse_url($this->getOutput());
     $this->assertEquals('/admin/config/people/accounts/fields/subtitle', $url['path']);
 
     // Assure that field-clone actually clones.
-    $this->drop('field-clone', array('subtitle', 'subtitlecloned'), $options);
+    $this->brush('field-clone', array('subtitle', 'subtitlecloned'), $options);
     $this->verifyInstance('subtitlecloned', $options);
 
     // Assure that delete works.
-    $this->drop('field-delete', array('subtitlecloned'), $options);
+    $this->brush('field-delete', array('subtitlecloned'), $options);
     $this->verifyInstance('subtitlecloned', $options, FALSE);
   }
 
   function verifyInstance($name, $options, $expected = TRUE) {
-    $this->drop('field-info', array('fields'), $options + array('pipe' => NULL));
+    $this->brush('field-info', array('fields'), $options + array('pipe' => NULL));
     $output = $this->getOutputAsList();
     $found = FALSE;
     foreach($output as $row) {

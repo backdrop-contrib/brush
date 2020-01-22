@@ -1,50 +1,50 @@
-#!/usr/bin/env drop
+#!/usr/bin/env brush
 
 //
-// This example demonstrates how to write a drop
+// This example demonstrates how to write a brush
 // "shebang" script.  These scripts start with the
-// line "#!/usr/bin/env drop" or "#!/full/path/to/drop".
+// line "#!/usr/bin/env brush" or "#!/full/path/to/brush".
 //
-// See `drop topic docs-scripts` for more information.
+// See `brush topic docs-scripts` for more information.
 //
-drop_print("Hello world!");
-drop_print();
-drop_print("The arguments to this command were:");
+brush_print("Hello world!");
+brush_print();
+brush_print("The arguments to this command were:");
 
 //
-// If called with --everything, use drop_get_arguments
+// If called with --everything, use brush_get_arguments
 // to print the commandline arguments.  Note that this
-// call will include 'php-script' (the drop command)
+// call will include 'php-script' (the brush command)
 // and the path to this script.
 //
-if (drop_get_option('everything')) {
-  drop_print("  " . implode("\n  ", drop_get_arguments()));
+if (brush_get_option('everything')) {
+  brush_print("  " . implode("\n  ", brush_get_arguments()));
 }
 //
 // If --everything is not included, then use
-// drop_shift to pull off the arguments one at
-// a time.  drop_shift only returns the user
+// brush_shift to pull off the arguments one at
+// a time.  brush_shift only returns the user
 // commandline arguments, and does not include
-// the drop command or the path to this script.
+// the brush command or the path to this script.
 //
 else {
-  while ($arg = drop_shift()) {
-    drop_print('  ' . $arg);
+  while ($arg = brush_shift()) {
+    brush_print('  ' . $arg);
   }
 }
 
-drop_print();
+brush_print();
 
 //
 // We can check which site was bootstrapped via
 // the '@self' alias, which is defined only if
 // there is a bootstrapped site.
 //
-$self_record = drop_sitealias_get_record('@self');
+$self_record = brush_sitealias_get_record('@self');
 if (empty($self_record)) {
-  drop_print('No bootstrapped site.');
+  brush_print('No bootstrapped site.');
 }
 else {
-  drop_print('The following site is bootstrapped:');
-  _drop_sitealias_print_record($self_record);
+  brush_print('The following site is bootstrapped:');
+  _brush_sitealias_print_record($self_record);
 }

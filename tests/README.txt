@@ -1,4 +1,4 @@
-Drop's test suite based on phpunit (http://www.phpunit.de/).
+Brush's test suite based on phpunit (http://www.phpunit.de/).
 
 Usage
 --------
@@ -20,7 +20,7 @@ Notes
 
 [*] Install PHPUnit:
 
-Drop requires PHPUnit 3.5 or later; installing with PEAR is easiest.
+Brush requires PHPUnit 3.5 or later; installing with PEAR is easiest.
  
 On Linux:
 ---------

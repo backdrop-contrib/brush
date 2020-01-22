@@ -1,9 +1,9 @@
-<h1>Drop Contexts</h1>
+<h1>Brush Contexts</h1>
 <p>
-The drop contexts API acts as a storage mechanism for all options, 
-arguments and configuration settings that are loaded into drop.
+The brush contexts API acts as a storage mechanism for all options, 
+arguments and configuration settings that are loaded into brush.
 <p>
-This API also acts as an IPC mechanism between the different drop commands,
+This API also acts as an IPC mechanism between the different brush commands,
 and provides protection from accidentally overriding settings that are
 needed by other parts of the system.
 <p>
@@ -15,33 +15,33 @@ This API defines several contexts that are used by default.
 
 <h2>Argument contexts</h2>
 <p>
-These contexts are used by Drop to store information on the command.
+These contexts are used by Brush to store information on the command.
 They have their own access functions in the forms of
-drop_set_arguments(), drop_get_arguments(), drop_set_command(),
-drop_get_command().
+brush_set_arguments(), brush_get_arguments(), brush_set_command(),
+brush_get_command().
 <ul>
-<li>command : The drop command being executed.</li>
+<li>command : The brush command being executed.</li>
 <li>arguments : Any additional arguments that were specified.</li>
 </ul>
 
 <h2>Setting contexts</h2>
 <p>
-These contexts store options that have been passed to the drop.php
+These contexts store options that have been passed to the brush.php
 script, either through the use of any of the config files, directly from
 the command line through --option='value' or through a JSON encoded string
 passed through the STDIN pipe.
 <p>
-These contexts are accessible through the drop_get_option() and
-drop_set_option() functions.  See drop_context_names() for a description
+These contexts are accessible through the brush_get_option() and
+brush_set_option() functions.  See brush_context_names() for a description
 of all of the contexts.
 <p>
-Drop commands may also choose to save settings for a specific context to
-the matching configuration file through the drop_save_config() function.
+Brush commands may also choose to save settings for a specific context to
+the matching configuration file through the brush_save_config() function.
 
 <h2>Available Setting contexts</h2>
 <p>
 These contexts are evaluated in a certain order, and the highest priority value
-is returned by default from drop_get_option. This allows scripts to check whether
+is returned by default from brush_get_option. This allows scripts to check whether
 an option was different before the current execution.
 <p>
 Specified by the script itself :
@@ -62,9 +62,9 @@ Specified by config files :
 <li>site     : Loaded from the droprc.php file in the Backdrop site directory.
 <li>backdrop   : Loaded from the droprc.php file in the Backdrop root directory.
 <li>user     : Loaded from the droprc.php file in the user's home directory.
-<li>drop    : Loaded from the droprc.php file in the $HOME/.drop directory.
-<li>system   : Loaded from the droprc.php file in the system's $PREFIX/etc/drop directory.
-<li>drop    : Loaded from the droprc.php file in the same directory as drop.php.
+<li>brush    : Loaded from the droprc.php file in the $HOME/.brush directory.
+<li>system   : Loaded from the droprc.php file in the system's $PREFIX/etc/brush directory.
+<li>brush    : Loaded from the droprc.php file in the same directory as brush.php.
 </ul>
 <p>
 Specified by the script, but has the lowest priority :

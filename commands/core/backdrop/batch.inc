@@ -5,7 +5,7 @@
  */
 
 /**
- * Main loop for the Drop batch API.
+ * Main loop for the Brush batch API.
  *
  * Saves a record of the batch into the database, and progressively call $command to
  * process the operations.
@@ -14,7 +14,7 @@
  *    The command to call to process the batch.
  *
  */
-function _drop_backend_batch_process($command = 'batch-process') {
+function _brush_backend_batch_process($command = 'batch-process') {
   global $user;
   $batch =& batch_get();
 
@@ -53,12 +53,12 @@ function _drop_backend_batch_process($command = 'batch-process') {
 
     while (!$finished) {
       if ($user->uid) {
-        $data = drop_backend_invoke($command, array($batch['id'], '-u', $user->uid));
+        $data = brush_backend_invoke($command, array($batch['id'], '-u', $user->uid));
       }
       else {
-        $data = drop_backend_invoke($command, array($batch['id']));
+        $data = brush_backend_invoke($command, array($batch['id']));
       }
-      $finished = drop_get_error() || !$data || (isset($data['context']['drop_batch_process_finished']) && $data['context']['drop_batch_process_finished'] == TRUE);
+      $finished = brush_get_error() || !$data || (isset($data['context']['brush_batch_process_finished']) && $data['context']['brush_batch_process_finished'] == TRUE);
     }
   }
 }
@@ -73,7 +73,7 @@ function _drop_backend_batch_process($command = 'batch-process') {
  * @param id
  *   The batch id of the batch being processed.
  */
-function _drop_batch_command($id) {
+function _brush_batch_command($id) {
   $batch =& batch_get();
 
   $data = db_query("SELECT batch FROM {batch} WHERE bid = :bid", array(
@@ -91,10 +91,10 @@ function _drop_batch_command($id) {
   }
 
   // Register database update for end of processing.
-  register_shutdown_function('_drop_batch_shutdown');
+  register_shutdown_function('_brush_batch_shutdown');
 
-  if (_drop_batch_worker()) {
-    _drop_batch_finished();
+  if (_brush_batch_worker()) {
+    _brush_batch_finished();
   }
 }
 
@@ -106,7 +106,7 @@ function _drop_batch_command($id) {
  * has been completed or half of the available memory for the process has been
  * reached.
  */
-function _drop_batch_worker() {
+function _brush_batch_worker() {
   $batch =& batch_get();
   $current_set =& _batch_current_set();
   $set_changed = TRUE;
@@ -173,8 +173,8 @@ function _drop_batch_worker() {
     // If we are in progressive mode, break processing after 1 second.
 
 
-    if ((memory_get_usage() * 2) >= drop_memory_limit()) {
-      drop_log(dt("Batch process has consumed in excess of 50% of available memory. Starting new thread"), "batch");
+    if ((memory_get_usage() * 2) >= brush_memory_limit()) {
+      brush_log(dt("Batch process has consumed in excess of 50% of available memory. Starting new thread"), "batch");
       // Record elapsed wall clock time.
       $current_set['elapsed'] = round((microtime(TRUE) - $current_set['start']) * 1000, 2);
       break;
@@ -209,7 +209,7 @@ function _drop_batch_worker() {
  * Call the 'finished' callbacks to allow custom handling of results,
  * and resolve page redirection.
  */
-function _drop_batch_finished() {
+function _brush_batch_finished() {
   $batch = &batch_get();
 
   // Execute the 'finished' callbacks for each batch set, if defined.
@@ -238,14 +238,14 @@ function _drop_batch_finished() {
   }
   $_batch = $batch;
   $batch = NULL;
-  drop_set_option('drop_batch_process_finished', TRUE);
+  brush_set_option('brush_batch_process_finished', TRUE);
 }
 
 /**
  * Shutdown function: store the batch data for next request,
  * or clear the table if the batch is finished.
  */
-function _drop_batch_shutdown() {
+function _brush_batch_shutdown() {
  if ($batch = batch_get()) {
     db_update('batch')
       ->fields(array('batch' => serialize($batch)))

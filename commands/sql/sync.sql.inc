@@ -1,6 +1,6 @@
 <?php
 
-require_once DROP_BASE_PATH . '/commands/core/rsync.core.inc';
+require_once BRUSH_BASE_PATH . '/commands/core/rsync.core.inc';
 
 /**
  * Sql sync init function.  Bootstrap either the source or the
@@ -9,17 +9,17 @@ require_once DROP_BASE_PATH . '/commands/core/rsync.core.inc';
  * then it clearly will not be possible to bootstrap to
  * either of them.  If both are local, the source site is preferred.
  */
-function drop_sql_sync_init($source = NULL, $destination = NULL) {
+function brush_sql_sync_init($source = NULL, $destination = NULL) {
   // Preflight destination in case it defines the alias used by the source
-  _drop_sitealias_get_record($destination);
+  _brush_sitealias_get_record($destination);
 
   // After preflight, get source and destination settings
-  $source_settings = drop_sitealias_get_record($source);
-  $destination_settings = drop_sitealias_get_record($destination);
+  $source_settings = brush_sitealias_get_record($source);
+  $destination_settings = brush_sitealias_get_record($destination);
 
   // Insure that we have database records for the source and destination
   // alias records.  sitealias_get_databases_from_record will cache the
-  // database info inside the alias records, and drop_sitealias_set_alias_context
+  // database info inside the alias records, and brush_sitealias_set_alias_context
   // will copy the database record into the 'alias' context.  We do not
   // actually use the databases record at this time.
   sitealias_get_databases_from_record($source_settings);
@@ -31,20 +31,20 @@ function drop_sql_sync_init($source = NULL, $destination = NULL) {
   // If the source is remote and the destination is local, then we
   // will determine the sanitization operations after the database
   // has been copied.
-  if (!drop_get_option('deferred-sanitization', FALSE) && drop_get_option(array('sanitize', 'destination-sanitize'), FALSE)) {
-    $bootstrapped = drop_bootstrap_max_to_sitealias($source_settings);
+  if (!brush_get_option('deferred-sanitization', FALSE) && brush_get_option(array('sanitize', 'destination-sanitize'), FALSE)) {
+    $bootstrapped = brush_bootstrap_max_to_sitealias($source_settings);
     if ($bootstrapped) {
-      drop_command_invoke_all('drop_sql_sync_sanitize', $source);
+      brush_command_invoke_all('brush_sql_sync_sanitize', $source);
     }
     else {
-      drop_set_option('deferred-sanitization', TRUE);
+      brush_set_option('deferred-sanitization', TRUE);
     }
   }
 
   // By default, sql-sync will do an ordered dump.
   // Set --no-ordered-dump to override.
-  if (!drop_get_option('no-ordered-dump', FALSE)) {
-    drop_set_option('ordered-dump', TRUE);
+  if (!brush_get_option('no-ordered-dump', FALSE)) {
+    brush_set_option('ordered-dump', TRUE);
   }
 
   return TRUE;
@@ -55,25 +55,25 @@ function drop_sql_sync_init($source = NULL, $destination = NULL) {
  * passwords in the user table when the --sanitize option is used.  It is
  * also an example of how to write a database sanitizer for sql sync.
  *
- * To write your own sync hook function, define mymodule_drop_sql_sync_sanitize()
+ * To write your own sync hook function, define mymodule_brush_sql_sync_sanitize()
  * and follow the form of this function to add your own database
  * sanitization operations via the register post-sync op function;
- * @see drop_sql_register_post_sync_op().  This is the only thing that the
+ * @see brush_sql_register_post_sync_op().  This is the only thing that the
  * sync hook function needs to do; sql-sync takes care of the rest.
  *
  * The function below has a lot of logic to process user preferences and
  * generate the correct SQL regardless of whether Postgres, Mysql,
- * Backdrop is in use. @see hook_drop_sql_sync_sanitize().
+ * Backdrop is in use. @see hook_brush_sql_sync_sanitize().
  */
-function sql_drop_sql_sync_sanitize($site) {
-  $site_settings = drop_sitealias_get_record($site);
+function sql_brush_sql_sync_sanitize($site) {
+  $site_settings = brush_sitealias_get_record($site);
   $user_table_updates = array();
   $message_list = array();
 
   // Sanitize passwords.
-  $newpassword = drop_get_option(array('sanitize-password', 'destination-sanitize-password'), 'password');
+  $newpassword = brush_get_option(array('sanitize-password', 'destination-sanitize-password'), 'password');
   if ($newpassword != 'no') {
-    $major_version = drop_backdrop_major_version();
+    $major_version = brush_backdrop_major_version();
     $pw_op = "";
 
     include_once BACKDROP_ROOT . '/core/includes/password.inc';
@@ -88,7 +88,7 @@ function sql_drop_sql_sync_sanitize($site) {
   }
 
   // Sanitize email addresses.
-  $newemail = drop_get_option(array('sanitize-email', 'destination-sanitize-email'), 'user+%uid@localhost');
+  $newemail = brush_get_option(array('sanitize-email', 'destination-sanitize-email'), 'user+%uid@localhost');
   if ($newemail != 'no') {
     if (strpos($newemail, '%') !== FALSE) {
       // We need a different sanitization query for Postgres and Mysql.
@@ -108,61 +108,61 @@ function sql_drop_sql_sync_sanitize($site) {
 
   if (!empty($user_table_updates)) {
     $sanitize_query = "update users set " . implode(', ', $user_table_updates) . " where uid > 0;";
-    drop_sql_register_post_sync_op('user-email', dt('Reset !message in user table', array('!message' => implode(' and ', $message_list))), $sanitize_query);
+    brush_sql_register_post_sync_op('user-email', dt('Reset !message in user table', array('!message' => implode(' and ', $message_list))), $sanitize_query);
   }
 
 }
 
 
-function drop_sql_sync($source = NULL, $destination = NULL) {
-  $source_settings = drop_sitealias_get_record($source);
-  $destination_settings = drop_sitealias_get_record($destination);
+function brush_sql_sync($source = NULL, $destination = NULL) {
+  $source_settings = brush_sitealias_get_record($source);
+  $destination_settings = brush_sitealias_get_record($destination);
 
   // Check to see if this is an sql-sync multiple command (multiple sources and multiple destinations)
-  $is_multiple = drop_do_multiple_command('sql-sync', $source_settings, $destination_settings);
+  $is_multiple = brush_do_multiple_command('sql-sync', $source_settings, $destination_settings);
 
   if ($is_multiple === FALSE) {
     // Evaluate the source and destination specifications into options.
     // The options from the 'source-*' and 'target-*' aliases are set
-    // in a drop context that has a lower priority than the command-line
+    // in a brush context that has a lower priority than the command-line
     // options; this allows command-line options to override the default
     // values specified in a site-alias.
-    drop_sitealias_set_alias_context($source_settings, 'source-');
-    drop_sitealias_set_alias_context($destination_settings, 'target-');
+    brush_sitealias_set_alias_context($source_settings, 'source-');
+    brush_sitealias_set_alias_context($destination_settings, 'target-');
 
     // Get the options for the source and target databases
-    $source_db_url = _drop_sql_get_spec_from_options('source-', FALSE);
+    $source_db_url = _brush_sql_get_spec_from_options('source-', FALSE);
     // The host may have special ssh requirements
-    $source_remote_ssh_options = drop_get_option('source-ssh-options');
+    $source_remote_ssh_options = brush_get_option('source-ssh-options');
     // rsync later will also have to know this option
     $source_rsync_options = array('ssh-options' => $source_remote_ssh_options);
 
-    $target_db_url = _drop_sql_get_spec_from_options('target-', FALSE);
+    $target_db_url = _brush_sql_get_spec_from_options('target-', FALSE);
     // The host may have special ssh requirements
-    $target_remote_ssh_options = drop_get_option('target-ssh-options');
+    $target_remote_ssh_options = brush_get_option('target-ssh-options');
     // rsync later will also have to know this option
     $target_rsync_options = array('ssh-options' => $target_remote_ssh_options);
 
     if (empty($source_db_url)) {
       if (empty($source_settings)) {
-        return drop_set_error('DROP_ALIAS_NOT_FOUND', dt('Error: no alias record could be found for !source', array('!source' => $source)));
+        return brush_set_error('BRUSH_ALIAS_NOT_FOUND', dt('Error: no alias record could be found for !source', array('!source' => $source)));
       }
-      return drop_set_error('DROP_DATABASE_NOT_FOUND', dt('Error: no database record could be found for !source', array('!source' => $source)));
+      return brush_set_error('BRUSH_DATABASE_NOT_FOUND', dt('Error: no database record could be found for !source', array('!source' => $source)));
     }
     if (empty($target_db_url)) {
       if (empty($destination_settings)) {
-        return drop_set_error('DROP_ALIAS_NOT_FOUND', dt('Error: no alias record could be found for !destination', array('!destination' => $destination)));
+        return brush_set_error('BRUSH_ALIAS_NOT_FOUND', dt('Error: no alias record could be found for !destination', array('!destination' => $destination)));
       }
-      return drop_set_error('DROP_DATABASE_NOT_FOUND', dt('Error: no database record could be found for !destination', array('!destination' => $destination)));
+      return brush_set_error('BRUSH_DATABASE_NOT_FOUND', dt('Error: no database record could be found for !destination', array('!destination' => $destination)));
     }
 
     // Set up the result file and the remote file.
     // If the result file is not set, then create a temporary file.
     // If the remote file is not set, use the same name for the remote
     // and local files and hope for the best.
-    $source_dump = drop_sql_dump_file($source_db_url, 'source-');
-    $target_dump = drop_sql_dump_file($target_db_url, 'target-');
-    $use_temp_files = drop_get_option('temp');
+    $source_dump = brush_sql_dump_file($source_db_url, 'source-');
+    $target_dump = brush_sql_dump_file($target_db_url, 'target-');
+    $use_temp_files = brush_get_option('temp');
     // Only use one dump file if both the source and the target are on the local machine
     if (!isset($source_db_url['remote-host']) && !isset($target_db_url['remote-host'])) {
       if ((!$target_db_url['dump-is-temp']) && ($source_db_url['dump-is-temp'])) {
@@ -191,24 +191,24 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
         $local_file = $target_dump;
       }
       else {
-        $local_file = drop_tempnam($source_db_url['database'] . ($source_db_url['database'] == $target_db_url['database'] ? '' : '-to-' . $target_db_url['database']) . '.sql.');
+        $local_file = brush_tempnam($source_db_url['database'] . ($source_db_url['database'] == $target_db_url['database'] ? '' : '-to-' . $target_db_url['database']) . '.sql.');
       }
     }
 
     // If source is remote, then use ssh to dump the database and then rsync to local machine
-    // If source is local, call drop_sql_dump to dump the database to local machine
+    // If source is local, call brush_sql_dump to dump the database to local machine
     // In either case, the '--no-dump' option will cause the sql-dump step to be skipped, and
     // we will import from the existing local file (first using rsync to fetch it if it does not exist)
     //
-    // No dump affects both local and remote sql-dumps; it prevents drop sql-sync
+    // No dump affects both local and remote sql-dumps; it prevents brush sql-sync
     // from calling sql-dump when the local cache file is newer than the cache threshhold
-    // No sync affects the remote sql-dump; it will prevent drop sql-sync from
+    // No sync affects the remote sql-dump; it will prevent brush sql-sync from
     // rsyncing the local sql-dump file with the remote sql-dump file.
-    $no_sync = drop_get_option(array('no-sync', 'source-no-sync'));
-    $no_dump = drop_get_option(array('no-dump', 'source-no-dump'));
-    $no_cache = drop_get_option(array('no-cache', 'source-no-cache'));
+    $no_sync = brush_get_option(array('no-sync', 'source-no-sync'));
+    $no_dump = brush_get_option(array('no-dump', 'source-no-dump'));
+    $no_cache = brush_get_option(array('no-cache', 'source-no-cache'));
     if (!isset($no_cache)) {
-      $cache = drop_get_option(array('cache', 'source-cache'));
+      $cache = brush_get_option(array('cache', 'source-cache'));
       if (!isset($cache)) {
         $cache = 24; // Default cache is 24 hours if nothing else is specified.
       }
@@ -218,41 +218,41 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
     if (isset($cache)) {
       if (file_exists($local_file) && (filesize($local_file) > 0)) {
         if ((time() - filemtime($local_file)) < ($cache * 60 * 60)) {
-          drop_log(dt('Modification time of local dump file !file is less than !cache hours old. Use the --no-cache option to force a refresh.', array('!file' => $local_file, '!cache' => $cache)), 'warning');
+          brush_log(dt('Modification time of local dump file !file is less than !cache hours old. Use the --no-cache option to force a refresh.', array('!file' => $local_file, '!cache' => $cache)), 'warning');
           $no_dump = TRUE;
           $no_sync = TRUE;
         }
         else {
-          drop_log(dt('Local sql cache file exists but is greater than !cache hours old.', array('!cache' => $cache)));
+          brush_log(dt('Local sql cache file exists but is greater than !cache hours old.', array('!cache' => $cache)));
         }
       }
       else {
-        drop_log('Local sql cache file does not exist.');
+        brush_log('Local sql cache file does not exist.');
       }
     }
 
     $table_selection = array();
     if (!isset($no_dump)) {
-      $table_selection = drop_sql_get_table_selection();
+      $table_selection = brush_sql_get_table_selection();
     }
 
     // Prompt for confirmation. This is destructive.
-    if (!drop_get_context('DROP_SIMULATE')) {
+    if (!brush_get_context('BRUSH_SIMULATE')) {
       // Check to see if we are using a temporary file in a situation
       // where the user did not specify "--temp".
       if (($source_db_url['dump-is-temp'] || $target_db_url['dump-is-temp']) && (!isset($use_temp_files)) && (isset($source_db_url['remote-host'])  || isset($target_db_url['remote-host']))) {
-        drop_print(dt('WARNING:  Using temporary files to store and transfer sql-dump.  It is recommended that you specify --source-dump and --target-dump options on the command line, or set \'%dump\' or \'%dump-dir\' in the path-aliases section of your site alias records. This facilitates fast file transfer via rsync.'));
+        brush_print(dt('WARNING:  Using temporary files to store and transfer sql-dump.  It is recommended that you specify --source-dump and --target-dump options on the command line, or set \'%dump\' or \'%dump-dir\' in the path-aliases section of your site alias records. This facilitates fast file transfer via rsync.'));
       }
 
       if (array_key_exists('tables', $table_selection) && (count($table_selection['tables']) > 0)) {
-        drop_print();
-        drop_print(dt('  Only the following tables will be transferred: !list', array('!list' => implode(',', $table_selection['tables']))));
+        brush_print();
+        brush_print(dt('  Only the following tables will be transferred: !list', array('!list' => implode(',', $table_selection['tables']))));
       }
       elseif (!empty($table_selection)) {
         $skip_tables_list = implode(',', $table_selection['skip'] + $table_selection['structure']);
         if(!empty($skip_tables_list)) {
-          drop_print();
-          drop_print(dt('  The following tables will be skipped: !list', array('!list' => $skip_tables_list)));
+          brush_print();
+          brush_print(dt('  The following tables will be skipped: !list', array('!list' => $skip_tables_list)));
         }
       }
 
@@ -260,17 +260,17 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
       // prompt once here and suppress the warning message
       // and the normal confirmation below.
       if (array_key_exists('site-list', $destination_settings)) {
-        drop_print();
-        drop_print(dt('You are about to sync the database from !source, overwriting all of the following targets:', array('!source' => $source)));
+        brush_print();
+        brush_print(dt('You are about to sync the database from !source, overwriting all of the following targets:', array('!source' => $source)));
         foreach ($destination_settings['site-list'] as $one_destination) {
-          drop_print(dt('  !target', array('!target' => $one_destination)));
+          brush_print(dt('  !target', array('!target' => $one_destination)));
         }
       }
       else {
-        drop_print();
+        brush_print();
         $txt_source = (isset($source_db_url['remote-host']) ? $source_db_url['remote-host'] . '/' : '') . $source_db_url['database'];
         $txt_destination = (isset($target_db_url['remote-host']) ? $target_db_url['remote-host'] . '/' : '') . $target_db_url['database'];
-        drop_print(dt("You will destroy data from !target and replace with data from !source.", array('!source' => $txt_source, '!target' => $txt_destination)));
+        brush_print(dt("You will destroy data from !target and replace with data from !source.", array('!source' => $txt_source, '!target' => $txt_destination)));
       }
 
       // If any sanitization operations are to be done, then get the
@@ -278,30 +278,30 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
       // If --sanitize was specified but there were no sanitize messages,
       // then warn that sanitization operations will be accumulated and
       // processed after the sync completes.
-      $messages = _drop_sql_get_post_sync_messages();
+      $messages = _brush_sql_get_post_sync_messages();
       if ($messages) {
-        drop_print();
-        drop_print($messages);
+        brush_print();
+        brush_print($messages);
       }
-      else if (drop_get_option('deferred-sanitization', FALSE) && !drop_get_option('confirm-sanitizations', FALSE)) {
-        drop_print();
-        drop_print("WARNING: --sanitize was specified, but deferred (e.g. the source site is remote).  The sanitization operations will be determined after the database is copied to the local system and will be run without further confirmation.  Run with --confirm-sanitizations to force confirmation after the sync.");
+      else if (brush_get_option('deferred-sanitization', FALSE) && !brush_get_option('confirm-sanitizations', FALSE)) {
+        brush_print();
+        brush_print("WARNING: --sanitize was specified, but deferred (e.g. the source site is remote).  The sanitization operations will be determined after the database is copied to the local system and will be run without further confirmation.  Run with --confirm-sanitizations to force confirmation after the sync.");
       }
 
       // TODO: actually make the backup if desired.
-      drop_print();
-      drop_print(dt("You might want to make a backup first, using the sql-dump command.\n"));
-      if (!drop_confirm(dt('Do you really want to continue?'))) {
-        return drop_user_abort();
+      brush_print();
+      brush_print(dt("You might want to make a backup first, using the sql-dump command.\n"));
+      if (!brush_confirm(dt('Do you really want to continue?'))) {
+        return brush_user_abort();
       }
     }
 
     if (isset($source_db_url['remote-host'])) {
-      $source_remote_user = drop_get_option('source-remote-user');
+      $source_remote_user = brush_get_option('source-remote-user');
       $source_at = '';
       if (isset($source_remote_user)) {
         $source_at ='@';
-        $source_remote_pass = drop_get_option('source-remote-pass') ? ':' . drop_get_option('source-remote-pass') : '';
+        $source_remote_pass = brush_get_option('source-remote-pass') ? ':' . brush_get_option('source-remote-pass') : '';
       }
 
       if (!isset($no_dump)) {
@@ -315,8 +315,8 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
           $source_intermediate = $source_dump . '-' . date("U");
           $mv_intermediate = '; mv -f ' . $source_intermediate . ' ' . $source_dump;
         }
-        drop_set_option('result-file', $source_intermediate);
-        list($dump_exec, $dump_file) = drop_sql_build_dump_command($table_selection, $source_db_url);
+        brush_set_option('result-file', $source_intermediate);
+        list($dump_exec, $dump_file) = brush_sql_build_dump_command($table_selection, $source_db_url);
         $dump_exec .= $mv_intermediate;
         if (isset($cache) && !$source_db_url['dump-is-temp']) {
           // Inject some bash commands to remotely test the modification date of the target file
@@ -328,16 +328,16 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
     }
     else {
       if (!isset($no_dump)) {
-        drop_set_option('result-file', $local_file);
-        list($dump_exec, $dump_file) = drop_sql_build_dump_command($table_selection, $source_db_url);
+        brush_set_option('result-file', $local_file);
+        list($dump_exec, $dump_file) = brush_sql_build_dump_command($table_selection, $source_db_url);
       }
       $no_sync = TRUE;
     }
 
     // Call sql-dump, either on the local machine or remotely via ssh, as appropriate.
     if (!empty($dump_exec)) {
-      if (drop_op_system($dump_exec)) {
-        return drop_set_error('DROP_SQL_DUMP_FAIL', 'Database dump failed');
+      if (brush_op_system($dump_exec)) {
+        return brush_set_error('BRUSH_SQL_DUMP_FAIL', 'Database dump failed');
       }
     }
 
@@ -345,7 +345,7 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
     if (!isset($no_sync)) {
       // If the source file is a temporary file, then we will have rsync
       // delete it for us (remove-source-files option set above).
-      if (!drop_core_call_rsync($source_remote_user . $source_at . $source_db_url['remote-host'] . ':' . $source_dump, $local_file, $source_rsync_options)) {
+      if (!brush_core_call_rsync($source_remote_user . $source_at . $source_db_url['remote-host'] . ':' . $source_dump, $local_file, $source_rsync_options)) {
         return FALSE;
       }
     }
@@ -356,13 +356,13 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
       // Insure that we will not dump the source sql database
       // repeatedly, but will instead re-use it each time through
       // the redispatch loop.
-      drop_set_option('no-dump', TRUE);
-      drop_set_option('no-sync', TRUE);
-      drop_set_option('source-dump', $source_dump);
+      brush_set_option('no-dump', TRUE);
+      brush_set_option('no-sync', TRUE);
+      brush_set_option('source-dump', $source_dump);
       // Call sql-sync for each destination to push the $source_dump
       // to each target in turn.
       foreach ($destination_settings['site-list'] as $one_destination) {
-        drop_do_command_redispatch('sql-sync', array($source, $one_destination));
+        brush_do_command_redispatch('sql-sync', array($source, $one_destination));
       }
     }
     else {
@@ -374,17 +374,17 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
       // Under postgres, "alter role username with createdb;" will give create database
       // permissions to the specified user if said user was not created with this right.
       $pre_import_commands = '';
-      $create_db = drop_get_option('create-db');
+      $create_db = brush_get_option('create-db');
       if (isset($create_db)) {
-        $create_db_su = drop_sql_su($target_db_url);
-        $db_su_connect = _drop_sql_connect($create_db_su);
-        $pre_import_sql = drop_sql_build_createdb_sql($target_db_url);
+        $create_db_su = brush_sql_su($target_db_url);
+        $db_su_connect = _brush_sql_connect($create_db_su);
+        $pre_import_sql = brush_sql_build_createdb_sql($target_db_url);
         $pre_import_commands = sprintf('echo "%s" | %s; ', $pre_import_sql, $db_su_connect);
       }
 
       // Generate the import command
-      $import_command = _drop_sql_connect($target_db_url);
-      switch (_drop_sql_get_scheme($target_db_url)) {
+      $import_command = _brush_sql_connect($target_db_url);
+      switch (_brush_sql_get_scheme($target_db_url)) {
         case 'mysql':
           $import_command .= ' --silent';
           break;
@@ -396,14 +396,14 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
       // If destination is remote, then use rsync to push the database, then use ssh to import the database
       // If destination is local, then just import the database locally
       if (isset($target_db_url['remote-host'])) {
-        $target_remote_user = drop_get_option('target-remote-user');
+        $target_remote_user = brush_get_option('target-remote-user');
         $target_at = '';
         if (isset($target_remote_user)) {
           $target_at ='@';
-          $target_remote_pass = drop_get_option('target-remote-pass') ? ':' . drop_get_option('target-remote-pass') : '';
+          $target_remote_pass = brush_get_option('target-remote-pass') ? ':' . brush_get_option('target-remote-pass') : '';
         }
 
-        if (!drop_core_call_rsync($local_file, $target_remote_user . $target_at . $target_db_url['remote-host'] . ':' . $target_dump, $target_rsync_options)) {
+        if (!brush_core_call_rsync($local_file, $target_remote_user . $target_at . $target_db_url['remote-host'] . ':' . $target_dump, $target_rsync_options)) {
           return FALSE;
         }
 
@@ -418,19 +418,19 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
         $import_exec = $pre_import_commands . $import_command . ' < ' . $local_file;
       }
 
-      drop_op_system($import_exec);
+      brush_op_system($import_exec);
 
       // After the database is imported into the destination, we
       // will check and see if we did not collect sanitization
-      // operations in drop_sql_sync_init (i.e. because the source
+      // operations in brush_sql_sync_init (i.e. because the source
       // site was remote), and if the destination site is local,
       // then we will call the sanitization hooks now.
       // This presumes an important precondition, that the code
       // files were sync'ed before the database was sync'ed.
-      if (drop_get_option('deferred-sanitization', FALSE) && (drop_has_boostrapped(DROP_BOOTSTRAP_BACKDROP_SITE) == FALSE)) {
-        $bootstrapped = drop_bootstrap_max_to_sitealias($destination_settings);
+      if (brush_get_option('deferred-sanitization', FALSE) && (brush_has_boostrapped(BRUSH_BOOTSTRAP_BACKDROP_SITE) == FALSE)) {
+        $bootstrapped = brush_bootstrap_max_to_sitealias($destination_settings);
         if ($bootstrapped) {
-          drop_command_invoke_all('drop_sql_sync_sanitize', $destination);
+          brush_command_invoke_all('brush_sql_sync_sanitize', $destination);
         }
       }
     }
@@ -441,27 +441,27 @@ function drop_sql_sync($source = NULL, $destination = NULL) {
  * Apply all post-sync operations that were registered in any pre-sync hook.
  * Follow the pattern of this function to make your own post-sync hook.
  * If changing the database, be sure to also include a pre-sync hook to
- * notify the user of the change that will be made.  @see drop_sql_pre_sql_sync().
+ * notify the user of the change that will be made.  @see brush_sql_pre_sql_sync().
  */
-function drop_sql_post_sql_sync($source = NULL, $destination = NULL) {
-  $options = drop_get_context('post-sync-ops');
+function brush_sql_post_sql_sync($source = NULL, $destination = NULL) {
+  $options = brush_get_context('post-sync-ops');
   if (!empty($options)) {
     // If 'deferred-sanitization' is set, then we collected the
     // sanitization operations -after- the database sync, which
     // means they were not confirmed up-front.  We will show the
     // operations here, but we will not offer an opportunity to
     // confirm unless --confirm-sanitizations is specified.
-    if (drop_get_option('deferred-sanitization', FALSE) || drop_get_option('confirm-sanitizations', FALSE)) {
-      if (!drop_get_context('DROP_SIMULATE')) {
-        $messages = _drop_sql_get_post_sync_messages();
+    if (brush_get_option('deferred-sanitization', FALSE) || brush_get_option('confirm-sanitizations', FALSE)) {
+      if (!brush_get_context('BRUSH_SIMULATE')) {
+        $messages = _brush_sql_get_post_sync_messages();
         if ($messages) {
-          drop_print();
-          drop_print($messages);
-          if (drop_get_option('confirm-sanitizations', FALSE)) {
-            if (!drop_confirm(dt('Do you really want to sanitize?'))) {
+          brush_print();
+          brush_print($messages);
+          if (brush_get_option('confirm-sanitizations', FALSE)) {
+            if (!brush_confirm(dt('Do you really want to sanitize?'))) {
               // Do not abort or return FALSE; that would trigger a rollback.
               // Just skip the sanitizations and signal that all is ok.
-              drop_log(dt('Sanitizations skipped.'), 'ok');
+              brush_log(dt('Sanitizations skipped.'), 'ok');
               return TRUE;
             }
           }
@@ -469,17 +469,17 @@ function drop_sql_post_sql_sync($source = NULL, $destination = NULL) {
       }
     }
 
-    $destination_settings = drop_sitealias_get_record($destination);
+    $destination_settings = brush_sitealias_get_record($destination);
     $sanitize_query = '';
     foreach($options as $id => $data) {
       $sanitize_query .= $data['query'] . " ";
     }
     if ($sanitize_query) {
-      if (!drop_get_context('DROP_SIMULATE')) {
-        $result = drop_invoke_sitealias_args($destination_settings, "sql-query", array($sanitize_query));
+      if (!brush_get_context('BRUSH_SIMULATE')) {
+        $result = brush_invoke_sitealias_args($destination_settings, "sql-query", array($sanitize_query));
       }
       else {
-        drop_print("Executing on $destination: $sanitize_query");
+        brush_print("Executing on $destination: $sanitize_query");
       }
     }
   }

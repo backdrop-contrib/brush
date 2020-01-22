@@ -1,5 +1,5 @@
 
-<h3>Core drop commands</h3>
+<h3>Core brush commands</h3>
 <table>
   <tr><td><a href="#archive-dump">archive-dump</a></td><td>Backup your code, files, and database into a single file.</td></tr>
   <tr><td><a href="#archive-restore">archive-restore</a></td><td>Expand a site archive into a Backdrop web site.</td></tr>
@@ -7,19 +7,19 @@
   <tr><td><a href="#cache-clear">cache-clear</a></td><td>Clear a specific cache, or all backdrop caches.</td></tr>
   <tr><td><a href="#cache-get">cache-get</a></td><td>Fetch a cached object and display it.</td></tr>
   <tr><td><a href="#cache-set">cache-set</a></td><td>Cache an object expressed in JSON or var_export() format.</td></tr>
-  <tr><td><a href="#core-cli">core-cli</a></td><td>Enter a new shell optimized for drop use.</td></tr>
+  <tr><td><a href="#core-cli">core-cli</a></td><td>Enter a new shell optimized for brush use.</td></tr>
   <tr><td><a href="#core-cron">core-cron</a></td><td>Run all cron hooks in all active modules for specified site.</td></tr>
   <tr><td><a href="#core-rsync">core-rsync</a></td><td>Rsync the Backdrop tree to/from another server using ssh.</td></tr>
   <tr><td><a href="#core-status">core-status</a></td><td>Provides a birds-eye view of the current Backdrop installation, if any.</td></tr>
   <tr><td><a href="#core-topic">core-topic</a></td><td>Read detailed documentation on a given topic.</td></tr>
-  <tr><td><a href="#help">help</a></td><td>Print this help message. See `drop help help` for more options.</td></tr>
+  <tr><td><a href="#help">help</a></td><td>Print this help message. See `brush help help` for more options.</td></tr>
   <tr><td><a href="#image-flush">image-flush</a></td><td>Flush all derived images for a given style.</td></tr>
   <tr><td><a href="#php-eval">php-eval</a></td><td>Evaluate arbitrary php code after bootstrapping Backdrop (if available).</td></tr>
   <tr><td><a href="#php-script">php-script</a></td><td>Run php script(s).</td></tr>
   <tr><td><a href="#search-index">search-index</a></td><td>Index the remaining search items without wiping the index.</td></tr>
   <tr><td><a href="#search-reindex">search-reindex</a></td><td>Force the search index to be rebuilt.</td></tr>
   <tr><td><a href="#search-status">search-status</a></td><td>Show how many items remain to be indexed out of the total.</td></tr>
-  <tr><td><a href="#self-update">self-update</a></td><td>Update drop to the latest version, if available.</td></tr>
+  <tr><td><a href="#self-update">self-update</a></td><td>Update brush to the latest version, if available.</td></tr>
   <tr><td><a href="#site-alias">site-alias</a></td><td>Print site alias records for all known site aliases and local sites.</td></tr>
   <tr><td><a href="#site-install">site-install</a></td><td>Install Backdrop along with modules/themes/configuration using the specified install profile.</td></tr>
   <tr><td><a href="#site-upgrade">site-upgrade</a></td><td>Run a major version upgrade for Backdrop (e.g. Backdrop 1).  A copy of the site is made, and then upgraded; the source site is not changed.</td></tr>
@@ -29,7 +29,7 @@
   <tr><td><a href="#variable-delete">variable-delete</a></td><td>Delete a variable.</td></tr>
   <tr><td><a href="#variable-get">variable-get</a></td><td>Get a list of some or all site variables and values.</td></tr>
   <tr><td><a href="#variable-set">variable-set</a></td><td>Set a variable.</td></tr>
-  <tr><td><a href="#version">version</a></td><td>Show drop version.</td></tr>
+  <tr><td><a href="#version">version</a></td><td>Show brush version.</td></tr>
   <tr><td><a href="#watchdog-delete">watchdog-delete</a></td><td>Delete watchdog messages.</td></tr>
   <tr><td><a href="#watchdog-list">watchdog-list</a></td><td>Show available message types and severity levels. A prompt will ask for a choice to show watchdog messages.</td></tr>
   <tr><td><a href="#watchdog-show">watchdog-show</a></td><td>Show watchdog messages.</td></tr>
@@ -47,7 +47,7 @@
 <h3>Project manager commands</h3>
 <table>
   <tr><td><a href="#pm-disable">pm-disable</a></td><td>Disable one or more extensions (modules or themes).</td></tr>
-  <tr><td><a href="#pm-download">pm-download</a></td><td>Download projects from backdrop.org or other sources.</td></tr>
+  <tr><td><a href="#pm-download">pm-download</a></td><td>Download projects from drupal.org or other sources.</td></tr>
   <tr><td><a href="#pm-enable">pm-enable</a></td><td>Enable one or more extensions (modules or themes).</td></tr>
   <tr><td><a href="#pm-info">pm-info</a></td><td>Show detailed info for one or more extensions (modules or themes).</td></tr>
   <tr><td><a href="#pm-list">pm-list</a></td><td>Show a list of available extensions (modules and themes).</td></tr>
@@ -81,7 +81,7 @@
   <tr><td><a href="#user-unblock">user-unblock</a></td><td>Unblock the specified user(s).</td></tr>
 </table>
 
-<h3>Global Options (see `drop topic core-global-options` for the full list)</h3><table><tr><td>-r &lt;path&gt;, --root=&lt;path&gt;</td>
+<h3>Global Options (see `brush topic core-global-options` for the full list)</h3><table><tr><td>-r &lt;path&gt;, --root=&lt;path&gt;</td>
 <td>Backdrop root directory to use (default: current directory)</td>
 </tr><tr><td>-l http://example.com:8888, --uri=http://example.com:8888</td>
 <td>URI of the backdrop site to use (only needed in multisite environments or when running on an alternate port)</td>
@@ -100,7 +100,7 @@
 </tr><tr><td>-h, --help</td>
 <td>This help system.</td>
 </tr><tr><td>--version</td>
-<td>Show drop version.</td>
+<td>Show brush version.</td>
 </tr><tr><td>--php</td>
 <td>The absolute path to your PHP intepreter, if not 'php' in the path.</td>
 </tr></table>
@@ -110,28 +110,28 @@
 Backup your code, files, and database into a single file.
 
 Examples:
- drop archive-dump                         Write an archive containing 3 sites in it.         
- default,example.com,foo.com                                                                  
- drop archive-dump @sites                  Save archive containing all sites in a multi-site. 
- drop archive-dump default                 Save archive to custom location.                   
- --destination=/backups/mysite.tar                                                            
+ brush archive-dump                         Write an archive containing 3 sites in it.
+ default,example.com,foo.com
+ brush archive-dump @sites                  Save archive containing all sites in a multi-site.
+ brush archive-dump default                 Save archive to custom location.
+ --destination=/backups/mysite.tar
 
 
 Arguments:
- targets                                   Optional. Site specifications, delimited by commas. Typically, list subdirectory name(s) under 
-                                           /sites.                                                                                        
+ targets                                   Optional. Site specifications, delimited by commas. Typically, list subdirectory name(s) under
+                                           /sites.
 
 
 Options:
- --description                             Describe the archive contents.                                                                 
- --tags                                    Add tags to the archive manifest. Delimit multiple by commas.                                  
- --destination                             The full path and filename in which the archive should be stored. If omitted, it will be saved 
-                                           to the drop-backups directory and a filename will be generated.                                
- --overwrite                               Do not fail if the destination file exists; overwrite it instead.                              
- --generator                               The generator name to store in the MANIFEST file. The default is "Drop archive-dump".          
- --generatorversion                        The generator version number to store in the MANIFEST file. The default is 1.0-dev.            
- --pipe                                    Only print the destination of the archive. Useful for scripts that don't pass --destination.   
- --preserve-symlinks                       Preserve symbolic links.                                                                       
+ --description                             Describe the archive contents.
+ --tags                                    Add tags to the archive manifest. Delimit multiple by commas.
+ --destination                             The full path and filename in which the archive should be stored. If omitted, it will be saved
+                                           to the brush-backups directory and a filename will be generated.
+ --overwrite                               Do not fail if the destination file exists; overwrite it instead.
+ --generator                               The generator name to store in the MANIFEST file. The default is "Brush archive-dump".
+ --generatorversion                        The generator version number to store in the MANIFEST file. The default is 1.0-dev.
+ --pipe                                    Only print the destination of the archive. Useful for scripts that don't pass --destination.
+ --preserve-symlinks                       Preserve symbolic links.
 
 
 Aliases: ard, archive-backup, arb
@@ -141,30 +141,30 @@ Aliases: ard, archive-backup, arb
 Expand a site archive into a Backdrop web site.
 
 Examples:
- drop archive-restore ./example.tar.gz     Restore the files and databases for all sites in the archive.                   
- drop archive-restore ./example.tar.gz     Restore the files and database for example.com site.                            
- example.com                                                                                                               
- drop archive-restore ./example.tar.gz     Restore archive to a custom location.                                           
- --destination=/var/www/example.com/docro                                                                                  
- ot                                                                                                                        
- drop archive-restore ./example.tar.gz     Restore archive to a new database (and customize settings.php to point there.). 
- --db-url=mysql://root:pass@127.0.0.1/dbn                                                                                  
- ame                                                                                                                       
+ brush archive-restore ./example.tar.gz     Restore the files and databases for all sites in the archive.
+ brush archive-restore ./example.tar.gz     Restore the files and database for example.com site.
+ example.com
+ brush archive-restore ./example.tar.gz     Restore archive to a custom location.
+ --destination=/var/www/example.com/docro
+ ot
+ brush archive-restore ./example.tar.gz     Restore archive to a new database (and customize settings.php to point there.).
+ --db-url=mysql://root:pass@127.0.0.1/dbn
+ ame
 
 
 Arguments:
- file                                      The site archive file that should be expanded.                                
- site name                                 Optional. Which site within the archive you want to restore. Defaults to all. 
+ file                                      The site archive file that should be expanded.
+ site name                                 Optional. Which site within the archive you want to restore. Defaults to all.
 
 
 Options:
- --destination                             Specify where the Backdrop site should be expanded. Defaults to the current working directory. 
- --db-prefix                               An optional table prefix to use during restore.                                                
- --db-url                                  A database URL indicating the target for database restore. If not provided, the archived       
-                                           settings.php is used.                                                                          
- --db-su                                   Account to use when creating the new database. Optional.                                       
- --db-su-pw                                Password for the "db-su" account. Optional.                                                    
- --overwrite                               Allow drop to overwrite any files in the destinion.                                            
+ --destination                             Specify where the Backdrop site should be expanded. Defaults to the current working directory.
+ --db-prefix                               An optional table prefix to use during restore.
+ --db-url                                  A database URL indicating the target for database restore. If not provided, the archived
+                                           settings.php is used.
+ --db-su                                   Account to use when creating the new database. Optional.
+ --db-su-pw                                Password for the "db-su" account. Optional.
+ --overwrite                               Allow brush to overwrite any files in the destinion.
 
 
 Aliases: arr
@@ -176,22 +176,22 @@ to use this command directly, you usually want to prefix the command with cd and
 below.
 
 Examples:
- cd `drop bd devel`                        Navigate into the devel module directory                            
- cd `drop bd`                              Navigate to the root of your Backdrop site                          
- cd `drop bd files`                        Navigate to the files directory.                                    
- drop bd @alias:%files                     Print the path to the files directory on the site @alias.           
- edit `drop dd devel`/devel.module         Open devel module in your editor (customize 'edit' for your editor) 
+ cd `brush bd devel`                        Navigate into the devel module directory
+ cd `brush bd`                              Navigate to the root of your Backdrop site
+ cd `brush bd files`                        Navigate to the files directory.
+ brush bd @alias:%files                     Print the path to the files directory on the site @alias.
+ edit `brush dd devel`/devel.module         Open devel module in your editor (customize 'edit' for your editor)
 
 
 Arguments:
- target                                    A module/theme name, or special names like root, files, private, or an alias : path alias string 
-                                           such as @alias:%files. Defaults to root.                                                         
+ target                                    A module/theme name, or special names like root, files, private, or an alias : path alias string
+                                           such as @alias:%files. Defaults to root.
 
 
 Options:
- --component                               The portion of the evaluated path to return.  Defaults to 'path'; 'name' returns the site alias 
-                                           of the target.                                                                                  
- --local                                   Reject any target that specifies a remote site.                                                 
+ --component                               The portion of the evaluated path to return.  Defaults to 'path'; 'name' returns the site alias
+                                           of the target.
+ --local                                   Reject any target that specifies a remote site.
 
 
 Aliases: bd
@@ -201,7 +201,7 @@ Aliases: bd
 Clear a specific cache, or all backdrop caches.
 
 Arguments:
- type                                      The particular cache to clear. Omit this argument to choose from available caches. 
+ type                                      The particular cache to clear. Omit this argument to choose from available caches.
 
 
 Aliases: cc
@@ -211,19 +211,19 @@ Aliases: cc
 Fetch a cached object and display it.
 
 Examples:
- drop cache-get schema                     Display the data for the cache id "schema" from the "cache" bin.                     
- drop cache-get update_available_releases  Display the data for the cache id "update_available_releases" from the "update" bin. 
- update                                                                                                                         
+ brush cache-get schema                     Display the data for the cache id "schema" from the "cache" bin.
+ brush cache-get update_available_releases  Display the data for the cache id "update_available_releases" from the "update" bin.
+ update
 
 
 Arguments:
- cid                                       The id of the object to fetch.         
- bin                                       Optional. The cache bin to fetch from. 
+ cid                                       The id of the object to fetch.
+ bin                                       Optional. The cache bin to fetch from.
 
 
 Options:
- --format                                  Format to output the object. Use "print_r" for print_r (default), "export" for var_export, and 
-                                           "json" for JSON.                                                                               
+ --format                                  Format to output the object. Use "print_r" for print_r (default), "export" for var_export, and
+                                           "json" for JSON.
 
 
 Aliases: cg
@@ -233,48 +233,48 @@ Aliases: cg
 Cache an object expressed in JSON or var_export() format.
 
 Arguments:
- cid                                       The id of the object to set.                                           
- data                                      The object to set in the cache. Use '-' to read the object from STDIN. 
- bin                                       Optional. The cache bin to store the object in.                        
- expire                                    Optional. CACHE_PERMANENT, CACHE_TEMPORARY, or a Unix timestamp.       
+ cid                                       The id of the object to set.
+ data                                      The object to set in the cache. Use '-' to read the object from STDIN.
+ bin                                       Optional. The cache bin to store the object in.
+ expire                                    Optional. CACHE_PERMANENT, CACHE_TEMPORARY, or a Unix timestamp.
 
 
 Options:
- --format                                  Format to parse the object. Use "string" for string (default), and "json" for JSON.             
- --cache-get                               If the object is the result a previous fetch from the cache, only store the value in the "data" 
-                                           property of the object in the cache.                                                            
+ --format                                  Format to parse the object. Use "string" for string (default), and "json" for JSON.
+ --cache-get                               If the object is the result a previous fetch from the cache, only store the value in the "data"
+                                           property of the object in the cache.
 
 
 Aliases: cs
 </pre></dd>
 
 <a name="core-cli"></a><dt>core-cli</dt><dd><pre>
-Enter a new shell optimized for drop use. All .bashrc customizations are still available.
+Enter a new shell optimized for brush use. All .bashrc customizations are still available.
 
 Examples:
- help                                      Print available drop commands                                                                    
- cd @alias                                 Navigate to the root of the site indicated by @alias; subsequent commands will target that site. 
- cd %files                                 Navigate to the files directory.                                                                 
- cd ~                                      Navigate back to your $HOME directory.                                                           
- lsd files                                 List all files in the Backdrop files directory.                                                  
- on @alias core-status                     Run the command "core-status" on the site indicated by @alias                                    
- @alias core-status                        An even shorter form that also runs "core-status" on the site @alias                             
- use @alias                                Run subsequent commands on the site indicated by @alias                                          
- use -                                     Switch back to the last alias "used".                                                            
- use ~                                     Use the default alias.                                                                           
- use                                       Revert to an ordinary prompt; do not use an alias.                                               
- drop core-cli --pipe > ~/.bash_aliases    Convert your default shell into drop core-cli.  Make sure that your .bashrc file includes        
-                                           .bash_aliases (e.g. "source ~/.bash_aliases" or ". ~/.bash_aliases").                            
+ help                                      Print available brush commands
+ cd @alias                                 Navigate to the root of the site indicated by @alias; subsequent commands will target that site.
+ cd %files                                 Navigate to the files directory.
+ cd ~                                      Navigate back to your $HOME directory.
+ lsd files                                 List all files in the Backdrop files directory.
+ on @alias core-status                     Run the command "core-status" on the site indicated by @alias
+ @alias core-status                        An even shorter form that also runs "core-status" on the site @alias
+ use @alias                                Run subsequent commands on the site indicated by @alias
+ use -                                     Switch back to the last alias "used".
+ use ~                                     Use the default alias.
+ use                                       Revert to an ordinary prompt; do not use an alias.
+ brush core-cli --pipe > ~/.bash_aliases    Convert your default shell into brush core-cli.  Make sure that your .bashrc file includes
+                                           .bash_aliases (e.g. "source ~/.bash_aliases" or ". ~/.bash_aliases").
 
 
 Options:
- --override                                List of drop commands or aliases that should override built-in shell functions and commands;     
-                                           otherwise, built-ins override drop commands. Defaults to dd,help,sa.                             
- --contextual                              Additional drop overrides that function ONLY when the prompt is "@alias>".  Defaults to          
-                                           cc,cron,rsync,status,sync,updatedb.                                                              
- --ignore                                  Drop commands or aliases that should not be usable from core-cli. Takes precedence over override 
-                                           and contextual options. Defaults to core-cli,cli.                                                
- --pipe                                    Print the generated .bashrc file and exit.                                                       
+ --override                                List of brush commands or aliases that should override built-in shell functions and commands;
+                                           otherwise, built-ins override brush commands. Defaults to dd,help,sa.
+ --contextual                              Additional brush overrides that function ONLY when the prompt is "@alias>".  Defaults to
+                                           cc,cron,rsync,status,sync,updatedb.
+ --ignore                                  Brush commands or aliases that should not be usable from core-cli. Takes precedence over override
+                                           and contextual options. Defaults to core-cli,cli.
+ --pipe                                    Print the generated .bashrc file and exit.
 
 
 Aliases: cli
@@ -290,29 +290,29 @@ Aliases: cron
 Rsync the Backdrop tree to/from another server using ssh.
 
 Examples:
- drop rsync @dev @stage                    Rsync Backdrop root from dev to stage (one of which must be local).                           
- drop rsync ./ @stage:%files/img           Rsync all files in the current directory to the 'img' directory in the file storage folder on 
-                                           stage.                                                                                        
+ brush rsync @dev @stage                    Rsync Backdrop root from dev to stage (one of which must be local).
+ brush rsync ./ @stage:%files/img           Rsync all files in the current directory to the 'img' directory in the file storage folder on
+                                           stage.
 
 
 Arguments:
- source                                    May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php. 
- destination                               May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php. 
+ source                                    May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php.
+ destination                               May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php.
 
 
 Options:
- --mode                                    The unary flags to pass to rsync; --mode=rultz implies rsync -rultz.  Default is -az.           
- --RSYNC-FLAG                              Most rsync flags passed to drop sync will be passed on to rsync.  See rsync documentation.      
- --exclude-conf                            Excludes settings.php from being rsynced.  Default.                                             
- --include-conf                            Allow settings.php to be rsynced. Default is to exclude settings.php.                           
- --include-vcs                             Include special version control directories (e.g. .svn).  Default is to exclude vcs files.      
- --exclude-files                           Exclude the files directory.                                                                    
- --exclude-sites                           Exclude all directories in "sites/" except for "sites/all".                                     
- --exclude-other-sites                     Exclude all directories in "sites/" except for "sites/all" and the site directory for the site  
-                                           being synced.  Note: if the site directory is different between the source and destination, use 
-                                           --exclude-sites followed by "drop rsync @from:%site @to:%site"                                  
- --exclude-paths                           List of paths to exclude, seperated by : (Unix-based systems) or ; (Windows).                   
- --include-paths                           List of paths to include, seperated by : (Unix-based systems) or ; (Windows).                   
+ --mode                                    The unary flags to pass to rsync; --mode=rultz implies rsync -rultz.  Default is -az.
+ --RSYNC-FLAG                              Most rsync flags passed to brush sync will be passed on to rsync.  See rsync documentation.
+ --exclude-conf                            Excludes settings.php from being rsynced.  Default.
+ --include-conf                            Allow settings.php to be rsynced. Default is to exclude settings.php.
+ --include-vcs                             Include special version control directories (e.g. .svn).  Default is to exclude vcs files.
+ --exclude-files                           Exclude the files directory.
+ --exclude-sites                           Exclude all directories in "sites/" except for "sites/all".
+ --exclude-other-sites                     Exclude all directories in "sites/" except for "sites/all" and the site directory for the site
+                                           being synced.  Note: if the site directory is different between the source and destination, use
+                                           --exclude-sites followed by "brush rsync @from:%site @to:%site"
+ --exclude-paths                           List of paths to exclude, seperated by : (Unix-based systems) or ; (Windows).
+ --include-paths                           List of paths to include, seperated by : (Unix-based systems) or ; (Windows).
 
 
 Aliases: rsync
@@ -322,17 +322,17 @@ Aliases: rsync
 Provides a birds-eye view of the current Backdrop installation, if any.
 
 Examples:
- drop status version                       Show all status lines that contain version information. 
- drop status --pipe                        A list key=value items separated by line breaks.        
- drop status drop-version --pipe           Emit just the drop version with no label.               
+ brush status version                       Show all status lines that contain version information.
+ brush status --pipe                        A list key=value items separated by line breaks.
+ brush status brush-version --pipe           Emit just the brush version with no label.
 
 
 Arguments:
- item                                      Optional.  The status item line(s) to display. 
+ item                                      Optional.  The status item line(s) to display.
 
 
 Options:
- --show-passwords                          Show database password. 
+ --show-passwords                          Show database password.
 
 
 Aliases: status, st
@@ -342,36 +342,36 @@ Aliases: status, st
 Read detailed documentation on a given topic.
 
 Examples:
- drop topic                                Show all available topics.                  
- drop topic docs-context                   Show documentation for the drop context API 
- drop docs-context                         Show documentation for the drop context API 
+ brush topic                                Show all available topics.
+ brush topic docs-context                   Show documentation for the brush context API
+ brush docs-context                         Show documentation for the brush context API
 
 
 Arguments:
- topic name                                The name of the topic you wish to view. If omitted, list all topic descriptions (and names in 
-                                           parenthesis).                                                                                 
+ topic name                                The name of the topic you wish to view. If omitted, list all topic descriptions (and names in
+                                           parenthesis).
 
 
 Aliases: topic
 </pre></dd>
 
 <a name="help"></a><dt>help</dt><dd><pre>
-Drop provides an extensive help system that describes both drop commands and topics of general interest.  Use `drop help --filter` to
-present a list of command categories to view, and `drop topic` for a list of topics that go more in-depth on how to use and extend drop.
+Brush provides an extensive help system that describes both brush commands and topics of general interest.  Use `brush help --filter` to
+present a list of command categories to view, and `brush topic` for a list of topics that go more in-depth on how to use and extend brush.
 
 Examples:
- drop                                      List all commands.                                    
- drop --filter=devel_generate              Show only commands defined in devel_generate.drop.inc 
- drop help pm-download                     Show help for one command.                            
- drop help dl                              Show help for one command using an alias.             
+ brush                                      List all commands.
+ brush --filter=devel_generate              Show only commands defined in devel_generate.brush.inc
+ brush help pm-download                     Show help for one command.
+ brush help dl                              Show help for one command using an alias.
 
 
 Options:
- --sort                                    Sort commands in alphabetical order. drop waits for full bootstrap before printing any commands 
-                                           when this option is used.                                                                       
- --filter                                  Restrict command list to those commands defined in the specified file.                          
- --html                                    Print help for all commands in HTML format.                                                     
- --pipe                                    A list of available commands, one per line.                                                     
+ --sort                                    Sort commands in alphabetical order. brush waits for full bootstrap before printing any commands
+                                           when this option is used.
+ --filter                                  Restrict command list to those commands defined in the specified file.
+ --html                                    Print help for all commands in HTML format.
+ --pipe                                    A list of available commands, one per line.
 
 
 </pre></dd>
@@ -380,17 +380,17 @@ Options:
 Flush all derived images for a given style.
 
 Examples:
- drop image-flush                          Pick an image style and then delete its images.                
- drop image-flush thumbnail                Delete all thumbnail images.                                   
- drop image-flush --all                    Flush all derived images. They will be regenerated on the fly. 
+ brush image-flush                          Pick an image style and then delete its images.
+ brush image-flush thumbnail                Delete all thumbnail images.
+ brush image-flush --all                    Flush all derived images. They will be regenerated on the fly.
 
 
 Arguments:
- style                                     An image style machine name. If not provided, user may choose from a list of names. 
+ style                                     An image style machine name. If not provided, user may choose from a list of names.
 
 
 Options:
- --all                                     Flush all derived images 
+ --all                                     Flush all derived images
 
 
 </pre></dd>
@@ -399,12 +399,12 @@ Options:
 Evaluate arbitrary php code after bootstrapping Backdrop (if available).
 
 Examples:
- drop php-eval "variable_set('hello',  Sets the hello variable using Backdrop API. 
- 'world');"                                                                        
+ brush php-eval "variable_set('hello',  Sets the hello variable using Backdrop API.
+ 'world');"
 
 
 Arguments:
- code                                      PHP code 
+ code                                      PHP code
 
 
 Aliases: eval, ev
@@ -412,31 +412,31 @@ Aliases: eval, ev
 
 <a name="php-script"></a><dt>php-script</dt><dd><pre>
 Runs the given php script(s) after a full Backdrop bootstrap. A useful alternative to eval command when your php is lengthy or you can't be
-bothered to figure out bash quoting. If you plan to share a script with others, consider making a full drop command instead, since that's
-more self-documenting.  Drop provides commandline options to the script via drop_get_option('option-name'), and commandline arguments can be
-accessed either via drop_get_arguments(), which returns all arguments in an array, or drop_shift(), which removes the next argument from the
+bothered to figure out bash quoting. If you plan to share a script with others, consider making a full brush command instead, since that's
+more self-documenting.  Brush provides commandline options to the script via brush_get_option('option-name'), and commandline arguments can be
+accessed either via brush_get_arguments(), which returns all arguments in an array, or brush_shift(), which removes the next argument from the
 list and returns it.
 
 Examples:
- drop php-script scratch                   Run scratch.php script. See commands/core directory.                          
- drop php-script example                   Run script from specified paths                                               
- --script-path=/path/to/scripts:/another/                                                                                
- path                                                                                                                    
- drop php-script                           List all available scripts.                                                   
-                                                                                                                         
- #!/usr/bin/env drop                       Execute php code with a full Backdrop bootstrap directly from a shell script. 
- <?php                                                                                                                   
- variable_set('key', drop_shift());                                                                                      
+ brush php-script scratch                   Run scratch.php script. See commands/core directory.
+ brush php-script example                   Run script from specified paths
+ --script-path=/path/to/scripts:/another/
+ path
+ brush php-script                           List all available scripts.
+
+ #!/usr/bin/env brush                       Execute php code with a full Backdrop bootstrap directly from a shell script.
+ <?php
+ variable_set('key', brush_shift());
 
 
 Arguments:
- filename                                  Optional. The file you wish to execute (without extension). If omitted, list files ending in 
-                                           .php in the current working directory and specified script-path. Some might not be real drop 
-                                           scripts. Beware.                                                                             
+ filename                                  Optional. The file you wish to execute (without extension). If omitted, list files ending in
+                                           .php in the current working directory and specified script-path. Some might not be real brush
+                                           scripts. Beware.
 
 
 Options:
- --script-path                             Additional paths to search for scripts, separated by : (Unix-based systems) or ; (Windows). 
+ --script-path                             Additional paths to search for scripts, separated by : (Unix-based systems) or ; (Windows).
 
 
 Aliases: scr
@@ -451,7 +451,7 @@ Index the remaining search items without wiping the index.
 Force the search index to be rebuilt.
 
 Options:
- --immediate                               Rebuild the index immediately, instead of waiting for cron. 
+ --immediate                               Rebuild the index immediately, instead of waiting for cron.
 
 
 </pre></dd>
@@ -460,16 +460,16 @@ Options:
 Show how many items remain to be indexed out of the total.
 
 Options:
- --pipe                                    Display in the format remaining/total for processing by scripts. 
+ --pipe                                    Display in the format remaining/total for processing by scripts.
 
 
 </pre></dd>
 
 <a name="self-update"></a><dt>self-update</dt><dd><pre>
-Update drop to the latest version, if available.
+Update brush to the latest version, if available.
 
 Options:
- --dev                                     Allow updates to latest dev release. 
+ --dev                                     Allow updates to latest dev release.
 
 
 Aliases: selfupdate
@@ -479,24 +479,24 @@ Aliases: selfupdate
 Print an alias record.
 
 Examples:
- drop site-alias                           List all alias records known to drop.      
- drop site-alias @dev                      Print an alias record for the alias 'dev'. 
+ brush site-alias                           List all alias records known to brush.
+ brush site-alias @dev                      Print an alias record for the alias 'dev'.
 
 
 Arguments:
- site                                      Site specification alias to print 
+ site                                      Site specification alias to print
 
 
 Options:
- --full                                    Print the full alias record for each site.  Default when aliases are specified on the command 
-                                           line.                                                                                         
- --component                               Print only the specified element from the full alias record.                                  
- --short                                   Print only the site alias name.  Default when not command line arguments are specified.       
- --pipe                                    Print the long-form site specification for each site.                                         
- --with-db                                 Include the databases structure in the full alias record.                                     
- --with-db-url                             Include the short-form db-url in the full alias record.                                       
- --no-db                                   Do not include the database record in the full alias record (default).                        
- --with-optional                           Include optional default items.                                                               
+ --full                                    Print the full alias record for each site.  Default when aliases are specified on the command
+                                           line.
+ --component                               Print only the specified element from the full alias record.
+ --short                                   Print only the site alias name.  Default when not command line arguments are specified.
+ --pipe                                    Print the long-form site specification for each site.
+ --with-db                                 Include the databases structure in the full alias record.
+ --with-db-url                             Include the short-form db-url in the full alias record.
+ --no-db                                   Do not include the database record in the full alias record (default).
+ --with-optional                           Include optional default items.
 
 
 Aliases: sa
@@ -506,43 +506,43 @@ Aliases: sa
 Install Backdrop along with modules/themes/configuration using the specified install profile.
 
 Examples:
- drop site-install expert --locale=uk      (Re)install using the expert install profile. Set default language to Ukranian. 
- drop site-install                         Install using the specified DB params.                                          
- --db-url=mysql://root:pass@localhost:por                                                                                  
- t/dbname                                                                                                                  
- drop site-install                         Install using SQLite (D7 only).                                                 
- --db-url=sqlite:/full/path/to/database.s                                                                                  
- qlite                                                                                                                     
- drop site-install --account-name=joe      Re-install with specified uid1 credentials.                                     
- --account-pass=mom                                                                                                        
- drop site-install standard                Pass additional arguments to the profile (D7 only).                             
- install_configure_form.site_default_coun                                                                                  
- try=FR                                                                                                                    
- my_profile_form.my_settings.key=value                                                                                     
+ brush site-install expert --locale=uk      (Re)install using the expert install profile. Set default language to Ukranian.
+ brush site-install                         Install using the specified DB params.
+ --db-url=mysql://root:pass@localhost:por
+ t/dbname
+ brush site-install                         Install using SQLite (D7 only).
+ --db-url=sqlite:/full/path/to/database.s
+ qlite
+ brush site-install --account-name=joe      Re-install with specified uid1 credentials.
+ --account-pass=mom
+ brush site-install standard                Pass additional arguments to the profile (D7 only).
+ install_configure_form.site_default_coun
+ try=FR
+ my_profile_form.my_settings.key=value
 
 
 Arguments:
- profile                                   the install profile you wish to run. defaults to 'default' in D6, 'standard' in D7             
- key=value...                              any additional settings you wish to pass to the profile. Only support on D7. The key is in the 
-                                           form [form name].[parameter name].                                                             
+ profile                                   the install profile you wish to run. defaults to 'default' in D6, 'standard' in D7
+ key=value...                              any additional settings you wish to pass to the profile. Only support on D7. The key is in the
+                                           form [form name].[parameter name].
 
 
 Options:
- --account-name                            uid1 name. defaults to admin                                                                    
- --account-pass                            uid1 pass. defaults to admin                                                                    
- --account-mail                            uid1 email. defaults to admin@example.com                                                       
- --db-url                                  A Backdrop 5/6 style database URL. Only required for initial install - not re-install.          
- --db-prefix                               An optional table prefix to use for initial install.  Can be a key-value array of               
-                                           tables/prefixes in a droprc file (not the command line).                                        
- --db-su                                   Account to use when creating a new database. Optional.                                          
- --db-su-pw                                Password for the "db-su" account. Optional.                                                     
- --locale                                  A short language code. Sets the default site language. Language files must already be present.  
-                                           You may use download command to get them.                                                       
- --clean-url                               Defaults to 1                                                                                   
- --site-name                               Defaults to Site-Install                                                                        
- --site-mail                               From: for system mailings. Defaults to admin@example.com                                        
- --sites-subdir                            Name of directory under 'sites' which should be created. Only needed when the subdirectory does 
-                                           not already exist. Defaults to 'default'                                                        
+ --account-name                            uid1 name. defaults to admin
+ --account-pass                            uid1 pass. defaults to admin
+ --account-mail                            uid1 email. defaults to admin@example.com
+ --db-url                                  A Backdrop 5/6 style database URL. Only required for initial install - not re-install.
+ --db-prefix                               An optional table prefix to use for initial install.  Can be a key-value array of
+                                           tables/prefixes in a droprc file (not the command line).
+ --db-su                                   Account to use when creating a new database. Optional.
+ --db-su-pw                                Password for the "db-su" account. Optional.
+ --locale                                  A short language code. Sets the default site language. Language files must already be present.
+                                           You may use download command to get them.
+ --clean-url                               Defaults to 1
+ --site-name                               Defaults to Site-Install
+ --site-mail                               From: for system mailings. Defaults to admin@example.com
+ --sites-subdir                            Name of directory under 'sites' which should be created. Only needed when the subdirectory does
+                                           not already exist. Defaults to 'default'
 
 
 Aliases: si
@@ -556,29 +556,29 @@ resulting site. Run this command from within your source site (D6). Note that th
 options for those commands are valid here too.
 
 Examples:
- drop site-upgrade @onward                 Upgrade from the current site to the site specified by @onward alias. 
+ brush site-upgrade @onward                 Upgrade from the current site to the site specified by @onward alias.
 
 
 Arguments:
- target                                    The name of a sitealias, which points to the destination site. 'root' and 'uri' keys are    
-                                           required; db-url is recommended. See examples/aliases.droprc.php for more information about 
-                                           creating a site alias.                                                                      
+ target                                    The name of a sitealias, which points to the destination site. 'root' and 'uri' keys are
+                                           required; db-url is recommended. See examples/aliases.droprc.php for more information about
+                                           creating a site alias.
 
 
 Options:
- --structure-tables-key                    A key in the structure-tables array. @see example.droprc.php. Defaults to 'common'.              
- --source-dump                             Path to dump file. Medium or large sized sites should set this. Optional; default is to create a 
-                                           temporary file.                                                                                  
- --db-su                                   DB username to use when dropping and creating the target database. Optional.                     
- --db-su-pw                                DB password to use when dropping and creating the target database. Optional.                     
- --no-cache                                Transfer a fresh database from source site. Otherwise, DB dump is re-used for 24 hours.          
- --core-only                               Stop after upgrading Backdrop core; do not download and enable new versions of the site's        
-                                           modules.                                                                                         
- --force-sites-default                     Forces settings.php to be written in sites/default folder, even if source settings.php is not.   
- --replace                                 Replace target if it already exists.  Default is to prompt.                                      
- --reuse                                   Reuse target if it already exists.  Default is to prompt.                                        
- --uninstall                               Comma-separated list of modules to uninstall in the target database prior to upgrade.  n.b. The  
-                                           source site is not affected.                                                                     
+ --structure-tables-key                    A key in the structure-tables array. @see example.droprc.php. Defaults to 'common'.
+ --source-dump                             Path to dump file. Medium or large sized sites should set this. Optional; default is to create a
+                                           temporary file.
+ --db-su                                   DB username to use when dropping and creating the target database. Optional.
+ --db-su-pw                                DB password to use when dropping and creating the target database. Optional.
+ --no-cache                                Transfer a fresh database from source site. Otherwise, DB dump is re-used for 24 hours.
+ --core-only                               Stop after upgrading Backdrop core; do not download and enable new versions of the site's
+                                           modules.
+ --force-sites-default                     Forces settings.php to be written in sites/default folder, even if source settings.php is not.
+ --replace                                 Replace target if it already exists.  Default is to prompt.
+ --reuse                                   Reuse target if it already exists.  Default is to prompt.
+ --uninstall                               Comma-separated list of modules to uninstall in the target database prior to upgrade.  n.b. The
+                                           source site is not affected.
 
 
 Aliases: sup
@@ -593,29 +593,29 @@ Clean temporary tables and files.
 Run tests. Note that you must use the --uri option.
 
 Examples:
- test-run                                  List all available classes and groups.                                                    
- sudo -u apache test-run --all             Run all available tests. Avoid permission related failures by running as web server user. 
- test-run XMLRPCBasicTestCase              Run one test class.                                                                       
- test-run XML-RPC                          Run all classes in a XML-RPC group.                                                       
- test-run XML-RPC,Filter                   Run all tests from multiple groups/classes.                                               
- test-run XMLRPCBasicTestCase              Run particular methods in the specified class or group.                                   
- --methods="testListMethods,                                                                                                         
- testInvalidMessageParsing"                                                                                                          
+ test-run                                  List all available classes and groups.
+ sudo -u apache test-run --all             Run all available tests. Avoid permission related failures by running as web server user.
+ test-run XMLRPCBasicTestCase              Run one test class.
+ test-run XML-RPC                          Run all classes in a XML-RPC group.
+ test-run XML-RPC,Filter                   Run all tests from multiple groups/classes.
+ test-run XMLRPCBasicTestCase              Run particular methods in the specified class or group.
+ --methods="testListMethods,
+ testInvalidMessageParsing"
 
 
 Arguments:
- targets                                   A test class, a test group. If omitted, a list of test classes and test groups is presented. 
-                                           Delimit multiple targets using commas.                                                       
+ targets                                   A test class, a test group. If omitted, a list of test classes and test groups is presented.
+                                           Delimit multiple targets using commas.
 
 
 Options:
- --all                                     Run all available tests                                                                     
- --methods                                 A comma delimited list of methods that should be run within the test class. Defaults to all 
-                                           methods.                                                                                    
- --dirty                                   Skip cleanup of temporary tables and files. Helpful for reading debug() messages and other  
-                                           post-mortem forensics.                                                                      
- --xml                                     Output verbose test results to a specified directory using the JUnit test reporting format. 
-                                           Useful for integrating with Jenkins.                                                        
+ --all                                     Run all available tests
+ --methods                                 A comma delimited list of methods that should be run within the test class. Defaults to all
+                                           methods.
+ --dirty                                   Skip cleanup of temporary tables and files. Helpful for reading debug() messages and other
+                                           post-mortem forensics.
+ --xml                                     Output verbose test results to a specified directory using the JUnit test reporting format.
+                                           Useful for integrating with Jenkins.
 
 
 </pre></dd>
@@ -630,16 +630,16 @@ Aliases: updb
 Delete a variable.
 
 Examples:
- drop vdel user_pictures                   Delete the user_pictures variable.                            
- drop vdel u                               Choose from a list of variables beginning with "u" to delete. 
+ brush vdel user_pictures                   Delete the user_pictures variable.
+ brush vdel u                               Choose from a list of variables beginning with "u" to delete.
 
 
 Arguments:
- name                                      The name of a variable or the first few letters of its name. 
+ name                                      The name of a variable or the first few letters of its name.
 
 
 Options:
- --yes                                     Skip confirmation if only one variable name matches. 
+ --yes                                     Skip confirmation if only one variable name matches.
 
 
 Aliases: vdel
@@ -649,16 +649,16 @@ Aliases: vdel
 Get a list of some or all site variables and values.
 
 Examples:
- drop vget                                 List all variables and values.                       
- drop vget user                            List all variables beginning with the string "user". 
+ brush vget                                 List all variables and values.
+ brush vget user                            List all variables beginning with the string "user".
 
 
 Arguments:
- name                                      A string to filter the variables by.  Only variables beginning with the string will be listed. 
+ name                                      A string to filter the variables by.  Only variables beginning with the string will be listed.
 
 
 Options:
- --pipe                                    Use var_export() to emit executable PHP. Useful for pasting into code. 
+ --pipe                                    Use var_export() to emit executable PHP. Useful for pasting into code.
 
 
 Aliases: vget
@@ -668,30 +668,30 @@ Aliases: vget
 Set a variable.
 
 Examples:
- drop vset --yes preprocess_css 1          Set the preprocess_css variable to true. Skip confirmation if variable already exists.  
- drop vset --always-set site_offline 1     Take the site offline; Skips confirmation even if site_offline variable does not exist. 
- drop vset pr 1                            Choose from a list of variables beginning with "pr" to set to true.                     
+ brush vset --yes preprocess_css 1          Set the preprocess_css variable to true. Skip confirmation if variable already exists.
+ brush vset --always-set site_offline 1     Take the site offline; Skips confirmation even if site_offline variable does not exist.
+ brush vset pr 1                            Choose from a list of variables beginning with "pr" to set to true.
 
 
 Arguments:
- name                                      The name of a variable or the first few letters of its name. 
- value                                     The value to assign to the variable.                         
+ name                                      The name of a variable or the first few letters of its name.
+ value                                     The value to assign to the variable.
 
 
 Options:
- --yes                                     Skip confirmation if only one variable name matches. 
- --always-set                              Always skip confirmation.                            
+ --yes                                     Skip confirmation if only one variable name matches.
+ --always-set                              Always skip confirmation.
 
 
 Aliases: vset
 </pre></dd>
 
 <a name="version"></a><dt>version</dt><dd><pre>
-Show drop version.
+Show brush version.
 
 Options:
- --pipe                                    Print just the version number, and nothing else.                   
- --self-update                             Check for pending updates to drop itself. Set to 0 to avoid check. 
+ --pipe                                    Print just the version number, and nothing else.
+ --self-update                             Check for pending updates to brush itself. Set to 0 to avoid check.
 
 
 </pre></dd>
@@ -700,17 +700,17 @@ Options:
 Delete watchdog messages. Arguments or options must be provided to specify which messages to delete.
 
 Examples:
- drop watchdog-delete all                  Delete all messages.                                        
- drop watchdog-delete 64                   Delete messages with id 64.                                 
- drop watchdog-delete "cron run            Delete messages containing the string "cron run succesful". 
- succesful"                                                                                            
- drop watchdog-delete --severity=notice    Delete all messages with a severity of notice.              
- drop watchdog-delete --type=cron          Delete all messages of type cron.                           
+ brush watchdog-delete all                  Delete all messages.
+ brush watchdog-delete 64                   Delete messages with id 64.
+ brush watchdog-delete "cron run            Delete messages containing the string "cron run succesful".
+ succesful"
+ brush watchdog-delete --severity=notice    Delete all messages with a severity of notice.
+ brush watchdog-delete --type=cron          Delete all messages of type cron.
 
 
 Arguments:
- severity                                  Delete messages of a given severity level. 
- type                                      Delete messages of a given type.           
+ severity                                  Delete messages of a given severity level.
+ type                                      Delete messages of a given type.
 
 
 Aliases: wd-del, wd-delete
@@ -726,32 +726,32 @@ Aliases: wd-list
 Show watchdog messages. Arguments and options can be combined to configure which messages to show.
 
 Examples:
- drop watchdog-show                        Show a listing of most recent 10 messages.                                                      
- drop watchdog-show 64                     Show in detail message with id 64.                                                              
- drop watchdog-show "cron run succesful"   Show a listing of most recent 10 messages containing the string "cron run succesful".           
- drop watchdog-show --count=46             Show a listing of most recent 46 messages.                                                      
- drop watchdog-show --severity=notice      Show a listing of most recent 10 messages with a severity of notice.                            
- drop watchdog-show --type=php             Show a listing of most recent 10 messages of type php.                                          
- drop watchdog-show --tail --full          Show a listing of most recent 10 messages with extended information about each one and continue 
-                                           showing messages as they are registered in the watchdog.                                        
- drop watchdog-show --tail                 Do a tail of the watchdog with a delay of two seconds between each poll to the database.        
- --sleep-delay=2                                                                                                                           
+ brush watchdog-show                        Show a listing of most recent 10 messages.
+ brush watchdog-show 64                     Show in detail message with id 64.
+ brush watchdog-show "cron run succesful"   Show a listing of most recent 10 messages containing the string "cron run succesful".
+ brush watchdog-show --count=46             Show a listing of most recent 46 messages.
+ brush watchdog-show --severity=notice      Show a listing of most recent 10 messages with a severity of notice.
+ brush watchdog-show --type=php             Show a listing of most recent 10 messages of type php.
+ brush watchdog-show --tail --full          Show a listing of most recent 10 messages with extended information about each one and continue
+                                           showing messages as they are registered in the watchdog.
+ brush watchdog-show --tail                 Do a tail of the watchdog with a delay of two seconds between each poll to the database.
+ --sleep-delay=2
 
 
 Arguments:
- wid                                       Optional id of a watchdog message to show in detail. If not provided, a listing of most recent  
-                                           10 messages will be displayed. Alternatively if a string is provided, watchdog messages will be 
-                                           filtered by it.                                                                                 
+ wid                                       Optional id of a watchdog message to show in detail. If not provided, a listing of most recent
+                                           10 messages will be displayed. Alternatively if a string is provided, watchdog messages will be
+                                           filtered by it.
 
 
 Options:
- --count                                   The number of messages to show. Defaults to 10.                                                
- --severity                                Restrict to messages of a given severity level.                                                
- --type                                    Restrict to messages of a given type.                                                          
- --tail                                    Continuously show new watchdog messages until interrupted.                                     
- --sleep-delay                             To be used in conjunction with --tail. This is the number of seconds to wait between each poll 
-                                           to the database. Delay is 1 second by default.                                                 
- --full                                    Return extended information about each message                                                 
+ --count                                   The number of messages to show. Defaults to 10.
+ --severity                                Restrict to messages of a given severity level.
+ --type                                    Restrict to messages of a given type.
+ --tail                                    Continuously show new watchdog messages until interrupted.
+ --sleep-delay                             To be used in conjunction with --tail. This is the number of seconds to wait between each poll
+                                           to the database. Delay is 1 second by default.
+ --full                                    Return extended information about each message
 
 
 Aliases: wd-show, ws
@@ -761,13 +761,13 @@ Aliases: wd-show, ws
 Clone a field and all its instances.
 
 Examples:
- field-clone tags labels                   Copy 'tags' field into a new field 'labels' field which has same instances. 
- open `field-clone tags labels`            Clone field and then open field edit forms for refinement.                  
+ field-clone tags labels                   Copy 'tags' field into a new field 'labels' field which has same instances.
+ open `field-clone tags labels`            Clone field and then open field edit forms for refinement.
 
 
 Arguments:
- source_field_name                         Name of field that will be cloned 
- target_field_name                         Name of new, cloned field.        
+ source_field_name                         Name of field that will be cloned
+ target_field_name                         Name of new, cloned field.
 
 
 </pre></dd>
@@ -776,22 +776,22 @@ Arguments:
 Create fields and instances. Returns urls for field editing.
 
 Examples:
- drop field-create article                 Define new article fields via interactive prompts.                      
- open `drop field-create article`          Define new article fields and then open field edit form for refinement. 
- drop field-create article                 Create two new fields.                                                  
- city,text,text_textfield                                                                                          
- subtitle,text,text_textfield                                                                                      
+ brush field-create article                 Define new article fields via interactive prompts.
+ open `brush field-create article`          Define new article fields and then open field edit form for refinement.
+ brush field-create article                 Create two new fields.
+ city,text,text_textfield
+ subtitle,text,text_textfield
 
 
 Arguments:
- bundle                                    Content type (for nodes). Name of bundle to attach fields to. Required.                    
- field_spec                                Comma delimited triple in the form: field_name,field_type,widget_name. If widget_name is   
-                                           omitted, the default widget will be used. Separate multiple fields by space. If omitted, a 
-                                           wizard will prompt you.                                                                    
+ bundle                                    Content type (for nodes). Name of bundle to attach fields to. Required.
+ field_spec                                Comma delimited triple in the form: field_name,field_type,widget_name. If widget_name is
+                                           omitted, the default widget will be used. Separate multiple fields by space. If omitted, a
+                                           wizard will prompt you.
 
 
 Options:
- --entity_type                             Type of entity (e.g. node, user, comment). Defaults to node. 
+ --entity_type                             Type of entity (e.g. node, user, comment). Defaults to node.
 
 
 </pre></dd>
@@ -800,18 +800,18 @@ Options:
 Delete a field and its instances.
 
 Examples:
- field-delete city                         Delete the city field and any instances it might have. 
- field-delete city --bundle=article        Delete the city instance on the article bundle         
+ field-delete city                         Delete the city field and any instances it might have.
+ field-delete city --bundle=article        Delete the city instance on the article bundle
 
 
 Arguments:
- field_name                                Name of field to delete. 
+ field_name                                Name of field to delete.
 
 
 Options:
- --bundle                                  Only delete the instance attached to this bundle. If omitted, admin can choose to delete one 
-                                           instance or whole field.                                                                     
- --entity_type                             Disambiguate a particular bundle from identically named bundles. Usually not needed.         
+ --bundle                                  Only delete the instance attached to this bundle. If omitted, admin can choose to delete one
+                                           instance or whole field.
+ --entity_type                             Disambiguate a particular bundle from identically named bundles. Usually not needed.
 
 
 </pre></dd>
@@ -820,15 +820,15 @@ Options:
 View information about fields, field_types, and widgets.
 
 Examples:
- field-info types                          Show a table which lists all field types and their available widgets 
+ field-info types                          Show a table which lists all field types and their available widgets
 
 
 Arguments:
- type                                      Recognized values: fields, types. If omitted, a choice list appears. 
+ type                                      Recognized values: fields, types. If omitted, a choice list appears.
 
 
 Options:
- --pipe                                    Return field information table as CSV. 
+ --pipe                                    Return field information table as CSV.
 
 
 </pre></dd>
@@ -837,11 +837,11 @@ Options:
 Return URL for field editing web page.
 
 Examples:
- field-update comment_body                 Quickly navigate to a field edit web page. 
+ field-update comment_body                 Quickly navigate to a field edit web page.
 
 
 Arguments:
- field_name                                Name of field that needs updating. 
+ field_name                                Name of field that needs updating.
 
 
 </pre></dd>
@@ -850,15 +850,15 @@ Arguments:
 Disable one or more extensions (modules or themes). Disable dependant extensions as well.
 
 Arguments:
- extensions                                A list of modules or themes. You can use the * wildcard at the end of extension names to disable 
-                                           multiple matches.                                                                                
+ extensions                                A list of modules or themes. You can use the * wildcard at the end of extension names to disable
+                                           multiple matches.
 
 
 Aliases: dis
 </pre></dd>
 
 <a name="pm-download"></a><dt>pm-download</dt><dd><pre>
-Download Backdrop core or projects from backdrop.org (Backdrop core, modules, themes or profiles) and other sources. It will automatically
+Download Backdrop core or projects from drupal.org (Backdrop core, modules, themes or profiles) and other sources. It will automatically
 figure out which project version you want based on its recommended release, or you may specify a particular version.
 
 If no --destination is provided, then destination depends on the project type:
@@ -867,86 +867,86 @@ If no --destination is provided, then destination depends on the project type:
 sites/all/modules|themes.
   - If you're downloading backdrop core or you are not running the command within a bootstrapped backdrop site, the default location is the
 current directory.
-  - Drop commands will be relocated to /usr/share/drop/commands (if available) or ~/.drop. Relocation is determined once the project is
+  - Brush commands will be relocated to /usr/share/brush/commands (if available) or ~/.brush. Relocation is determined once the project is
 downloaded by examining its content. Note you can provide your own function in a commandfile to determine the relocation of any project.
 
 Examples:
- drop dl                                   Download latest recommended release of Backdrop core.                                          
- drop dl backdrop                          Same as `drop dl`.                                                                             
- drop dl cck zen                           Download latest versions of CCK and Zen projects.                                              
- drop dl og-1.3                            Download a specfic version of Organic groups module for my version of Backdrop.                
- drop dl diff-6.x-2.x                      Download a specific development branch of diff module for a specific Backdrop version.         
- drop dl views --select                    Show a list of recent releases of the views project, prompt for which one to download.         
- drop dl webform --dev                     Download the latest dev release of webform.                                                    
- drop dl cck --version-control=bzr         Download the cck project and then add it and commit it to Bazaar.                              
- --bzrsync --bzrcommit                                                                                                                    
- drop pm-download cck                      Commit changes as the user 'joe' (Quotes are required).                                        
- --svncommitparams=\"--username joe\"                                                                                                     
- drop pm-download cck                      Checkout should use these credentials.                                                         
- --cvscredentials=\"name:password\"                                                                                                       
- drop pm-download cck --cvsparams=\"-C\"   Overwrite all local changes (Quotes are required).                                             
- drop pm-download cck --cvsmethod=update   Will update the project, and try to merge changes, rather than overwriting them. Any conflicts 
-                                           will need to be resolved manually.                                                             
+ brush dl                                   Download latest recommended release of Backdrop core.
+ brush dl backdrop                          Same as `brush dl`.
+ brush dl cck zen                           Download latest versions of CCK and Zen projects.
+ brush dl og-1.3                            Download a specfic version of Organic groups module for my version of Backdrop.
+ brush dl diff-6.x-2.x                      Download a specific development branch of diff module for a specific Backdrop version.
+ brush dl views --select                    Show a list of recent releases of the views project, prompt for which one to download.
+ brush dl webform --dev                     Download the latest dev release of webform.
+ brush dl cck --version-control=bzr         Download the cck project and then add it and commit it to Bazaar.
+ --bzrsync --bzrcommit
+ brush pm-download cck                      Commit changes as the user 'joe' (Quotes are required).
+ --svncommitparams=\"--username joe\"
+ brush pm-download cck                      Checkout should use these credentials.
+ --cvscredentials=\"name:password\"
+ brush pm-download cck --cvsparams=\"-C\"   Overwrite all local changes (Quotes are required).
+ brush pm-download cck --cvsmethod=update   Will update the project, and try to merge changes, rather than overwriting them. Any conflicts
+                                           will need to be resolved manually.
 
 
 Arguments:
- projects                                  A comma delimited list of backdrop.org project names, with optional version. Defaults to 
-                                           'backdrop'                                                                               
+ projects                                  A comma delimited list of drupal.org project names, with optional version. Defaults to
+                                           'backdrop'
 
 
 Options:
- --destination                             Path to which the project will be copied. If you're providing a relative path, note it is       
-                                           relative to the backdrop root (if bootstrapped).                                                
- --use-site-dir                            Force to use the site specific directory. It will create the directory if it doesn't exist. If  
-                                           --destination is also present this option will be ignored.                                      
- --source                                  The base URL which provides project release history in XML. Defaults to                         
-                                           https://updates.backdropcms.org/release-history.                                                
- --variant                                 Only useful for install profiles. Possible values: 'full', 'projects', 'profile-only'.          
- --dev                                     Download a development release.                                                                 
- --select                                  Select the version to download interactively from a list of available releases.                 
- --all                                     Useful only with --select; shows all available releases instead of a short list of recent       
-                                           releases.                                                                                       
- --backdrop-project-rename                 Alternate name for "backdrop-x.y" directory when downloading Backdrop project. Defaults to      
-                                           "backdrop".                                                                                     
- --default-major                           Specify the default major version of modules to download when there is no bootstrapped Backdrop 
-                                           site.  Defaults to "7".                                                                         
- --pipe                                    Returns a list of the names of the extensions (modules and themes) contained in the downloaded  
-                                           projects.                                                                                       
- --version-control=backup                  Default engine. Backup all project files before updates.                                        
-   --no-backup                             Do not perform backups.                                                                         
-   --backup-dir                            Specify a directory to backup projects into. Defaults to drop-backups within the home directory 
-                                           of the user running the command. It is forbidden to specify a directory inside your backdrop    
-                                           root.                                                                                           
- --version-control=bzr                     Quickly add/remove/commit your project changes to Bazaar.                                       
-   --bzrsync                               Automatically add new files to the Bazaar repository and remove deleted files. Caution.         
-   --bzrcommit                             Automatically commit changes to Bazaar repository. You must also usw the --bzrsync option.      
-     --bzrmessage                          Override default commit message which is: Drop automatic commit. Project <name> <type> Command: 
-                                           <the drop command line used>                                                                    
- --version-control=svn                     Quickly add/remove/commit your project changes to Subversion.                                   
-   --svnsync                               Automatically add new files to the SVN repository and remove deleted files. Caution.            
-   --svncommit                             Automatically commit changes to SVN repository. You must also using the --svnsync option.       
-     --svnmessage                          Override default commit message which is: Drop automatic commit: <the drop command line used>   
-   --svnstatusparams                       Add options to the 'svn status' command                                                         
-   --svnaddparams                          Add options to the `svn add` command                                                            
-   --svnremoveparams                       Add options to the `svn remove` command                                                         
-   --svnrevertparams                       Add options to the `svn revert` command                                                         
-   --svncommitparams                       Add options to the `svn commit` command                                                         
- --package-handler=cvs                     Use CVS to checkout and update projects.                                                        
-   --cvsparams                             Add options to the `cvs` program                                                                
-   --cvsmethod                             Force cvs updates or checkouts (checkout is default unless the directory is managed by a        
-                                           supported version control system).                                                              
-   --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous  
- --package-handler=git_backdroporg         Use git.backdrop.org to checkout and update projects.                                           
-   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.   
-                                           Omitting this prevents users from pushing changes back to git.backdrop.org.                     
-   --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and    
-                                           will continue to (not) use submodules regardless of this setting.                               
-   --gitcheckoutparams                     Add options to the `git checkout` command.                                                      
-   --gitcloneparams                        Add options to the `git clone` command.                                                         
-   --gitfetchparams                        Add options to the `git fetch` command.                                                         
-   --gitpullparams                         Add options to the `git pull` command.                                                          
-   --gitsubmoduleaddparams                 Add options to the `git submodule add` command.                                                 
-   --cache                                 Use a local git cache and clone projects using --reference.                                     
+ --destination                             Path to which the project will be copied. If you're providing a relative path, note it is
+                                           relative to the backdrop root (if bootstrapped).
+ --use-site-dir                            Force to use the site specific directory. It will create the directory if it doesn't exist. If
+                                           --destination is also present this option will be ignored.
+ --source                                  The base URL which provides project release history in XML. Defaults to
+                                           https://updates.backdropcms.org/release-history.
+ --variant                                 Only useful for install profiles. Possible values: 'full', 'projects', 'profile-only'.
+ --dev                                     Download a development release.
+ --select                                  Select the version to download interactively from a list of available releases.
+ --all                                     Useful only with --select; shows all available releases instead of a short list of recent
+                                           releases.
+ --backdrop-project-rename                 Alternate name for "backdrop-x.y" directory when downloading Backdrop project. Defaults to
+                                           "backdrop".
+ --default-major                           Specify the default major version of modules to download when there is no bootstrapped Backdrop
+                                           site.  Defaults to "7".
+ --pipe                                    Returns a list of the names of the extensions (modules and themes) contained in the downloaded
+                                           projects.
+ --version-control=backup                  Default engine. Backup all project files before updates.
+   --no-backup                             Do not perform backups.
+   --backup-dir                            Specify a directory to backup projects into. Defaults to brush-backups within the home directory
+                                           of the user running the command. It is forbidden to specify a directory inside your backdrop
+                                           root.
+ --version-control=bzr                     Quickly add/remove/commit your project changes to Bazaar.
+   --bzrsync                               Automatically add new files to the Bazaar repository and remove deleted files. Caution.
+   --bzrcommit                             Automatically commit changes to Bazaar repository. You must also usw the --bzrsync option.
+     --bzrmessage                          Override default commit message which is: Brush automatic commit. Project <name> <type> Command:
+                                           <the brush command line used>
+ --version-control=svn                     Quickly add/remove/commit your project changes to Subversion.
+   --svnsync                               Automatically add new files to the SVN repository and remove deleted files. Caution.
+   --svncommit                             Automatically commit changes to SVN repository. You must also using the --svnsync option.
+     --svnmessage                          Override default commit message which is: Brush automatic commit: <the brush command line used>
+   --svnstatusparams                       Add options to the 'svn status' command
+   --svnaddparams                          Add options to the `svn add` command
+   --svnremoveparams                       Add options to the `svn remove` command
+   --svnrevertparams                       Add options to the `svn revert` command
+   --svncommitparams                       Add options to the `svn commit` command
+ --package-handler=cvs                     Use CVS to checkout and update projects.
+   --cvsparams                             Add options to the `cvs` program
+   --cvsmethod                             Force cvs updates or checkouts (checkout is default unless the directory is managed by a
+                                           supported version control system).
+   --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous
+ --package-handler=git_backdroporg         Use git.drupal.org to checkout and update projects.
+   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.
+                                           Omitting this prevents users from pushing changes back to git.drupal.org.
+   --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and
+                                           will continue to (not) use submodules regardless of this setting.
+   --gitcheckoutparams                     Add options to the `git checkout` command.
+   --gitcloneparams                        Add options to the `git clone` command.
+   --gitfetchparams                        Add options to the `git fetch` command.
+   --gitpullparams                         Add options to the `git pull` command.
+   --gitsubmoduleaddparams                 Add options to the `git submodule add` command.
+   --cache                                 Use a local git cache and clone projects using --reference.
 
 
 Aliases: dl
@@ -956,8 +956,8 @@ Aliases: dl
 Enable one or more extensions (modules or themes). Enable dependant extensions as well.
 
 Arguments:
- extensions                                A list of modules or themes. You can use the * wildcard at the end of extension names to enable 
-                                           all matches.                                                                                    
+ extensions                                A list of modules or themes. You can use the * wildcard at the end of extension names to enable
+                                           all matches.
 
 
 Aliases: en
@@ -967,9 +967,9 @@ Aliases: en
 Show detailed info for one or more extensions (modules or themes).
 
 Arguments:
- extensions                                A list of modules or themes. You can use the * wildcard at the end of extension names to show 
-                                           info for multiple matches. If no argument is provided it will show info for all available     
-                                           extensions.                                                                                   
+ extensions                                A list of modules or themes. You can use the * wildcard at the end of extension names to show
+                                           info for multiple matches. If no argument is provided it will show info for all available
+                                           extensions.
 
 
 Aliases: pmi
@@ -979,14 +979,14 @@ Aliases: pmi
 Show a list of available extensions (modules and themes).
 
 Options:
- --type                                    Filter by extension type. Choices: module, theme.                                                
- --status                                  Filter by extension status. Choices: enabled, disable and/or 'not installed'. You can use        
-                                           multiple comma separated values. (i.e. --status="disabled,not installed").                       
- --package                                 Filter by project packages. You can use multiple comma separated values. (i.e. --package="Core - 
-                                           required,Other").                                                                                
- --core                                    Filter out extensions that are not in backdrop core.                                             
- --no-core                                 Filter out extensions that are provided by backdrop core.                                        
- --pipe                                    Returns a whitespace delimited list of the names of the resulting extensions.                    
+ --type                                    Filter by extension type. Choices: module, theme.
+ --status                                  Filter by extension status. Choices: enabled, disable and/or 'not installed'. You can use
+                                           multiple comma separated values. (i.e. --status="disabled,not installed").
+ --package                                 Filter by project packages. You can use multiple comma separated values. (i.e. --package="Core -
+                                           required,Other").
+ --core                                    Filter out extensions that are not in backdrop core.
+ --no-core                                 Filter out extensions that are provided by backdrop core.
+ --pipe                                    Returns a whitespace delimited list of the names of the resulting extensions.
 
 
 Aliases: pml
@@ -999,19 +999,19 @@ Aliases: rf
 </pre></dd>
 
 <a name="pm-releases"></a><dt>pm-releases</dt><dd><pre>
-View all releases for a given backdrop.org project. Useful for deciding which version to install/update.
+View all releases for a given drupal.org project. Useful for deciding which version to install/update.
 
 Examples:
- drop pm-releases cck zen                  View releases for cck and Zen projects for your Backdrop version. 
+ brush pm-releases cck zen                  View releases for cck and Zen projects for your Backdrop version.
 
 
 Arguments:
- projects                                  A list of backdrop.org project names. Defaults to 'backdrop' 
+ projects                                  A list of drupal.org project names. Defaults to 'backdrop'
 
 
 Options:
- --dev                                     Show only development releases.                                                    
- --all                                     Shows all available releases instead of the default short list of recent releases. 
+ --dev                                     Show only development releases.
+ --all                                     Shows all available releases instead of the default short list of recent releases.
 
 
 Aliases: rl
@@ -1021,7 +1021,7 @@ Aliases: rl
 Uninstall one or more modules.
 
 Arguments:
- modules                                   A list of modules. 
+ modules                                   A list of modules.
 
 
 </pre></dd>
@@ -1033,72 +1033,72 @@ are performed unless directory is already under version control. Updated project
 update production sites without prior testing.
 
 Examples:
- drop dl cck --version-control=bzr         Download the cck project and then add it and commit it to Bazaar.                              
- --bzrsync --bzrcommit                                                                                                                    
- drop pm-update cck                        Commit changes as the user 'joe' (Quotes are required).                                        
- --svncommitparams=\"--username joe\"                                                                                                     
- drop pm-update cck                        Checkout should use these credentials.                                                         
- --cvscredentials=\"name:password\"                                                                                                       
- drop pm-update cck --cvsparams=\"-C\"     Overwrite all local changes (Quotes are required).                                             
- drop pm-update cck --cvsmethod=update     Will update the project, and try to merge changes, rather than overwriting them. Any conflicts 
-                                           will need to be resolved manually.                                                             
+ brush dl cck --version-control=bzr         Download the cck project and then add it and commit it to Bazaar.
+ --bzrsync --bzrcommit
+ brush pm-update cck                        Commit changes as the user 'joe' (Quotes are required).
+ --svncommitparams=\"--username joe\"
+ brush pm-update cck                        Checkout should use these credentials.
+ --cvscredentials=\"name:password\"
+ brush pm-update cck --cvsparams=\"-C\"     Overwrite all local changes (Quotes are required).
+ brush pm-update cck --cvsmethod=update     Will update the project, and try to merge changes, rather than overwriting them. Any conflicts
+                                           will need to be resolved manually.
 
 
 Arguments:
- projects                                  Optional. A list of installed projects to update. 
+ projects                                  Optional. A list of installed projects to update.
 
 
 Options:
- --pipe                                    Returns a whitespace delimited list of projects with any of its extensions enabled and their     
-                                           respective version and update information, one project per line. Order: project name, current    
-                                           version, recommended version, update status.                                                     
- --no-core                                 Only update modules and skip the core update.                                                    
- --self-update                             Check for pending updates to drop itself. Set to 0 to avoid check.                               
- --security-only                           Only update modules that have security updates available. However, if there were other releases  
-                                           of a module between the installed version the security update, other changes to features or      
-                                           functionality may occur.                                                                         
- --lock                                    Add a persistent lock to remove the specified projects from consideration during updates.  Locks 
-                                           may be removed with the --unlock parameter, or overridden by specifically naming the project as  
-                                           a parameter to pm-update or pm-updatecode.  The lock does not affect pm-download.  See also the  
-                                           update-advanced project for similar and improved functionality.                                  
-   --lock-message                          A brief message explaining why a project is being locked; displayed during pm-updatecode.        
-                                           Optional.                                                                                        
-   --unlock                                Remove the persistent lock from the specified projects so that they may be updated again.        
- --version-control=backup                  Default engine. Backup all project files before updates.                                         
-   --no-backup                             Do not perform backups.                                                                          
-   --backup-dir                            Specify a directory to backup projects into. Defaults to drop-backups within the home directory  
-                                           of the user running the command. It is forbidden to specify a directory inside your backdrop     
-                                           root.                                                                                            
- --version-control=bzr                     Quickly add/remove/commit your project changes to Bazaar.                                        
-   --bzrsync                               Automatically add new files to the Bazaar repository and remove deleted files. Caution.          
-   --bzrcommit                             Automatically commit changes to Bazaar repository. You must also usw the --bzrsync option.       
-     --bzrmessage                          Override default commit message which is: Drop automatic commit. Project <name> <type> Command:  
-                                           <the drop command line used>                                                                     
- --version-control=svn                     Quickly add/remove/commit your project changes to Subversion.                                    
-   --svnsync                               Automatically add new files to the SVN repository and remove deleted files. Caution.             
-   --svncommit                             Automatically commit changes to SVN repository. You must also using the --svnsync option.        
-     --svnmessage                          Override default commit message which is: Drop automatic commit: <the drop command line used>    
-   --svnstatusparams                       Add options to the 'svn status' command                                                          
-   --svnaddparams                          Add options to the `svn add` command                                                             
-   --svnremoveparams                       Add options to the `svn remove` command                                                          
-   --svnrevertparams                       Add options to the `svn revert` command                                                          
-   --svncommitparams                       Add options to the `svn commit` command                                                          
- --package-handler=cvs                     Use CVS to checkout and update projects.                                                         
-   --cvsparams                             Add options to the `cvs` program                                                                 
-   --cvsmethod                             Force cvs updates or checkouts (checkout is default unless the directory is managed by a         
-                                           supported version control system).                                                               
-   --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous   
- --package-handler=git_backdroporg         Use git.backdrop.org to checkout and update projects.                                            
-   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.    
-                                           Omitting this prevents users from pushing changes back to git.backdrop.org.                      
-   --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and     
-                                           will continue to (not) use submodules regardless of this setting.                                
-   --gitcheckoutparams                     Add options to the `git checkout` command.                                                       
-   --gitcloneparams                        Add options to the `git clone` command.                                                          
-   --gitfetchparams                        Add options to the `git fetch` command.                                                          
-   --gitpullparams                         Add options to the `git pull` command.                                                           
-   --gitsubmoduleaddparams                 Add options to the `git submodule add` command.                                                  
-   --cache                                 Use a local git cache and clone projects using --reference.                                      
+ --pipe                                    Returns a whitespace delimited list of projects with any of its extensions enabled and their
+                                           respective version and update information, one project per line. Order: project name, current
+                                           version, recommended version, update status.
+ --no-core                                 Only update modules and skip the core update.
+ --self-update                             Check for pending updates to brush itself. Set to 0 to avoid check.
+ --security-only                           Only update modules that have security updates available. However, if there were other releases
+                                           of a module between the installed version the security update, other changes to features or
+                                           functionality may occur.
+ --lock                                    Add a persistent lock to remove the specified projects from consideration during updates.  Locks
+                                           may be removed with the --unlock parameter, or overridden by specifically naming the project as
+                                           a parameter to pm-update or pm-updatecode.  The lock does not affect pm-download.  See also the
+                                           update-advanced project for similar and improved functionality.
+   --lock-message                          A brief message explaining why a project is being locked; displayed during pm-updatecode.
+                                           Optional.
+   --unlock                                Remove the persistent lock from the specified projects so that they may be updated again.
+ --version-control=backup                  Default engine. Backup all project files before updates.
+   --no-backup                             Do not perform backups.
+   --backup-dir                            Specify a directory to backup projects into. Defaults to brush-backups within the home directory
+                                           of the user running the command. It is forbidden to specify a directory inside your backdrop
+                                           root.
+ --version-control=bzr                     Quickly add/remove/commit your project changes to Bazaar.
+   --bzrsync                               Automatically add new files to the Bazaar repository and remove deleted files. Caution.
+   --bzrcommit                             Automatically commit changes to Bazaar repository. You must also usw the --bzrsync option.
+     --bzrmessage                          Override default commit message which is: Brush automatic commit. Project <name> <type> Command:
+                                           <the brush command line used>
+ --version-control=svn                     Quickly add/remove/commit your project changes to Subversion.
+   --svnsync                               Automatically add new files to the SVN repository and remove deleted files. Caution.
+   --svncommit                             Automatically commit changes to SVN repository. You must also using the --svnsync option.
+     --svnmessage                          Override default commit message which is: Brush automatic commit: <the brush command line used>
+   --svnstatusparams                       Add options to the 'svn status' command
+   --svnaddparams                          Add options to the `svn add` command
+   --svnremoveparams                       Add options to the `svn remove` command
+   --svnrevertparams                       Add options to the `svn revert` command
+   --svncommitparams                       Add options to the `svn commit` command
+ --package-handler=cvs                     Use CVS to checkout and update projects.
+   --cvsparams                             Add options to the `cvs` program
+   --cvsmethod                             Force cvs updates or checkouts (checkout is default unless the directory is managed by a
+                                           supported version control system).
+   --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous
+ --package-handler=git_backdroporg         Use git.drupal.org to checkout and update projects.
+   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.
+                                           Omitting this prevents users from pushing changes back to git.drupal.org.
+   --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and
+                                           will continue to (not) use submodules regardless of this setting.
+   --gitcheckoutparams                     Add options to the `git checkout` command.
+   --gitcloneparams                        Add options to the `git clone` command.
+   --gitfetchparams                        Add options to the `git fetch` command.
+   --gitpullparams                         Add options to the `git pull` command.
+   --gitsubmoduleaddparams                 Add options to the `git submodule add` command.
+   --cache                                 Use a local git cache and clone projects using --reference.
 
 
 Aliases: up
@@ -1110,73 +1110,73 @@ user is asked to confirm before the actual update. Backups are performed unless 
 can potentially break your site. It is NOT recommended to update production sites without prior testing.
 
 Examples:
- drop dl cck --version-control=bzr     Download the cck project and then add it and commit it to Bazaar.                              
- --bzrsync --bzrcommit                                                                                                                
- drop pm-updatecode cck                Commit changes as the user 'joe' (Quotes are required).                                        
- --svncommitparams=\"--username joe\"                                                                                                 
- drop pm-updatecode cck                Checkout should use these credentials.                                                         
- --cvscredentials=\"name:password\"                                                                                                   
- drop pm-updatecode cck                Overwrite all local changes (Quotes are required).                                             
- --cvsparams=\"-C\"                                                                                                                   
- drop pm-updatecode cck                Will update the project, and try to merge changes, rather than overwriting them. Any conflicts 
- --cvsmethod=update                    will need to be resolved manually.                                                             
+ brush dl cck --version-control=bzr     Download the cck project and then add it and commit it to Bazaar.
+ --bzrsync --bzrcommit
+ brush pm-updatecode cck                Commit changes as the user 'joe' (Quotes are required).
+ --svncommitparams=\"--username joe\"
+ brush pm-updatecode cck                Checkout should use these credentials.
+ --cvscredentials=\"name:password\"
+ brush pm-updatecode cck                Overwrite all local changes (Quotes are required).
+ --cvsparams=\"-C\"
+ brush pm-updatecode cck                Will update the project, and try to merge changes, rather than overwriting them. Any conflicts
+ --cvsmethod=update                    will need to be resolved manually.
 
 
 Arguments:
- projects                                  Optional. A list of installed projects to update. 
+ projects                                  Optional. A list of installed projects to update.
 
 
 Options:
- --pipe                                    Returns a whitespace delimited list of projects with any of its extensions enabled and their     
-                                           respective version and update information, one project per line. Order: project name, current    
-                                           version, recommended version, update status.                                                     
- --no-core                                 Only update modules and skip the core update.                                                    
- --self-update                             Check for pending updates to drop itself. Set to 0 to avoid check.                               
- --security-only                           Only update modules that have security updates available. However, if there were other releases  
-                                           of a module between the installed version the security update, other changes to features or      
-                                           functionality may occur.                                                                         
- --lock                                    Add a persistent lock to remove the specified projects from consideration during updates.  Locks 
-                                           may be removed with the --unlock parameter, or overridden by specifically naming the project as  
-                                           a parameter to pm-update or pm-updatecode.  The lock does not affect pm-download.  See also the  
-                                           update-advanced project for similar and improved functionality.                                  
-   --lock-message                          A brief message explaining why a project is being locked; displayed during pm-updatecode.        
-                                           Optional.                                                                                        
-   --unlock                                Remove the persistent lock from the specified projects so that they may be updated again.        
- --version-control=backup                  Default engine. Backup all project files before updates.                                         
-   --no-backup                             Do not perform backups.                                                                          
-   --backup-dir                            Specify a directory to backup projects into. Defaults to drop-backups within the home directory  
-                                           of the user running the command. It is forbidden to specify a directory inside your backdrop     
-                                           root.                                                                                            
- --version-control=bzr                     Quickly add/remove/commit your project changes to Bazaar.                                        
-   --bzrsync                               Automatically add new files to the Bazaar repository and remove deleted files. Caution.          
-   --bzrcommit                             Automatically commit changes to Bazaar repository. You must also usw the --bzrsync option.       
-     --bzrmessage                          Override default commit message which is: Drop automatic commit. Project <name> <type> Command:  
-                                           <the drop command line used>                                                                     
- --version-control=svn                     Quickly add/remove/commit your project changes to Subversion.                                    
-   --svnsync                               Automatically add new files to the SVN repository and remove deleted files. Caution.             
-   --svncommit                             Automatically commit changes to SVN repository. You must also using the --svnsync option.        
-     --svnmessage                          Override default commit message which is: Drop automatic commit: <the drop command line used>    
-   --svnstatusparams                       Add options to the 'svn status' command                                                          
-   --svnaddparams                          Add options to the `svn add` command                                                             
-   --svnremoveparams                       Add options to the `svn remove` command                                                          
-   --svnrevertparams                       Add options to the `svn revert` command                                                          
-   --svncommitparams                       Add options to the `svn commit` command                                                          
- --package-handler=cvs                     Use CVS to checkout and update projects.                                                         
-   --cvsparams                             Add options to the `cvs` program                                                                 
-   --cvsmethod                             Force cvs updates or checkouts (checkout is default unless the directory is managed by a         
-                                           supported version control system).                                                               
-   --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous   
- --package-handler=git_backdroporg         Use git.backdrop.org to checkout and update projects.                                            
-   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.    
-                                           Omitting this prevents users from pushing changes back to git.backdrop.org.                      
-   --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and     
-                                           will continue to (not) use submodules regardless of this setting.                                
-   --gitcheckoutparams                     Add options to the `git checkout` command.                                                       
-   --gitcloneparams                        Add options to the `git clone` command.                                                          
-   --gitfetchparams                        Add options to the `git fetch` command.                                                          
-   --gitpullparams                         Add options to the `git pull` command.                                                           
-   --gitsubmoduleaddparams                 Add options to the `git submodule add` command.                                                  
-   --cache                                 Use a local git cache and clone projects using --reference.                                      
+ --pipe                                    Returns a whitespace delimited list of projects with any of its extensions enabled and their
+                                           respective version and update information, one project per line. Order: project name, current
+                                           version, recommended version, update status.
+ --no-core                                 Only update modules and skip the core update.
+ --self-update                             Check for pending updates to brush itself. Set to 0 to avoid check.
+ --security-only                           Only update modules that have security updates available. However, if there were other releases
+                                           of a module between the installed version the security update, other changes to features or
+                                           functionality may occur.
+ --lock                                    Add a persistent lock to remove the specified projects from consideration during updates.  Locks
+                                           may be removed with the --unlock parameter, or overridden by specifically naming the project as
+                                           a parameter to pm-update or pm-updatecode.  The lock does not affect pm-download.  See also the
+                                           update-advanced project for similar and improved functionality.
+   --lock-message                          A brief message explaining why a project is being locked; displayed during pm-updatecode.
+                                           Optional.
+   --unlock                                Remove the persistent lock from the specified projects so that they may be updated again.
+ --version-control=backup                  Default engine. Backup all project files before updates.
+   --no-backup                             Do not perform backups.
+   --backup-dir                            Specify a directory to backup projects into. Defaults to brush-backups within the home directory
+                                           of the user running the command. It is forbidden to specify a directory inside your backdrop
+                                           root.
+ --version-control=bzr                     Quickly add/remove/commit your project changes to Bazaar.
+   --bzrsync                               Automatically add new files to the Bazaar repository and remove deleted files. Caution.
+   --bzrcommit                             Automatically commit changes to Bazaar repository. You must also usw the --bzrsync option.
+     --bzrmessage                          Override default commit message which is: Brush automatic commit. Project <name> <type> Command:
+                                           <the brush command line used>
+ --version-control=svn                     Quickly add/remove/commit your project changes to Subversion.
+   --svnsync                               Automatically add new files to the SVN repository and remove deleted files. Caution.
+   --svncommit                             Automatically commit changes to SVN repository. You must also using the --svnsync option.
+     --svnmessage                          Override default commit message which is: Brush automatic commit: <the brush command line used>
+   --svnstatusparams                       Add options to the 'svn status' command
+   --svnaddparams                          Add options to the `svn add` command
+   --svnremoveparams                       Add options to the `svn remove` command
+   --svnrevertparams                       Add options to the `svn revert` command
+   --svncommitparams                       Add options to the `svn commit` command
+ --package-handler=cvs                     Use CVS to checkout and update projects.
+   --cvsparams                             Add options to the `cvs` program
+   --cvsmethod                             Force cvs updates or checkouts (checkout is default unless the directory is managed by a
+                                           supported version control system).
+   --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous
+ --package-handler=git_backdroporg         Use git.drupal.org to checkout and update projects.
+   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.
+                                           Omitting this prevents users from pushing changes back to git.drupal.org.
+   --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and
+                                           will continue to (not) use submodules regardless of this setting.
+   --gitcheckoutparams                     Add options to the `git checkout` command.
+   --gitcloneparams                        Add options to the `git clone` command.
+   --gitfetchparams                        Add options to the `git fetch` command.
+   --gitpullparams                         Add options to the `git pull` command.
+   --gitsubmoduleaddparams                 Add options to the `git submodule add` command.
+   --cache                                 Use a local git cache and clone projects using --reference.
 
 
 Aliases: upc
@@ -1186,7 +1186,7 @@ Aliases: upc
 Open a SQL command-line interface using Backdrop's credentials.
 
 Options:
- --database                                The DB connection key if using multiple connections in settings.php. 
+ --database                                The DB connection key if using multiple connections in settings.php.
 
 
 Aliases: sqlc
@@ -1196,22 +1196,22 @@ Aliases: sqlc
 A string for connecting to the DB.
 
 Examples:
- `drop sql-connect` < example.sql          Import sql statements from a file into the current database. 
+ `brush sql-connect` < example.sql          Import sql statements from a file into the current database.
 
 
 Options:
- --database                                The DB connection key if using multiple connections in settings.php. 
+ --database                                The DB connection key if using multiple connections in settings.php.
 
 
 </pre></dd>
 
 <a name="sql-drop"></a><dt>sql-drop</dt><dd><pre>
-Drop all tables in a given database.
+Brush all tables in a given database.
 
 Options:
- --yes                                     Skip confirmation and proceed.                                             
- --result-file                             Save to a file. The file should be relative to Backdrop root. Recommended. 
- --database                                The DB connection key if using multiple connections in settings.php.       
+ --yes                                     Skip confirmation and proceed.
+ --result-file                             Save to a file. The file should be relative to Backdrop root. Recommended.
+ --database                                The DB connection key if using multiple connections in settings.php.
 
 
 </pre></dd>
@@ -1220,23 +1220,23 @@ Options:
 Exports the Backdrop DB as SQL using mysqldump or equivalent.
 
 Examples:
- drop sql-dump --result-file=../18.sql     Save SQL dump to the directory above Backdrop root. 
- drop sql-dump --skip-tables-key=common    Skip standard tables. @see example.droprc.php       
+ brush sql-dump --result-file=../18.sql     Save SQL dump to the directory above Backdrop root.
+ brush sql-dump --skip-tables-key=common    Skip standard tables. @see example.droprc.php
 
 
 Options:
- --result-file                             Save to a file. The file should be relative to Backdrop root. If --result-file is provided with 
-                                           no value, then date based filename will be created under ~/drop-backups directory.              
- --skip-tables-key                         A key in the $skip_tables array. @see example.droprc.php. Optional.                             
- --structure-tables-key                    A key in the $structure_tables array. @see example.droprc.php. Optional.                        
- --tables-key                              A key in the $tables array. Optional.                                                           
- --tables-list                             A comma-separated list of tables to transfer. Optional.                                         
- --ordered-dump                            Order by primary key and add line breaks for efficient diff in revision control. Also, faster   
-                                           rsync. Slows down the dump. Mysql only.                                                         
- --create-db                               Wipe existing tables.                                                                           
- --data-only                               Omit CREATE TABLE statements. Postgres only.                                                    
- --gzip                                    Compress the dump using the gzip program which must be in your $PATH.                           
- --database                                The DB connection key if using multiple connections in settings.php.                            
+ --result-file                             Save to a file. The file should be relative to Backdrop root. If --result-file is provided with
+                                           no value, then date based filename will be created under ~/brush-backups directory.
+ --skip-tables-key                         A key in the $skip_tables array. @see example.droprc.php. Optional.
+ --structure-tables-key                    A key in the $structure_tables array. @see example.droprc.php. Optional.
+ --tables-key                              A key in the $tables array. Optional.
+ --tables-list                             A comma-separated list of tables to transfer. Optional.
+ --ordered-dump                            Order by primary key and add line breaks for efficient diff in revision control. Also, faster
+                                           rsync. Slows down the dump. Mysql only.
+ --create-db                               Wipe existing tables.
+ --data-only                               Omit CREATE TABLE statements. Postgres only.
+ --gzip                                    Compress the dump using the gzip program which must be in your $PATH.
+ --database                                The DB connection key if using multiple connections in settings.php.
 
 
 </pre></dd>
@@ -1245,21 +1245,21 @@ Options:
 Execute a query against the site database.
 
 Examples:
- drop sql-query "SELECT * FROM {users}     Browse user record. Table prefixes are honored.              
- WHERE uid=1"                                                                                           
- `drop sql-connect` < example.sql          Import sql statements from a file into the current database. 
- drop sql-query --input-file=example.sql   Alternate way to import sql statements from a file.          
+ brush sql-query "SELECT * FROM {users}     Browse user record. Table prefixes are honored.
+ WHERE uid=1"
+ `brush sql-connect` < example.sql          Import sql statements from a file into the current database.
+ brush sql-query --input-file=example.sql   Alternate way to import sql statements from a file.
 
 
 Arguments:
- query                                     An SQL query. Ignored if 'file' is provided. 
+ query                                     An SQL query. Ignored if 'file' is provided.
 
 
 Options:
- --result-file                             Save to a file. The file should be relative to Backdrop root. Optional. 
- --input-file                              Path to a file containing the SQL to be run.                            
- --extra                                   Add custom options to the mysql command.                                
- --database                                The DB connection key if using multiple connections in settings.php.    
+ --result-file                             Save to a file. The file should be relative to Backdrop root. Optional.
+ --input-file                              Path to a file containing the SQL to be run.
+ --extra                                   Add custom options to the mysql command.
+ --database                                The DB connection key if using multiple connections in settings.php.
 
 
 Aliases: sqlq
@@ -1269,49 +1269,49 @@ Aliases: sqlq
 Copy and import source database to target database. Transfers via rsync.
 
 Examples:
- drop sql-sync @dev @prod                  Copy the DB defined in sites/dev to the DB in sites/prod. 
+ brush sql-sync @dev @prod                  Copy the DB defined in sites/dev to the DB in sites/prod.
 
 
 Arguments:
- from                                      Name of subdirectory within /sites or a site-alias. 
- to                                        Name of subdirectory within /sites or a site-alias. 
+ from                                      Name of subdirectory within /sites or a site-alias.
+ to                                        Name of subdirectory within /sites or a site-alias.
 
 
 Options:
- --skip-tables-key                         A key in the $skip_tables array. @see example.droprc.php. Optional.                             
- --structure-tables-key                    A key in the $structure_tables array. @see example.droprc.php. Optional.                        
- --tables-key                              A key in the $tables array. Optional.                                                           
- --tables-list                             A comma-separated list of tables to transfer. Optional.                                         
- --cache                                   Skip dump if result file exists and is less than "cache" hours old. Optional; default is 24     
-                                           hours.                                                                                          
- --no-cache                                Do not cache the sql-dump file.                                                                 
- --no-dump                                 Do not dump the sql database; always use an existing dump file.                                 
- --source-db-url                           Database specification for source system to dump from.                                          
- --source-remote-port                      Override sql database port number in source-db-url. Optional.                                   
- --source-remote-host                      Remote machine to run sql-dump file on. Optional; default is local machine.                     
- --source-dump                             Path to dump file. Optional; default is to create a temporary file.                             
- --target-database                         A key in the $db_url or $databases array which shall receive the data.                          
- --source-target                           Oy. A key within the --target_database identifying a particular server in the database group.   
- --target-db-url                                                                                                                           
- --target-remote-port                                                                                                                      
- --target-remote-host                                                                                                                      
- --target-dump                                                                                                                             
- --target-target                           Oy. A key within the --target_database identifying a particular server in the database group.   
- --temp                                    Use a temporary file to hold dump files.  Implies --no-cache.                                   
- --dump-dir                                Directory to store sql dump files in when --source-dump or --target-dump are not used.  Takes   
-                                           precedence over --temp.                                                                         
- --create-db                               Create a new database before importing the database dump on the target machine.                 
- --db-su                                   Account to use when creating a new database. Optional.                                          
- --db-su-pw                                Password for the "db-su" account. Optional.                                                     
- --no-ordered-dump                         Do not pass --ordered-dump to sql-dump.  sql-sync orders the dumpfile by default in order to    
-                                           increase the efficiency of rsync.                                                               
- --sanitize                                Obscure email addresses and reset passwords in the user table post-sync. Optional.              
-   --sanitize-password                     The password to assign to all accounts in the sanitization operation, or "no" to keep passwords 
-                                           unchanged.  Default is "password".                                                              
-   --sanitize-email                        The username for test email addresses in the sanitization operation, or "no" to keep email      
-                                           addresses unchanged.  May contain replacement patterns %uid, %mail or %login.  Default is       
-                                           "user+%uid@localhost".                                                                          
-   --confirm-sanitizations                 Prompt yes/no after importing the database, but before running the sanitizations                
+ --skip-tables-key                         A key in the $skip_tables array. @see example.droprc.php. Optional.
+ --structure-tables-key                    A key in the $structure_tables array. @see example.droprc.php. Optional.
+ --tables-key                              A key in the $tables array. Optional.
+ --tables-list                             A comma-separated list of tables to transfer. Optional.
+ --cache                                   Skip dump if result file exists and is less than "cache" hours old. Optional; default is 24
+                                           hours.
+ --no-cache                                Do not cache the sql-dump file.
+ --no-dump                                 Do not dump the sql database; always use an existing dump file.
+ --source-db-url                           Database specification for source system to dump from.
+ --source-remote-port                      Override sql database port number in source-db-url. Optional.
+ --source-remote-host                      Remote machine to run sql-dump file on. Optional; default is local machine.
+ --source-dump                             Path to dump file. Optional; default is to create a temporary file.
+ --target-database                         A key in the $db_url or $databases array which shall receive the data.
+ --source-target                           Oy. A key within the --target_database identifying a particular server in the database group.
+ --target-db-url
+ --target-remote-port
+ --target-remote-host
+ --target-dump
+ --target-target                           Oy. A key within the --target_database identifying a particular server in the database group.
+ --temp                                    Use a temporary file to hold dump files.  Implies --no-cache.
+ --dump-dir                                Directory to store sql dump files in when --source-dump or --target-dump are not used.  Takes
+                                           precedence over --temp.
+ --create-db                               Create a new database before importing the database dump on the target machine.
+ --db-su                                   Account to use when creating a new database. Optional.
+ --db-su-pw                                Password for the "db-su" account. Optional.
+ --no-ordered-dump                         Do not pass --ordered-dump to sql-dump.  sql-sync orders the dumpfile by default in order to
+                                           increase the efficiency of rsync.
+ --sanitize                                Obscure email addresses and reset passwords in the user table post-sync. Optional.
+   --sanitize-password                     The password to assign to all accounts in the sanitization operation, or "no" to keep passwords
+                                           unchanged.  Default is "password".
+   --sanitize-email                        The username for test email addresses in the sanitization operation, or "no" to keep email
+                                           addresses unchanged.  May contain replacement patterns %uid, %mail or %login.  Default is
+                                           "user+%uid@localhost".
+   --confirm-sanitizations                 Prompt yes/no after importing the database, but before running the sanitizations
 
 
 </pre></dd>
@@ -1320,20 +1320,20 @@ Options:
 Add a role to the specified user accounts.
 
 Examples:
- drop user-add-role "power user" 5,user3  Add the "power user" role to the accounts with name, id, or email 5 or user3, uids 2 and 3, 
- --uid=2,3 --name=someguy,somegal         names someguy and somegal, and email address of billgates@microsoft.com                     
- --mail=billgates@microsoft.com                                                                                                       
+ brush user-add-role "power user" 5,user3  Add the "power user" role to the accounts with name, id, or email 5 or user3, uids 2 and 3,
+ --uid=2,3 --name=someguy,somegal         names someguy and somegal, and email address of billgates@microsoft.com
+ --mail=billgates@microsoft.com
 
 
 Arguments:
- role                                      The name of the role to add                                                
- users                                     (optional) A comma delimited list of uids, user names, or email addresses. 
+ role                                      The name of the role to add
+ users                                     (optional) A comma delimited list of uids, user names, or email addresses.
 
 
 Options:
- --uid                                     A comma delimited list of uids                
- --name                                    A comma delimited list of user names          
- --mail                                    A comma delimited list of user mail addresses 
+ --uid                                     A comma delimited list of uids
+ --name                                    A comma delimited list of user names
+ --mail                                    A comma delimited list of user mail addresses
 
 
 Aliases: urol
@@ -1343,19 +1343,19 @@ Aliases: urol
 Block the specified user(s).
 
 Examples:
- drop user-block 5,user3 --uid=2,3  Block the users with name, id, or email 5 or user3, uids 2 and 3, names someguy and somegal, and 
- --name=someguy,somegal             email address of billgates@microsoft.com                                                         
- --mail=billgates@microsoft.com                                                                                                      
+ brush user-block 5,user3 --uid=2,3  Block the users with name, id, or email 5 or user3, uids 2 and 3, names someguy and somegal, and
+ --name=someguy,somegal             email address of billgates@microsoft.com
+ --mail=billgates@microsoft.com
 
 
 Arguments:
- users                                     A comma delimited list of uids, user names, or email addresses. 
+ users                                     A comma delimited list of uids, user names, or email addresses.
 
 
 Options:
- --uid                                     A comma delimited list of uids to block                
- --name                                    A comma delimited list of user names to block          
- --mail                                    A comma delimited list of user mail addresses to block 
+ --uid                                     A comma delimited list of uids to block
+ --name                                    A comma delimited list of user names to block
+ --mail                                    A comma delimited list of user mail addresses to block
 
 
 Aliases: ublk
@@ -1365,17 +1365,17 @@ Aliases: ublk
 Cancel a user account with the specified name.
 
 Examples:
- drop user-cancel username                 Cancel the user account with the name username and anonymize all content created by that user. 
- drop user-cancel --delete-content         Cancel the user account with the name username and delete all content created by that user.    
- username                                                                                                                                 
+ brush user-cancel username                 Cancel the user account with the name username and anonymize all content created by that user.
+ brush user-cancel --delete-content         Cancel the user account with the name username and delete all content created by that user.
+ username
 
 
 Arguments:
- name                                      The name of the account to cancel 
+ name                                      The name of the account to cancel
 
 
 Options:
- --delete-content                          Delete all content created by the user 
+ --delete-content                          Delete all content created by the user
 
 
 Aliases: ucan
@@ -1385,18 +1385,18 @@ Aliases: ucan
 Create a user account with the specified name.
 
 Examples:
- drop user-create newuser     Create a new user account with the name newuser, the email address person@example.com, and the 
- --mail="person@example.com"  password letmein                                                                               
- --password="letmein"                                                                                                        
+ brush user-create newuser     Create a new user account with the name newuser, the email address person@example.com, and the
+ --mail="person@example.com"  password letmein
+ --password="letmein"
 
 
 Arguments:
- name                                      The name of the account to add 
+ name                                      The name of the account to add
 
 
 Options:
- --password                                The password for the new account      
- --mail                                    The email address for the new account 
+ --password                                The password for the new account
+ --mail                                    The email address for the new account
 
 
 Aliases: ucrt
@@ -1406,18 +1406,18 @@ Aliases: ucrt
 Print information about the specified user(s).
 
 Examples:
- drop user-information                     Display information about any users with uids, names, or mail addresses matching the strings 
- 2,3,someguy,somegal,billgates@microsoft.  between commas.                                                                              
- com                                                                                                                                    
+ brush user-information                     Display information about any users with uids, names, or mail addresses matching the strings
+ 2,3,someguy,somegal,billgates@microsoft.  between commas.
+ com
 
 
 Arguments:
- users                                     A comma delimited list of uids, user names, or email addresses. 
+ users                                     A comma delimited list of uids, user names, or email addresses.
 
 
 Options:
- --full                                    show extended information about the user                    
- --short                                   show basic information about the user (this is the default) 
+ --full                                    show extended information about the user
+ --short                                   show basic information about the user (this is the default)
 
 
 Aliases: uinf
@@ -1427,12 +1427,12 @@ Aliases: uinf
 Display a one time login link for the given user account (defaults to uid 1).
 
 Examples:
- drop user-login ryan                      Displays a one-time login link for the user ryan. 
- open `drop user-login ryan`               Open web browser and login as user ryan.          
+ brush user-login ryan                      Displays a one-time login link for the user ryan.
+ open `brush user-login ryan`               Open web browser and login as user ryan.
 
 
 Arguments:
- name                                      The name of the account to log in as. Leave it empty to log in as uid 1. 
+ name                                      The name of the account to log in as. Leave it empty to log in as uid 1.
 
 
 Aliases: uli
@@ -1442,16 +1442,16 @@ Aliases: uli
 (Re)Set the password for the user account with the specified name.
 
 Examples:
- drop user-password someuser  Set the password for the username someuser to gr3@tP@$s. 
- --password="gr3@tP@$s"                                                                
+ brush user-password someuser  Set the password for the username someuser to gr3@tP@$s.
+ --password="gr3@tP@$s"
 
 
 Arguments:
- name                                      The name of the account to modify 
+ name                                      The name of the account to modify
 
 
 Options:
- --password                                (required) The new password for the account 
+ --password                                (required) The new password for the account
 
 
 Aliases: upwd
@@ -1461,20 +1461,20 @@ Aliases: upwd
 Remove a role from the specified user accounts.
 
 Examples:
- drop user-remove-role "power user"        Remove the "power user" role from the accounts with name, id, or email 5 or user3, uids 2 and 3, 
- 5,user3 --uid=2,3 --name=someguy,somegal  names someguy and somegal, and email address of billgates@microsoft.com                          
- --mail=billgates@microsoft.com                                                                                                             
+ brush user-remove-role "power user"        Remove the "power user" role from the accounts with name, id, or email 5 or user3, uids 2 and 3,
+ 5,user3 --uid=2,3 --name=someguy,somegal  names someguy and somegal, and email address of billgates@microsoft.com
+ --mail=billgates@microsoft.com
 
 
 Arguments:
- role                                      The name of the role to remove                                             
- users                                     (optional) A comma delimited list of uids, user names, or email addresses. 
+ role                                      The name of the role to remove
+ users                                     (optional) A comma delimited list of uids, user names, or email addresses.
 
 
 Options:
- --uid                                     A comma delimited list of uids                
- --name                                    A comma delimited list of user names          
- --mail                                    A comma delimited list of user mail addresses 
+ --uid                                     A comma delimited list of uids
+ --name                                    A comma delimited list of user names
+ --mail                                    A comma delimited list of user mail addresses
 
 
 Aliases: urrol
@@ -1484,22 +1484,21 @@ Aliases: urrol
 Unblock the specified user(s).
 
 Examples:
- drop user-unblock 5,user3 --uid=2,3  Unblock the users with name, id, or email 5 or user3, uids 2 and 3, names someguy and somegal, 
- --name=someguy,somegal               and email address of billgates@microsoft.com                                                   
- --mail=billgates@microsoft.com                                                                                                      
+ brush user-unblock 5,user3 --uid=2,3  Unblock the users with name, id, or email 5 or user3, uids 2 and 3, names someguy and somegal,
+ --name=someguy,somegal               and email address of billgates@microsoft.com
+ --mail=billgates@microsoft.com
 
 
 Arguments:
- users                                     A comma delimited list of uids, user names, or email addresses. 
+ users                                     A comma delimited list of uids, user names, or email addresses.
 
 
 Options:
- --uid                                     A comma delimited list of uids to unblock                
- --name                                    A comma delimited list of user names to unblock          
- --mail                                    A comma delimited list of user mail addresses to unblock 
+ --uid                                     A comma delimited list of uids to unblock
+ --name                                    A comma delimited list of user names to unblock
+ --mail                                    A comma delimited list of user mail addresses to unblock
 
 
 Aliases: uublk
 </pre></dd>
 </body></html>
-

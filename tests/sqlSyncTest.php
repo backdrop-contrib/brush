@@ -31,7 +31,7 @@ class sqlSyncTest extends Drop_TestCase {
       'uri' => 'stage',
       'yes' => NULL,
     );
-    $this->drop('user-create', array($name), $options + array('password' => 'password', 'mail' => $mail));
+    $this->brush('user-create', array($name), $options + array('password' => 'password', 'mail' => $mail));
 
     // Copy stage to dev with --sanitize
     $sync_options = array(
@@ -39,10 +39,10 @@ class sqlSyncTest extends Drop_TestCase {
       'yes' => NULL,
       'dump-dir' => $dump_dir
     );
-    $this->drop('sql-sync', array('@stage', '@dev'), $sync_options);
+    $this->brush('sql-sync', array('@stage', '@dev'), $sync_options);
     
     // Confirm that the sample user has the correct email address on the staging site
-    $this->drop('user-information', array($name), $options + array('pipe' => NULL));
+    $this->brush('user-information', array($name), $options + array('pipe' => NULL));
     $output = $this->getOutput();
     $row  = str_getcsv($output);
     $uid = $row[1];
@@ -55,7 +55,7 @@ class sqlSyncTest extends Drop_TestCase {
       'yes' => NULL,
     );
     // Confirm that the sample user's email address has been sanitized on the dev site
-    $this->drop('user-information', array($name), $options + array('pipe' => NULL));
+    $this->brush('user-information', array($name), $options + array('pipe' => NULL));
     $output = $this->getOutput();
     $row  = str_getcsv($output);
     $uid = $row[1];

@@ -10,22 +10,22 @@ class coreCase extends Drop_TestCase {
    * Test standalone php-script scripts. Assure that script args and options work.
    */
   public function testStandaloneScript() {
-    $this->drop('version', array('drop_version'), array('pipe' => NULL));
+    $this->brush('version', array('brush_version'), array('pipe' => NULL));
     $standard = $this->getOutput();
 
-    // Write out a hellounish.script into the sandbox. The correct /path/to/drop
+    // Write out a hellounish.script into the sandbox. The correct /path/to/brush
     // is in the shebang line.
     $filename = 'hellounish.script';
-    $data = '#!/usr/bin/env [PATH-TO-DROP]
+    $data = '#!/usr/bin/env [PATH-TO-BRUSH]
 
-$arg = drop_shift();
-drop_invoke("version", $arg);
+$arg = brush_shift();
+brush_invoke("version", $arg);
 ';
-    $data = str_replace('[PATH-TO-DROP]', UNISH_DROP, $data);
+    $data = str_replace('[PATH-TO-BRUSH]', UNISH_DROP, $data);
     $script = UNISH_SANDBOX . '/' . $filename;
     file_put_contents($script, $data);
     chmod($script, 0755);
-    $this->execute("$script drop_version --pipe");
+    $this->execute("$script brush_version --pipe");
     $standalone = $this->getOutput();
     $this->assertEquals($standard, $standalone);
   }
@@ -39,18 +39,18 @@ drop_invoke("version", $arg);
       'verbose' => NULL,
       'yes' => NULL,
     );
-    $this->drop('pm-download', array('devel-7.x-1.0'), $options);
-    $this->drop('pm-enable', array('menu', 'devel'), $options);
+    $this->brush('pm-download', array('devel-7.x-1.0'), $options);
+    $this->brush('pm-enable', array('menu', 'devel'), $options);
 
-    $this->drop('backdrop-directory', array('devel'), $options);
+    $this->brush('backdrop-directory', array('devel'), $options);
     $output = $this->getOutput();
     $this->assertEquals($root . '/sites/all/modules/devel', $output);
 
-    $this->drop('backdrop-directory', array('%files'), $options);
+    $this->brush('backdrop-directory', array('%files'), $options);
     $output = $this->getOutput();
     $this->assertEquals($root . '/sites/dev/files', $output);
 
-    $this->drop('backdrop-directory', array('%modules'), $options);
+    $this->brush('backdrop-directory', array('%modules'), $options);
     $output = $this->getOutput();
     $this->assertEquals($root . '/sites/all/modules', $output);
   }
@@ -59,7 +59,7 @@ drop_invoke("version", $arg);
     /*
      * @todo
      *   - BASHRC_PATH. Same file cleanup woes as contextTest.
-     *   - DROP_CLI
+     *   - BRUSH_CLI
      *   - INITIAL_SITE
      *   - PS1. Hard to test in non interactive session?
      *   - on
@@ -69,17 +69,17 @@ drop_invoke("version", $arg);
      */
 
     // Exercise core-cli's interactive mode.
-    // Include unit.drop.inc commandfile.
+    // Include unit.brush.inc commandfile.
     $options = array(
       'include' => dirname(__FILE__),
     );
     // These commands will throw a failure if they return non-zero exit code.
     // Assure that we create a bash function for command names.
     $options['unit-extra'] = 'core-status;exit';
-    $this->drop('core-cli', array(), $options);
+    $this->brush('core-cli', array(), $options);
     // Assure that we create a bash function for command aliases.
     $options['unit-extra'] = 'st;exit';
-    $this->drop('core-cli', array(), $options);
+    $this->brush('core-cli', array(), $options);
 
     // Assure that we create a bash alias for site aliases.
     // First, write an alias file to the sandbox.
@@ -93,7 +93,7 @@ drop_invoke("version", $arg);
     // Append a bash command which starts with alias name (i.e. @cliAlias).
     $options['unit-extra'] = sprintf('@cliAlias core-status --alias-path=%s;exit', UNISH_SANDBOX);
     $options['alias-path'] = UNISH_SANDBOX;
-    $this->drop('core-cli', array(), $options);
+    $this->brush('core-cli', array(), $options);
 
     // $this->markTestIncomplete('In progress below.');
     // Exercise core-cli's non-interactive mode.
@@ -102,7 +102,7 @@ drop_invoke("version", $arg);
     //  'pipe' => NULL,
     //  'alias-path' => UNISH_SANDBOX,
     //);
-    //$this->drop('core-cli', array(), $options);
+    //$this->brush('core-cli', array(), $options);
     //$bashrc_data = $this->getOutput();
     //$bashrc_file = UNISH_SANDBOX . '/.bashrc';
     //$extra = 'cd @cliAlias;exit;';

@@ -5,7 +5,7 @@
 *  Assure that context API behaves as designed. Mostly implicitly tested, but we
 *  do have some edges that need explicit testing.
 *
-*  @see drop/includes/context.inc.
+*  @see brush/includes/context.inc.
 */
 
 class contextCase extends Drop_TestCase {
@@ -18,18 +18,18 @@ class contextCase extends Drop_TestCase {
       'site' =>  $this->site,
       'backdrop' => $this->root,
       'user' => $this->home,
-      'home.drop' => $this->home . '/.drop',
-      'system' => UNISH_SANDBOX . '/etc/drop',
-      // We don't want to write a file into drop dir since it is not in the sandbox.
-      // 'drop' => dirname(realpath(UNISH_DROP)),
+      'home.brush' => $this->home . '/.brush',
+      'system' => UNISH_SANDBOX . '/etc/brush',
+      // We don't want to write a file into brush dir since it is not in the sandbox.
+      // 'brush' => dirname(realpath(UNISH_DROP)),
     );
     // Run each path through realpath() since the paths we'll compare against
-    // will have already run through drop_load_config_file().
+    // will have already run through brush_load_config_file().
     foreach ($this->paths as $key => $path) $this->paths[$key] = realpath($path);
   }
 
   /**
-   * Try to write a tiny droprc.php to each place that drop checks. Also
+   * Try to write a tiny droprc.php to each place that brush checks. Also
    * write a sites/dev/aliases.droprc.php file to the sandbox.
    */
   function setup() {
@@ -43,7 +43,7 @@ class contextCase extends Drop_TestCase {
     foreach ($this->paths as $key => $path) {
       $contents = <<<EOD
 <?php
-// Written by Drop's contextCase::setup(). This file is safe to delete.
+// Written by Brush's contextCase::setup(). This file is safe to delete.
 
 \$options['contextConfig'] = '$key';
 \$command_specific['unit-eval']['contextConfig'] = '$key-specific';
@@ -89,7 +89,7 @@ EOD;
       'root' => $this->root,
       'uri' => $this->env,
     );
-    $this->drop('core-status', array('Drop configuration'), $options);
+    $this->brush('core-status', array('Brush configuration'), $options);
     $output = trim($this->getOutput());
     $loaded = explode(' ', $output);
     $this->assertSame($this->written, $loaded);
@@ -99,9 +99,9 @@ EOD;
    * Assure that matching version-specific config files are loaded and others are ignored.
    */
   function ConfigVersionSpecific() {
-    $major = $this->drop_major_version();
+    $major = $this->brush_major_version();
     // Arbitrarily choose the system search path.
-    $path = realpath(UNISH_SANDBOX . '/etc/drop');
+    $path = realpath(UNISH_SANDBOX . '/etc/brush');
     $contents = <<<EOD
 <?php
 // Written by Unish. This file is safe to delete.
@@ -110,16 +110,16 @@ EOD;
 
     // Write matched and unmatched files to the system search path.
     $files = array(
-      $path .  '/drop' . $major . 'rc.php',
+      $path .  '/brush' . $major . 'rc.php',
       $path .  '/drop999' . 'rc.php',
     );
-    mkdir($path . '/drop' . $major);
+    mkdir($path . '/brush' . $major);
     mkdir($path . '/drop999');
     foreach ($files as $file) {
       file_put_contents($file, $contents);
     }
 
-    $this->drop('core-status', array('Drop configuration'), array('pipe' => NULL));
+    $this->brush('core-status', array('Brush configuration'), array('pipe' => NULL));
     $output = trim($this->getOutput());
     $loaded = explode(' ', $output);
     $this->assertTrue(in_array($files[0], $loaded), 'Loaded a version-specific config file.');
@@ -128,14 +128,14 @@ EOD;
 
   /**
    * Assure that options are loaded into right context and hierarchy is
-   * respected by drop_get_option().
+   * respected by brush_get_option().
    *
    * Stdin context not exercised here. See backendCase::testTarget().
    */
   function ContextHierarchy() {
     // The 'custom' config file has higher priority than cli and regular config files.
-    $eval =  '$contextConfig = drop_get_option("contextConfig", "n/a");';
-    $eval .= '$cli1 = drop_get_option("cli1");';
+    $eval =  '$contextConfig = brush_get_option("contextConfig", "n/a");';
+    $eval .= '$cli1 = brush_get_option("cli1");';
     $eval .= 'print json_encode(get_defined_vars());';
     $config = UNISH_SANDBOX . '/droprc.php';
     $options = array(
@@ -144,21 +144,21 @@ EOD;
       'root' => $this->root,
       'uri' => $this->env,
     );
-    $this->drop('php-eval', array($eval), $options);
+    $this->brush('php-eval', array($eval), $options);
     $output = $this->getOutput();
     $actuals = json_decode(trim($output));
     $this->assertEquals('custom', $actuals->contextConfig);
     $this->assertTrue($actuals->cli1);
 
     // Site alias trumps 'custom'.
-    $eval =  '$contextConfig = drop_get_option("contextConfig", "n/a");';
+    $eval =  '$contextConfig = brush_get_option("contextConfig", "n/a");';
     $eval .= 'print json_encode(get_defined_vars());';
     $options = array(
       'config' => $config,
       'root' => $this->root,
       'uri' => $this->env,
     );
-    $this->drop('php-eval', array($eval), $options, '@contextAlias');
+    $this->brush('php-eval', array($eval), $options, '@contextAlias');
     $output = $this->getOutput();
     $actuals = json_decode(trim($output));
     $this->assertEquals('alias1', $actuals->contextConfig);
@@ -166,14 +166,14 @@ EOD;
     // Command specific wins over non-specific. If it did not, $expected would
     // be 'site'. Note we call unit-eval command in order not to purturb
     // php-eval with options in config file.
-    $eval =  '$contextConfig = drop_get_option("contextConfig", "n/a");';
+    $eval =  '$contextConfig = brush_get_option("contextConfig", "n/a");';
     $eval .= 'print json_encode(get_defined_vars());';
     $options = array(
       'root' => $this->root,
       'uri' => $this->env,
-      'include' => dirname(__FILE__), // Find unit.drop.inc commandfile.
+      'include' => dirname(__FILE__), // Find unit.brush.inc commandfile.
     );
-    $this->drop('unit-eval', array($eval), $options);
+    $this->brush('unit-eval', array($eval), $options);
     $output = $this->getOutput();
     $actuals = json_decode(trim($output));
     $this->assertEquals('site-specific', $actuals->contextConfig);

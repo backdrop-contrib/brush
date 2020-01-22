@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Entrypoint for drop rsync.
+ * Entrypoint for brush rsync.
  *
  * @param source
  *   A site alias ("@dev") or site specification ("/path/to/backdrop#mysite.com")
@@ -14,24 +14,24 @@
  *   the command line (like the 'process' context, but only for
  *   the scope of this one call).
  */
-function drop_core_rsync($source, $destination, $additional_options = array()) {
+function brush_core_rsync($source, $destination, $additional_options = array()) {
   // Preflight destination in case it defines aliases used by the source
-  _drop_sitealias_preflight_path($destination);
+  _brush_sitealias_preflight_path($destination);
   // After preflight, evaluate file paths
-  $source_settings = drop_sitealias_evaluate_path($source, $additional_options);
-  $destination_settings = drop_sitealias_evaluate_path($destination, $additional_options);
+  $source_settings = brush_sitealias_evaluate_path($source, $additional_options);
+  $destination_settings = brush_sitealias_evaluate_path($destination, $additional_options);
   $source_path = $source_settings['evaluated-path'];
   $destination_path = $destination_settings['evaluated-path'];
 
   if (!isset($source_settings)) {
-    return drop_set_error('DROP_BAD_PATH', dt('Could not evaluate source path !path.', array('!path' => $source)));
+    return brush_set_error('BRUSH_BAD_PATH', dt('Could not evaluate source path !path.', array('!path' => $source)));
   }
   if (!isset($destination_settings)) {
-    return drop_set_error('DROP_BAD_PATH', dt('Could not evaluate destination path !path.', array('!path' => $destination)));
+    return brush_set_error('BRUSH_BAD_PATH', dt('Could not evaluate destination path !path.', array('!path' => $destination)));
   }
     
   // Check to see if this is an rsync multiple command (multiple sources and multiple destinations)
-  $is_multiple = drop_do_multiple_command('rsync', $source_settings, $destination_settings, TRUE);
+  $is_multiple = brush_do_multiple_command('rsync', $source_settings, $destination_settings, TRUE);
   
   if ($is_multiple === FALSE) {
     // If the user path is the same for the source and the destination, then
@@ -42,11 +42,11 @@ function drop_core_rsync($source, $destination, $additional_options = array()) {
       $source_path .= '/';
     }
     // Prompt for confirmation. This is destructive.
-    if (!drop_get_context('DROP_SIMULATE')) {
-      drop_print(dt("You will destroy data from !target and replace with data from !source", array('!source' => $source_path, '!target' => $destination_path)));
-      if (!drop_confirm(dt('Do you really want to continue?'))) {
-        // was: return drop_set_error('CORE_SYNC_ABORT', 'Aborting.');
-        return drop_user_abort();
+    if (!brush_get_context('BRUSH_SIMULATE')) {
+      brush_print(dt("You will destroy data from !target and replace with data from !source", array('!source' => $source_path, '!target' => $destination_path)));
+      if (!brush_confirm(dt('Do you really want to continue?'))) {
+        // was: return brush_set_error('CORE_SYNC_ABORT', 'Aborting.');
+        return brush_user_abort();
       }
     }
 
@@ -57,7 +57,7 @@ function drop_core_rsync($source, $destination, $additional_options = array()) {
     $include_settings_is_default = (strpos($source . $destination, ':') !== FALSE) || (strpos($source . $destination, '/') !== FALSE);
 
     // Go ahead and call rsync with the paths we determined
-    return drop_core_call_rsync($source_path, $destination_path, $additional_options, $include_settings_is_default);
+    return brush_core_call_rsync($source_path, $destination_path, $additional_options, $include_settings_is_default);
   }
 }
 
@@ -79,17 +79,17 @@ function drop_core_rsync($source, $destination, $additional_options = array()) {
  *   from the transfer unless --include-conf is specified.
  * @param $live_output
  *   If TRUE, output goes directly to the terminal using system(). If FALSE,
- *   rsync is executed with drop_shell_exec() with output in
- *   drop_shell_exec_output().
+ *   rsync is executed with brush_shell_exec() with output in
+ *   brush_shell_exec_output().
  *
  * @return
  *   TRUE on success, FALSE on failure.
  */
-function drop_core_call_rsync($source, $destination, $additional_options = array(), $include_settings_is_default = TRUE, $live_output = TRUE) {
+function brush_core_call_rsync($source, $destination, $additional_options = array(), $include_settings_is_default = TRUE, $live_output = TRUE) {
   // Exclude vcs reserved files.
   $options = '';
-  if (!_drop_rsync_option_exists('include-vcs', $additional_options)) {
-    $vcs_files = drop_version_control_reserved_files();
+  if (!_brush_rsync_option_exists('include-vcs', $additional_options)) {
+    $vcs_files = brush_version_control_reserved_files();
     foreach ($vcs_files as $file) {
       $options .= ' --exclude="'.$file.'"';
     }
@@ -100,28 +100,28 @@ function drop_core_call_rsync($source, $destination, $additional_options = array
   foreach (array('include', 'exclude') as $include_exclude) {
     // Get the option --include-path or --exclude-path and explode to an array of paths
     // that we will translate into an --include or --exclude option to pass to rsync
-    $inc_ex_path = explode(PATH_SEPARATOR, drop_get_option(array($include_exclude . '-path', $include_exclude . '-paths'), ''));
+    $inc_ex_path = explode(PATH_SEPARATOR, brush_get_option(array($include_exclude . '-path', $include_exclude . '-paths'), ''));
     foreach ($inc_ex_path as $one_path_to_inc_ex) {
       if (!empty($one_path_to_inc_ex)) {
         $options .= ' --' . $include_exclude . '="' . $one_path_to_inc_ex . '"';
       }
     }
   }
-  // drop_core_rsync passes in $include_settings_is_default such that
+  // brush_core_rsync passes in $include_settings_is_default such that
   // 'exclude-conf' is the default when syncing from one alias to
   // another, and 'include-conf' is the default when a path component
   // is included.
-  if ($include_settings_is_default ? _drop_rsync_option_exists('exclude-conf', $additional_options) : !_drop_rsync_option_exists('include-conf', $additional_options)) {
+  if ($include_settings_is_default ? _brush_rsync_option_exists('exclude-conf', $additional_options) : !_brush_rsync_option_exists('include-conf', $additional_options)) {
     $options .= ' --exclude="settings.php"';
   }
-  if (_drop_rsync_option_exists('exclude-sites', $additional_options)) {
+  if (_brush_rsync_option_exists('exclude-sites', $additional_options)) {
     $options .= ' --include="sites/all" --exclude="sites/*"';
   }
-  if (_drop_rsync_option_exists('mode', $additional_options)) {
-    $mode = "-" . drop_get_option_override($additional_options, 'mode');
+  if (_brush_rsync_option_exists('mode', $additional_options)) {
+    $mode = "-" . brush_get_option_override($additional_options, 'mode');
   }
-  if (drop_get_context('DROP_VERBOSE')) {
-    // the drop_op() will be verbose about the command that gets executed.
+  if (brush_get_context('BRUSH_VERBOSE')) {
+    // the brush_op() will be verbose about the command that gets executed.
     $mode .= 'v';
     $options .= ' --stats --progress';
   }
@@ -220,15 +220,15 @@ function drop_core_call_rsync($source, $destination, $additional_options = array
     'protocol',
     );
   // Check if the user has set $options['rsync-version'] to enable rsync legacy version support.
-  // Drop was written for rsync 2.6.9 or later, so assume that version if nothing was explicitly set.
-  $rsync_version = drop_get_option(array('rsync-version','source-rsync-version','target-rsync-version'), '2.6.9');
+  // Brush was written for rsync 2.6.9 or later, so assume that version if nothing was explicitly set.
+  $rsync_version = brush_get_option(array('rsync-version','source-rsync-version','target-rsync-version'), '2.6.9');
   foreach ($rsync_available_options as $test_option) {
-    $value = drop_get_option_override($additional_options, $test_option);
+    $value = brush_get_option_override($additional_options, $test_option);
     // Downgrade some options for older versions of rsync
     if ($test_option == 'remove-source-files') {
       if (version_compare($rsync_version, '2.6.4', '<')) {
         $test_option = NULL;
-        drop_log('Rsync does not support --remove-sent-files prior to version 2.6.4; some temporary files may remain undeleted.', 'warning');
+        brush_log('Rsync does not support --remove-sent-files prior to version 2.6.4; some temporary files may remain undeleted.', 'warning');
       }
       elseif (version_compare($rsync_version, '2.6.9', '<')) {
         $test_option = 'remove-sent-files';
@@ -244,29 +244,29 @@ function drop_core_call_rsync($source, $destination, $additional_options = array
     }
   }
 
-  $ssh_options = drop_get_option_override($additional_options, 'ssh-options', '');
+  $ssh_options = brush_get_option_override($additional_options, 'ssh-options', '');
   $exec = "rsync -e 'ssh $ssh_options' $mode$options $source $destination";
 
   if ($live_output) {
-    $exec_result = drop_op_system($exec);
+    $exec_result = brush_op_system($exec);
     $result = ($exec_result == 0);
   }
   else {
-    $result = drop_shell_exec($exec);
+    $result = brush_shell_exec($exec);
   }
   
   if (!$result) {
-    drop_set_error('DROP_RSYNC_FAILED', dt("Could not rsync from !source to !dest", array('!source' => $source, '!dest' => $destination)));
+    brush_set_error('BRUSH_RSYNC_FAILED', dt("Could not rsync from !source to !dest", array('!source' => $source, '!dest' => $destination)));
   }
 
   return $result;
 }
 
-function _drop_rsync_option_exists($option, $additional_options) {
+function _brush_rsync_option_exists($option, $additional_options) {
   if (array_key_exists($option, $additional_options)) {
     return TRUE;
   }
   else {
-    return drop_get_option($option, FALSE);
+    return brush_get_option($option, FALSE);
   }
 }

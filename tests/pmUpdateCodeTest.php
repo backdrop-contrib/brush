@@ -20,8 +20,8 @@ class pmUpdateCode extends Drop_TestCase {
       'yes' => NULL,
       'quiet' => NULL,
     );
-    $this->drop('pm-download', array('devel-7.x-1.0-rc1,webform-7.x-3.4-beta1'), $options);
-    $this->drop('pm-enable', array('menu', 'devel', 'webform'), $options);
+    $this->brush('pm-download', array('devel-7.x-1.0-rc1,webform-7.x-3.4-beta1'), $options);
+    $this->brush('pm-enable', array('menu', 'devel', 'webform'), $options);
   }
 
   function testUpdateCode() {
@@ -30,29 +30,29 @@ class pmUpdateCode extends Drop_TestCase {
       'uri' => 'dev',
       'yes' => NULL,
       'backup-dir' => UNISH_SANDBOX . '/backups',
-      'self-update' => 0, // Don't try update Drop.
+      'self-update' => 0, // Don't try update Brush.
     );
 
     // Try to upgrade a specific module.
-    $this->drop('pm-updatecode', array('devel'), $options + array());
+    $this->brush('pm-updatecode', array('devel'), $options + array());
     // Assure that devel was upgraded and webform was not.
-    $this->drop('pm-updatecode', array(), $options + array('pipe' => NULL));
+    $this->brush('pm-updatecode', array(), $options + array('pipe' => NULL));
     $all = $this->getOutput();
     $this->assertNotContains('devel', $all);
     $this->assertContains('webform', $all);
 
     // Lock webform, and update core.
-    $this->drop('pm-updatecode', array(), $options + array('lock' => 'webform'));
+    $this->brush('pm-updatecode', array(), $options + array('lock' => 'webform'));
     $list = $this->getOutputAsList(); // For debugging.
-    $this->drop('pm-updatecode', array(), $options + array('pipe' => NULL));
+    $this->brush('pm-updatecode', array(), $options + array('pipe' => NULL));
     $all = $this->getOutput();
     $this->assertNotContains('backdrop', $all, 'Core was updated');
     $this->assertContains('webform', $all, 'Webform was skipped.');
 
     // Unlock webform, update, and check.
-    $this->drop('pm-updatecode', array(), $options + array('unlock' => 'webform', 'no-backup' => NULL));
+    $this->brush('pm-updatecode', array(), $options + array('unlock' => 'webform', 'no-backup' => NULL));
     $list = $this->getOutputAsList();
-    $this->drop('pm-updatecode', array(), $options + array('pipe' => NULL));
+    $this->brush('pm-updatecode', array(), $options + array('pipe' => NULL));
     $all = $this->getOutput();
     $this->assertNotContains('webform', $all, 'Webform was updated');
 

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @file Drop backend API
+ * @file Brush backend API
  *
- * When a drop command is called with the --backend option,
+ * When a brush command is called with the --backend option,
  * it will buffer all output, and instead return a JSON encoded
  * string containing all relevant information on the command that
  * was just executed.
  *
- * Through this mechanism, it is possible for Drop commands to
+ * Through this mechanism, it is possible for Brush commands to
  * invoke each other.
  *
  * There are many cases where a command might wish to call another
@@ -36,34 +36,34 @@
  * It will call :
  *  [apipath] [command] --[arg1]=[value1] --[arg2]=[value2] --backend
  *
- * [apipath] in this case will be the path to the drop.php file.
+ * [apipath] in this case will be the path to the brush.php file.
  * [command] is the command you would call, for instance 'status'.
  *
  * GET parameters will be passed as options to the script.
  * POST parameters will be passed to the script as a JSON encoded associative array over STDIN.
  *
- * Because of this standard interface, Drop commands can also be executed on
+ * Because of this standard interface, Brush commands can also be executed on
  * external servers through SSH pipes, simply by prepending, 'ssh username@server.com'
  * in front of the command.
  *
  * If the key-based ssh authentication has been set up between the servers,
- * this will just work.  By default, drop is configured to disallow password
+ * this will just work.  By default, brush is configured to disallow password
  * authentication; if you would like to enter a password for every connection,
  * then in your droprc.php file, set $options['ssh-options'] so that it does NOT
  * include '-o PasswordAuthentication=no'.  See examples/example.droprc.php.
  *
  * The results from backend API calls can be fetched via a call to
- * drop_backend_get_result().
+ * brush_backend_get_result().
  */
 
 /**
  * Identify the JSON encoded output from a command.
  */
-define('DROP_BACKEND_OUTPUT_DELIMITER', 'DROP_BACKEND_OUTPUT_START>>>%s<<<DROP_BACKEND_OUTPUT_END');
+define('BRUSH_BACKEND_OUTPUT_DELIMITER', 'BRUSH_BACKEND_OUTPUT_START>>>%s<<<BRUSH_BACKEND_OUTPUT_END');
 
-function drop_backend_set_result($value) {
-  if (drop_get_context('DROP_BACKEND')) {
-    drop_set_context('BACKEND_RESULT', $value);
+function brush_backend_set_result($value) {
+  if (brush_get_context('BRUSH_BACKEND')) {
+    brush_set_context('BACKEND_RESULT', $value);
   }
 }
 /**
@@ -103,32 +103,32 @@ function drop_backend_set_result($value) {
  *       the command line options, options set in a droprc.php configuration
  *       files, and options set from the alias record used with the command.
  */
-function drop_backend_get_result() {
-  return drop_get_context('BACKEND_RESULT');
+function brush_backend_get_result() {
+  return brush_get_context('BACKEND_RESULT');
 }
 
-function drop_backend_output() {
+function brush_backend_output() {
   $data = array();
 
   $data['output'] = ob_get_contents();
   ob_end_clean();
 
-  $result_object = drop_backend_get_result();
+  $result_object = brush_backend_get_result();
   if (isset($result_object)) {
     $data['object'] = $result_object;
   }
 
-  $error = drop_get_error();
-  $data['error_status'] = ($error) ? $error : DROP_SUCCESS;
+  $error = brush_get_error();
+  $data['error_status'] = ($error) ? $error : BRUSH_SUCCESS;
 
-  $data['log'] = drop_get_log(); // Append logging information
+  $data['log'] = brush_get_log(); // Append logging information
   // The error log is a more specific version of the log, and may be used by calling
   // scripts to check for specific errors that have occurred.
-  $data['error_log'] = drop_get_error_log();
+  $data['error_log'] = brush_get_error_log();
   // If there is a @self record, then include it in the result
-  $self_record = drop_sitealias_get_record('@self');
+  $self_record = brush_sitealias_get_record('@self');
   if (!empty($self_record)) {
-    $site_context = drop_get_context('site', array());
+    $site_context = brush_get_context('site', array());
     unset($site_context['config-file']);
     unset($site_context['context-path']);
     unset($self_record['loaded-config']);
@@ -137,17 +137,17 @@ function drop_backend_output() {
   }
 
   // Return the options that were set at the end of the process.
-  $data['context']  = drop_get_merged_options();
-  if (!drop_get_context('DROP_QUIET')) {
-    printf(DROP_BACKEND_OUTPUT_DELIMITER, json_encode($data));
+  $data['context']  = brush_get_merged_options();
+  if (!brush_get_context('BRUSH_QUIET')) {
+    printf(BRUSH_BACKEND_OUTPUT_DELIMITER, json_encode($data));
   }
 }
 
 /**
- * Parse output returned from a Drop command.
+ * Parse output returned from a Brush command.
  *
  * @param string
- *    The output of a drop command
+ *    The output of a brush command
  * @param integrate
  *    Integrate the errors and log messages from the command into the current process.
  *
@@ -155,8 +155,8 @@ function drop_backend_output() {
  *   An associative array containing the data from the external command, or the string parameter if it
  *   could not be parsed successfully.
  */
-function drop_backend_parse_output($string, $integrate = TRUE) {
-  $regex = sprintf(DROP_BACKEND_OUTPUT_DELIMITER, '(.*)');
+function brush_backend_parse_output($string, $integrate = TRUE) {
+  $regex = sprintf(BRUSH_BACKEND_OUTPUT_DELIMITER, '(.*)');
 
   preg_match("/$regex/s", $string, $match);
 
@@ -164,14 +164,14 @@ function drop_backend_parse_output($string, $integrate = TRUE) {
     // we have our JSON encoded string
     $output = $match[1];
     // remove the match we just made and any non printing characters
-    $string = trim(str_replace(sprintf(DROP_BACKEND_OUTPUT_DELIMITER, $match[1]), '', $string));
+    $string = trim(str_replace(sprintf(BRUSH_BACKEND_OUTPUT_DELIMITER, $match[1]), '', $string));
   }
 
   if ($output) {
     $data = json_decode($output, TRUE);
     if (is_array($data)) {
       if ($integrate) {
-        _drop_backend_integrate($data);
+        _brush_backend_integrate($data);
       }
       return $data;
     }
@@ -188,21 +188,21 @@ function drop_backend_parse_output($string, $integrate = TRUE) {
  * @param data
  *    The associative array returned from the external command.
  */
-function _drop_backend_integrate($data) {
+function _brush_backend_integrate($data) {
   if (is_array($data['log'])) {
     foreach($data['log'] as $log) {
       $message = is_array($log['message']) ? implode("\n", $log['message']) : $log['message'];
       if (!is_null($log['error'])) {
-        drop_set_error($log['error'], $message);
+        brush_set_error($log['error'], $message);
       }
       else {
-        drop_log($message, $log['type']);
+        brush_log($message, $log['type']);
       }
     }
   }
-  // Output will either be printed, or buffered to the drop_backend_output command.
-  if (drop_cmp_error('DROP_APPLICATION_ERROR') && !empty($data['output'])) {
-    drop_set_error("DROP_APPLICATION_ERROR", dt("Output from failed command :\n !output", array('!output' => $data['output'])));
+  // Output will either be printed, or buffered to the brush_backend_output command.
+  if (brush_cmp_error('BRUSH_APPLICATION_ERROR') && !empty($data['output'])) {
+    brush_set_error("BRUSH_APPLICATION_ERROR", dt("Output from failed command :\n !output", array('!output' => $data['output'])));
   }
   else {
     print ($data['output']);
@@ -224,14 +224,14 @@ function _drop_backend_integrate($data) {
  *   If it executed successfully, it returns an associative array containing the command
  *   called, the output of the command, and the error code of the command.
  */
-function _drop_proc_open($cmd, $data = NULL, $context = NULL) {
+function _brush_proc_open($cmd, $data = NULL, $context = NULL) {
   $descriptorspec = array(
      0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
      1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
      2 => array("pipe", "w")   // stderr is a pipe the child will write to
   );
-  if (drop_get_context('DROP_SIMULATE') && !array_key_exists('#override-simulated', $data)) {
-    drop_print('proc_open: ' . $cmd);
+  if (brush_get_context('BRUSH_SIMULATE') && !array_key_exists('#override-simulated', $data)) {
+    brush_print('proc_open: ' . $cmd);
     return FALSE;
   }
   $process = proc_open($cmd, $descriptorspec, $pipes, null, null, array('context' => $context));
@@ -269,10 +269,10 @@ function _drop_proc_open($cmd, $data = NULL, $context = NULL) {
 }
 
 /**
- * Invoke a drop backend command.
+ * Invoke a brush backend command.
  *
  * @param command
- *    A defined drop command such as 'cron', 'status' or any of the available ones such as 'drop pm'.
+ *    A defined brush command such as 'cron', 'status' or any of the available ones such as 'brush pm'.
  * @param data
  *    Optional. An array containing options to pass to the call. Common options would be 'uri' if you want to call a command
  *    on a different site, or 'root', if you want to call a command using a different Backdrop installation.
@@ -286,39 +286,39 @@ function _drop_proc_open($cmd, $data = NULL, $context = NULL) {
  *    Optional. Defaults to TRUE.
  *    If TRUE, any error statuses or log messages will be integrated into the current process. This might not be what you want,
  *    if you are writing a command that operates on multiple sites.
- * @param drop_path
- *    Optional. Defaults to the current drop.php file on the local machine, and
- *    to simply 'drop' (the drop script in the current PATH) on remote servers.
- *    You may also specify a different drop.php script explicitly.  You will need
- *    to set this when calling drop on a remote server if 'drop' is not in the
+ * @param brush_path
+ *    Optional. Defaults to the current brush.php file on the local machine, and
+ *    to simply 'brush' (the brush script in the current PATH) on remote servers.
+ *    You may also specify a different brush.php script explicitly.  You will need
+ *    to set this when calling brush on a remote server if 'brush' is not in the
  *    PATH on that machine.
  * @param hostname
- *    Optional. A remote host to execute the drop command on.
+ *    Optional. A remote host to execute the brush command on.
  * @param username
  *    Optional. Defaults to the current user. If you specify this, you can choose which module to send.
  *
  * @deprecated Command name includes arguments, and these are not quote-escaped in any way.
- * @see drop_invoke_process("@self", $command, array($arg1, $arg2, ...), $data) for a better option.
+ * @see brush_invoke_process("@self", $command, array($arg1, $arg2, ...), $data) for a better option.
  *
  * @return
  *   If the command could not be completed successfully, FALSE.
- *   If the command was completed, this will return an associative array containing the data from drop_backend_output().
+ *   If the command was completed, this will return an associative array containing the data from brush_backend_output().
  */
-function drop_backend_invoke($command, $data = array(), $method = 'GET', $integrate = TRUE, $drop_path = NULL, $hostname = NULL, $username = NULL) {
+function brush_backend_invoke($command, $data = array(), $method = 'GET', $integrate = TRUE, $brush_path = NULL, $hostname = NULL, $username = NULL) {
   $args = explode(" ", $command);
   $command = array_shift($args);
-  return drop_backend_invoke_args($command, $args, $data, $method, $integrate, $drop_path, $hostname, $username);
+  return brush_backend_invoke_args($command, $args, $data, $method, $integrate, $brush_path, $hostname, $username);
 }
 
 /**
- * A variant of drop_backend_invoke() which specifies command and arguments separately.
+ * A variant of brush_backend_invoke() which specifies command and arguments separately.
  *
  * @deprecated; do not call directly.
- * @see drop_invoke_process("@self", $command, $args, $data) for a better option.
+ * @see brush_invoke_process("@self", $command, $args, $data) for a better option.
  */
-function drop_backend_invoke_args($command, $args, $data = array(), $method = 'GET', $integrate = TRUE, $drop_path = NULL, $hostname = NULL, $username = NULL, $ssh_options = NULL) {
-  $cmd = _drop_backend_generate_command($command, $args, $data, $method, $drop_path, $hostname, $username, $ssh_options);
-  return _drop_backend_invoke($cmd, $data, array_key_exists('#integrate', $data) ? $data['#integrate'] : $integrate);
+function brush_backend_invoke_args($command, $args, $data = array(), $method = 'GET', $integrate = TRUE, $brush_path = NULL, $hostname = NULL, $username = NULL, $ssh_options = NULL) {
+  $cmd = _brush_backend_generate_command($command, $args, $data, $method, $brush_path, $hostname, $username, $ssh_options);
+  return _brush_backend_invoke($cmd, $data, array_key_exists('#integrate', $data) ? $data['#integrate'] : $integrate);
 }
 
 /**
@@ -327,21 +327,21 @@ function drop_backend_invoke_args($command, $args, $data = array(), $method = 'G
  * @param site_record
  *   An array containing information used to generate the command.
  *   'remote-host'
- *      Optional. A remote host to execute the drop command on.
+ *      Optional. A remote host to execute the brush command on.
  *   'remote-user'
  *      Optional. Defaults to the current user. If you specify this, you can choose which module to send.
  *   'ssh-options'
  *      Optional.  Defaults to "-o PasswordAuthentication=no"
  *   'path-aliases'
  *      Optional; contains paths to folders and executables useful to the command.
- *      '%drop-script'
- *        Optional. Defaults to the current drop.php file on the local machine, and
- *        to simply 'drop' (the drop script in the current PATH) on remote servers.
- *        You may also specify a different drop.php script explicitly.  You will need
- *        to set this when calling drop on a remote server if 'drop' is not in the
+ *      '%brush-script'
+ *        Optional. Defaults to the current brush.php file on the local machine, and
+ *        to simply 'brush' (the brush script in the current PATH) on remote servers.
+ *        You may also specify a different brush.php script explicitly.  You will need
+ *        to set this when calling brush on a remote server if 'brush' is not in the
  *        PATH on that machine.
  * @param command
- *    A defined drop command such as 'cron', 'status' or any of the available ones such as 'drop pm'.
+ *    A defined brush command such as 'cron', 'status' or any of the available ones such as 'brush pm'.
  * @param args
  *    An array of arguments for the command.
  * @param data
@@ -363,11 +363,11 @@ function drop_backend_invoke_args($command, $args, $data = array(), $method = 'G
  *   A text string representing a fully escaped command.
  *
  * @deprecated; do not call directly.
- * @see drop_invoke_process($site_record, $command, $args, $data) for a better option.
+ * @see brush_invoke_process($site_record, $command, $args, $data) for a better option.
  */
-function drop_backend_invoke_sitealias($site_record, $command, $args, $data = array(), $method = 'GET', $integrate = TRUE) {
-  $cmd = _drop_backend_generate_command_sitealias($site_record, $command, $args, $data, $method);
-  return _drop_backend_invoke($cmd, $data, array_key_exists('#integrate', $data) ? $data['#integrate'] : $integrate);
+function brush_backend_invoke_sitealias($site_record, $command, $args, $data = array(), $method = 'GET', $integrate = TRUE) {
+  $cmd = _brush_backend_generate_command_sitealias($site_record, $command, $args, $data, $method);
+  return _brush_backend_invoke($cmd, $data, array_key_exists('#integrate', $data) ? $data['#integrate'] : $integrate);
 }
 
 /**
@@ -389,28 +389,28 @@ function drop_backend_invoke_sitealias($site_record, $command, $args, $data = ar
  *
  * @return
  *   If the command could not be completed successfully, FALSE.
- *   If the command was completed, this will return an associative array containing the data from drop_backend_output().
+ *   If the command was completed, this will return an associative array containing the data from brush_backend_output().
  */
-function _drop_backend_invoke($cmd, $data = null, $integrate = TRUE) {
-  drop_log(dt('Running: !cmd', array('!cmd' => $cmd)), 'command');
+function _brush_backend_invoke($cmd, $data = null, $integrate = TRUE) {
+  brush_log(dt('Running: !cmd', array('!cmd' => $cmd)), 'command');
   if (array_key_exists('#interactive', $data)) {
-    drop_log(dt("executing !cmd", array('!cmd' => $cmd)));
-    return drop_op_system($cmd);
+    brush_log(dt("executing !cmd", array('!cmd' => $cmd)));
+    return brush_op_system($cmd);
   }
   else {
-    $proc = _drop_proc_open($cmd, $data);
+    $proc = _brush_proc_open($cmd, $data);
 
-    if (($proc['code'] == DROP_APPLICATION_ERROR) && $integrate) {
-      drop_set_error('DROP_APPLICATION_ERROR', dt("The external command could not be executed due to an application error."));
+    if (($proc['code'] == BRUSH_APPLICATION_ERROR) && $integrate) {
+      brush_set_error('BRUSH_APPLICATION_ERROR', dt("The external command could not be executed due to an application error."));
     }
 
     if ($proc['output']) {
-      $values = drop_backend_parse_output($proc['output'], $integrate);
+      $values = brush_backend_parse_output($proc['output'], $integrate);
       if (is_array($values)) {
         return $values;
       }
       else {
-        return drop_set_error('DROP_FRAMEWORK_ERROR', dt("The command could not be executed successfully (returned: !return, code: %code)", array("!return" => $proc['output'], "%code" =>  $proc['code'])));
+        return brush_set_error('BRUSH_FRAMEWORK_ERROR', dt("The command could not be executed successfully (returned: !return, code: %code)", array("!return" => $proc['output'], "%code" =>  $proc['code'])));
       }
     }
   }
@@ -421,7 +421,7 @@ function _drop_backend_invoke($cmd, $data = null, $integrate = TRUE) {
  * Generate a command to execute.
  *
  * @param command
- *    A defined drop command such as 'cron', 'status' or any of the available ones such as 'drop pm'.
+ *    A defined brush command such as 'cron', 'status' or any of the available ones such as 'brush pm'.
  * @param args
  *    An array of arguments for the command.
  * @param data
@@ -434,30 +434,30 @@ function _drop_backend_invoke($cmd, $data = null, $integrate = TRUE) {
  *    If this parameter is set to 'POST', the $data array will be passed to the script being called as a JSON encoded string over
  *    the STDIN pipe of that process. This is preferable if you have to pass sensitive data such as passwords and the like.
  *    For any other value, the $data array will be collapsed down into a set of command line options to the script.
- * @param drop_path
- *    Optional. Defaults to the current drop.php file on the local machine, and
- *    to simply 'drop' (the drop script in the current PATH) on remote servers.
- *    You may also specify a different drop.php script explicitly.  You will need
- *    to set this when calling drop on a remote server if 'drop' is not in the
+ * @param brush_path
+ *    Optional. Defaults to the current brush.php file on the local machine, and
+ *    to simply 'brush' (the brush script in the current PATH) on remote servers.
+ *    You may also specify a different brush.php script explicitly.  You will need
+ *    to set this when calling brush on a remote server if 'brush' is not in the
  *    PATH on that machine.
  * @param hostname
- *    Optional. A remote host to execute the drop command on.
+ *    Optional. A remote host to execute the brush command on.
  * @param username
  *    Optional. Defaults to the current user. If you specify this, you can choose which module to send.
  *
  * @return
  *   A text string representing a fully escaped command.
  *
- * @deprecated Is not as flexible as recommended command.  @see _drop_backend_generate_command_sitealias().
+ * @deprecated Is not as flexible as recommended command.  @see _brush_backend_generate_command_sitealias().
  */
-function _drop_backend_generate_command($command, $args, &$data, $method = 'GET', $drop_path = null, $hostname = null, $username = null, $ssh_options = NULL) {
-  return _drop_backend_generate_command_sitealias(
+function _brush_backend_generate_command($command, $args, &$data, $method = 'GET', $brush_path = null, $hostname = null, $username = null, $ssh_options = NULL) {
+  return _brush_backend_generate_command_sitealias(
     array(
       'remote-host' => $hostname,
       'remote-user' => $username,
       'ssh-options' => $ssh_options,
       'path-aliases' => array(
-        '%drop-script' => $drop_path,
+        '%brush-script' => $brush_path,
       ),
     ), $command, $args, $data, $method);
 }
@@ -468,21 +468,21 @@ function _drop_backend_generate_command($command, $args, &$data, $method = 'GET'
  * @param site_record
  *   An array containing information used to generate the command.
  *   'remote-host'
- *      Optional. A remote host to execute the drop command on.
+ *      Optional. A remote host to execute the brush command on.
  *   'remote-user'
  *      Optional. Defaults to the current user. If you specify this, you can choose which module to send.
  *   'ssh-options'
  *      Optional.  Defaults to "-o PasswordAuthentication=no"
  *   'path-aliases'
  *      Optional; contains paths to folders and executables useful to the command.
- *      '%drop-script'
- *        Optional. Defaults to the current drop.php file on the local machine, and
- *        to simply 'drop' (the drop script in the current PATH) on remote servers.
- *        You may also specify a different drop.php script explicitly.  You will need
- *        to set this when calling drop on a remote server if 'drop' is not in the
+ *      '%brush-script'
+ *        Optional. Defaults to the current brush.php file on the local machine, and
+ *        to simply 'brush' (the brush script in the current PATH) on remote servers.
+ *        You may also specify a different brush.php script explicitly.  You will need
+ *        to set this when calling brush on a remote server if 'brush' is not in the
  *        PATH on that machine.
  * @param command
- *    A defined drop command such as 'cron', 'status' or any of the available ones such as 'drop pm'.
+ *    A defined brush command such as 'cron', 'status' or any of the available ones such as 'brush pm'.
  * @param args
  *    An array of arguments for the command.
  * @param data
@@ -499,30 +499,30 @@ function _drop_backend_generate_command($command, $args, &$data, $method = 'GET'
  * @return
  *   A text string representing a fully escaped command.
  */
-function _drop_backend_generate_command_sitealias($site_record, $command, $args, &$data, $method = 'GET') {
-  $drop_path = null;
+function _brush_backend_generate_command_sitealias($site_record, $command, $args, &$data, $method = 'GET') {
+  $brush_path = null;
 
   $hostname = array_key_exists('remote-host', $site_record) ? $site_record['remote-host'] : null;
   $username = array_key_exists('remote-user', $site_record) ? $site_record['remote-user'] : null;
   $ssh_options = array_key_exists('ssh-options', $site_record) ? $site_record['ssh-options'] : null;
-  $os = drop_os($site_record);
+  $os = brush_os($site_record);
 
-  $drop_path = NULL;
+  $brush_path = NULL;
   if (array_key_exists('path-aliases', $site_record)) {
-    if (array_key_exists('%drop-script', $site_record['path-aliases'])) {
-      $drop_path = $site_record['path-aliases']['%drop-script'];
+    if (array_key_exists('%brush-script', $site_record['path-aliases'])) {
+      $brush_path = $site_record['path-aliases']['%brush-script'];
     }
   }
 
-  if (drop_is_local_host($hostname)) {
+  if (brush_is_local_host($hostname)) {
     $hostname = null;
   }
 
-  $drop_path = !is_null($drop_path) ? $drop_path : (is_null($hostname) ? DROP_COMMAND : 'drop'); // Call own drop.php file on local machines, or 'drop' on remote machines.
-  $data['root'] = array_key_exists('root', $data) ? $data['root'] : drop_get_context('DROP_BACKDROP_ROOT');
-  $data['uri'] = array_key_exists('uri', $data) ? $data['uri'] : drop_get_context('DROP_URI');
+  $brush_path = !is_null($brush_path) ? $brush_path : (is_null($hostname) ? BRUSH_COMMAND : 'brush'); // Call own brush.php file on local machines, or 'brush' on remote machines.
+  $data['root'] = array_key_exists('root', $data) ? $data['root'] : brush_get_context('BRUSH_BACKDROP_ROOT');
+  $data['uri'] = array_key_exists('uri', $data) ? $data['uri'] : brush_get_context('BRUSH_URI');
 
-  $option_str = _drop_backend_argument_string($data, $method);
+  $option_str = _brush_backend_argument_string($data, $method);
   foreach ($data as $key => $arg) {
     if (is_numeric($key)) {
       $args[] = $arg;
@@ -530,16 +530,16 @@ function _drop_backend_generate_command_sitealias($site_record, $command, $args,
     }
   }
   foreach ($args as $arg) {
-    $command .= ' ' . drop_escapeshellarg($arg);
+    $command .= ' ' . brush_escapeshellarg($arg);
   }
   $interactive = ' ' . (empty($data['#interactive']) ? '' : ' > `tty`') . ' 2>&1';
   // @TODO: Implement proper multi platform / multi server support.
-  $cmd = escapeshellcmd($drop_path) . " " . $option_str . " " . $command . (empty($data['#interactive']) ? " --backend" : "");
+  $cmd = escapeshellcmd($brush_path) . " " . $option_str . " " . $command . (empty($data['#interactive']) ? " --backend" : "");
 
   if (!is_null($hostname)) {
-    $username = (!is_null($username)) ? drop_escapeshellarg($username) . "@" : '';
-    $ssh_options = (!is_null($ssh_options)) ? $ssh_options : drop_get_option('ssh-options', "-o PasswordAuthentication=no");
-    $cmd = "ssh " . $ssh_options . " " . $username . drop_escapeshellarg($hostname) . " " . drop_escapeshellarg($cmd . ' 2>&1', $os) . $interactive;
+    $username = (!is_null($username)) ? brush_escapeshellarg($username) . "@" : '';
+    $ssh_options = (!is_null($ssh_options)) ? $ssh_options : brush_get_option('ssh-options', "-o PasswordAuthentication=no");
+    $cmd = "ssh " . $ssh_options . " " . $username . brush_escapeshellarg($hostname) . " " . brush_escapeshellarg($cmd . ' 2>&1', $os) . $interactive;
   }
   else {
     $cmd .= $interactive;
@@ -549,20 +549,20 @@ function _drop_backend_generate_command_sitealias($site_record, $command, $args,
 }
 
 /**
- * A small utility function to call a drop command in the background.
+ * A small utility function to call a brush command in the background.
  *
- * Takes the same parameters as drop_backend_invoke, but forks a new
+ * Takes the same parameters as brush_backend_invoke, but forks a new
  * process by calling the command using system() and adding a '&' at the
  * end of the command.
  *
  * Use this if you don't care what the return value of the command may be.
  */
-function drop_backend_fork($command, $data, $drop_path = null, $hostname = null, $username = null) {
+function brush_backend_fork($command, $data, $brush_path = null, $hostname = null, $username = null) {
   $data['quiet'] = TRUE;
   $args = explode(" ", $command);
   $command = array_shift($args);
-  $cmd = "(" . _drop_backend_generate_command($command, $args, $data, 'GET', $drop_path, $hostname, $username) . ' &) > /dev/null';
-  drop_op_system($cmd);
+  $cmd = "(" . _brush_backend_generate_command($command, $args, $data, 'GET', $brush_path, $hostname, $username) . ' &) > /dev/null';
+  brush_op_system($cmd);
 }
 
 /**
@@ -579,9 +579,9 @@ function drop_backend_fork($command, $data, $drop_path = null, $hostname = null,
  *    the STDIN pipe of that process. This is preferable if you have to pass sensitive data such as passwords and the like.
  *    For any other value, the $data array will be collapsed down into a set of command line options to the script.
  * @return
- *    A properly formatted and escaped set of arguments and options to append to the drop.php shell command.
+ *    A properly formatted and escaped set of arguments and options to append to the brush.php shell command.
  */
-function _drop_backend_argument_string(&$data, $method = 'GET') {
+function _brush_backend_argument_string(&$data, $method = 'GET') {
   // Named keys are options, numerically indexed keys are optional arguments.
   $args = array();
   $options = array();
@@ -604,7 +604,7 @@ function _drop_backend_argument_string(&$data, $method = 'GET') {
   $option_str = '';
   foreach ($options as $key => $value) {
     if (($method != 'POST') || (($method == 'POST') && in_array($key, $special))) {
-      $option_str .= _drop_escape_option($key, $value);
+      $option_str .= _brush_escape_option($key, $value);
       unset($data[$key]); // Remove items in the data array.
     }
   }
@@ -624,7 +624,7 @@ function _drop_backend_argument_string(&$data, $method = 'GET') {
  *   If the value is set to TRUE, this function will return " --key"
  *   In other cases it will return " --key='value'"
  */
-function _drop_escape_option($key, $value = TRUE) {
+function _brush_escape_option($key, $value = TRUE) {
   if ($value !== TRUE) {
     $option_str = " --$key=" . escapeshellarg($value);
   }
@@ -644,7 +644,7 @@ function _drop_escape_option($key, $value = TRUE) {
  * @return
  *   An associative array of options, if successfull. Otherwise FALSE.
  */
-function _drop_backend_get_stdin() {
+function _brush_backend_get_stdin() {
   $fp = fopen('php://stdin', 'r');
   stream_set_blocking($fp, FALSE);
   $string = stream_get_contents($fp);

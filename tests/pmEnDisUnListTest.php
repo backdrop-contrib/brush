@@ -15,31 +15,31 @@ class EnDisUnListCase extends Drop_TestCase {
       'root' => $this->sites['dev']['root'],
       'uri' => 'dev',
     );
-    $this->drop('pm-download', array('devel-7.x-1.0'), $options);
-    $this->drop('pm-list', array(), $options + array('no-core' => NULL, 'status' => 'not installed'));
+    $this->brush('pm-download', array('devel-7.x-1.0'), $options);
+    $this->brush('pm-list', array(), $options + array('no-core' => NULL, 'status' => 'not installed'));
     $list = $this->getOutputAsList();
     $this->assertTrue(in_array('devel', $list));
 
-    $this->drop('pm-enable', array('menu', 'devel'), $options);
-    $this->drop('pm-list', array(), $options + array('status' => 'enabled'));
+    $this->brush('pm-enable', array('menu', 'devel'), $options);
+    $this->brush('pm-list', array(), $options + array('status' => 'enabled'));
     $list = $this->getOutputAsList();
     $this->assertTrue(in_array('devel', $list));
     $this->assertTrue(in_array('bartik', $list), 'Themes are in the pm-list');
 
-    $this->drop('pm-list', array(), $options + array('package' => 'Core'));
+    $this->brush('pm-list', array(), $options + array('package' => 'Core'));
     $list = $this->getOutputAsList();
     $this->assertFalse(in_array('devel', $list), 'Devel is not part of core package');
 
     // For testing uninstall later.
-    $this->drop('variable-set', array('devel_query_display', 1), $options);
+    $this->brush('variable-set', array('devel_query_display', 1), $options);
 
-    $this->drop('pm-disable', array('devel'), $options);
-    $this->drop('pm-list', array(), $options + array('status' => 'disabled'));
+    $this->brush('pm-disable', array('devel'), $options);
+    $this->brush('pm-list', array(), $options + array('status' => 'disabled'));
     $list = $this->getOutputAsList();
     $this->assertTrue(in_array('devel', $list));
 
-    $this->drop('pm-uninstall', array('devel'), $options);
-    $this->drop('pm-list', array(), $options + array('status' => 'not installed', 'type' => 'module'));
+    $this->brush('pm-uninstall', array('devel'), $options);
+    $this->brush('pm-list', array(), $options + array('status' => 'not installed', 'type' => 'module'));
     $list = $this->getOutputAsList();
     $this->assertTrue(in_array('devel', $list));
 

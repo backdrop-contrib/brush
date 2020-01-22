@@ -5,7 +5,7 @@
 *  We choose to test the backend system in two parts.
 *    - Origin. These tests assure that we are generate a proper ssh command
 *        when a backend invoke is needed.
-*    - Target. These tests assure that drop generates a delimited JSON array
+*    - Target. These tests assure that brush generates a delimited JSON array
 *        when called with --backend option.
 *
 *  Advantages of this approach:
@@ -14,7 +14,7 @@
 */
 
 class backendCase extends Drop_TestCase {
-  const DROP_BACKEND_OUTPUT_DELIMITER = 'DROP_BACKEND_OUTPUT_START>>>%s<<<DROP_BACKEND_OUTPUT_END';
+  const BRUSH_BACKEND_OUTPUT_DELIMITER = 'BRUSH_BACKEND_OUTPUT_START>>>%s<<<BRUSH_BACKEND_OUTPUT_END';
 
   /*
    * Covers the following origin responsibilities.
@@ -27,7 +27,7 @@ class backendCase extends Drop_TestCase {
     $exec = sprintf('%s %s version --simulate --ssh-options=%s | grep ssh', self::escapeshellarg(UNISH_DROP), self::escapeshellarg('user@server/path/to/backdrop#sitename'), self::escapeshellarg('-i mysite_dsa'));
     $this->execute($exec);
     // $expected might be different on non unix platforms. We shall see.
-    $expected = "proc_open: ssh -i mysite_dsa 'user'@'server' 'drop  --uri='\''sitename'\'' --root='\''/path/to/backdrop'\'' --simulate version --backend 2>&1'  2>&1";
+    $expected = "proc_open: ssh -i mysite_dsa 'user'@'server' 'brush  --uri='\''sitename'\'' --root='\''/path/to/backdrop'\'' --simulate version --backend 2>&1'  2>&1";
     $output = $this->getOutput();
     $this->assertEquals($expected, $output, 'Expected ssh command was built');
   }
@@ -58,20 +58,20 @@ class backendCase extends Drop_TestCase {
     $this->execute($exec, self::EXIT_ERROR);
     $parsed = $this->parse($this->getOutput());
     $this->assertEquals(1, $parsed['error_status']);
-    $this->assertArrayHasKey('DROP_NO_BACKDROP_ROOT', $parsed['error_log']);
+    $this->assertArrayHasKey('BRUSH_NO_BACKDROP_ROOT', $parsed['error_log']);
   }
 
   /*
-   * A slightly less functional copy of drop_backend_parse_output().
+   * A slightly less functional copy of brush_backend_parse_output().
    */
   function parse($string) {
-    $regex = sprintf(self::DROP_BACKEND_OUTPUT_DELIMITER, '(.*)');
+    $regex = sprintf(self::BRUSH_BACKEND_OUTPUT_DELIMITER, '(.*)');
     preg_match("/$regex/s", $string, $match);
     if ($match[1]) {
       // we have our JSON encoded string
       $output = $match[1];
       // remove the match we just made and any non printing characters
-      $string = trim(str_replace(sprintf(self::DROP_BACKEND_OUTPUT_DELIMITER, $match[1]), '', $string));
+      $string = trim(str_replace(sprintf(self::BRUSH_BACKEND_OUTPUT_DELIMITER, $match[1]), '', $string));
     }
 
     if ($output) {

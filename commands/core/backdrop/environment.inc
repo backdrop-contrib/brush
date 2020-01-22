@@ -2,8 +2,8 @@
 /**
  * @file
  *   Specific functions for a Backdrop environment.
- *   drop_include_engine() magically includes either this file
- *   or environment_X.inc depending on which version of backdrop drop
+ *   brush_include_engine() magically includes either this file
+ *   or environment_X.inc depending on which version of backdrop brush
  *   is called from.
  */
 
@@ -13,14 +13,14 @@
  * @return
  *   An array containing module info for all available modules.
  */
-function drop_get_modules() {
+function brush_get_modules() {
   return system_rebuild_module_data();
 }
 
 /**
  * Returns backdrop required modules, including modules declared as required dynamically.
  */
-function _drop_backdrop_required_modules($module_info) {
+function _brush_backdrop_required_modules($module_info) {
   $required = backdrop_required_modules();
   foreach ($module_info as $name => $module) {
     if (isset($module->info['required']) && $module->info['required']) {
@@ -36,18 +36,18 @@ function _drop_backdrop_required_modules($module_info) {
  * @param $modules
  *   Array of module names
  * @param $module_info
- *   Backdrop 'files' array for modules as returned by drop_get_modules().
+ *   Backdrop 'files' array for modules as returned by brush_get_modules().
  * @return
  *   Array with dependencies and status for $modules
  */
-function drop_check_module_dependencies($modules, $module_info) {
+function brush_check_module_dependencies($modules, $module_info) {
   $status = array();
   foreach ($modules as $key => $module) {
     $dependencies = array_reverse($module_info[$module]->requires);
     $unmet_dependencies = array_diff(array_keys($dependencies), array_keys($module_info));
     if (!empty($unmet_dependencies)) {
       $status[$key]['error'] = array(
-          'code' => 'DROP_PM_ENABLE_DEPENDENCY_NOT_FOUND',
+          'code' => 'BRUSH_PM_ENABLE_DEPENDENCY_NOT_FOUND',
           'message' => dt('Module !module cannot be enabled because it depends on the following modules which could not be found: !unmet_dependencies', array('!module' => $module, '!unmet_dependencies' => implode(',', $unmet_dependencies)))
       );
     }
@@ -59,7 +59,7 @@ function drop_check_module_dependencies($modules, $module_info) {
         $incompatibility = backdrop_check_incompatibility($v, $current_version);
         if (!is_null($incompatibility)) {
           $status[$key]['error'] = array(
-            'code' => 'DROP_PM_ENABLE_DEPENDENCY_VERSION_MISMATCH',
+            'code' => 'BRUSH_PM_ENABLE_DEPENDENCY_VERSION_MISMATCH',
             'message' => dt('Module !module cannot be enabled because it depends on !dependency !required_version but !current_version is available', array('!module' => $module, '!dependency' => $dependency_name, '!required_version' => $incompatibility, '!current_version' => $current_version))
           );
         }
@@ -78,11 +78,11 @@ function drop_check_module_dependencies($modules, $module_info) {
  * @param $modules
  *   Array of module names
  * @param $module_info
- *   Backdrop 'files' array for modules as returned by drop_get_modules().
+ *   Backdrop 'files' array for modules as returned by brush_get_modules().
  * @return
  *   Array with dependents for each one of $modules
  */
-function drop_module_dependents($modules, $module_info) {
+function brush_module_dependents($modules, $module_info) {
   $dependents = array();
   foreach ($modules as $module) {
     $dependents = array_merge($dependents, backdrop_map_assoc(array_keys($module_info[$module]->required_by)));
@@ -97,7 +97,7 @@ function drop_module_dependents($modules, $module_info) {
  * @param $modules
  *   Array of module names
  */
-function drop_module_enable($modules) {
+function brush_module_enable($modules) {
   // The list of modules already have all the dependencies, but they might not
   // be in the correct order. Still pass $enable_dependencies = TRUE so that
   // Backdrop will enable the modules in the correct order.
@@ -110,7 +110,7 @@ function drop_module_enable($modules) {
  * @param $modules
  *   Array of module names
  */
-function drop_module_disable($modules) {
+function brush_module_disable($modules) {
   // The list of modules already have all the dependencies, but they might not
   // be in the correct order. Still pass $enable_dependencies = TRUE so that
   // Backdrop will enable the modules in the correct order.
@@ -123,8 +123,8 @@ function drop_module_disable($modules) {
  * @param $modules
  *   Array of module names
  */
-function drop_module_uninstall($modules) {
-  require_once drop_get_context('DROP_BACKDROP_ROOT') . '/core/includes/install.inc';
+function brush_module_uninstall($modules) {
+  require_once brush_get_context('BRUSH_BACKDROP_ROOT') . '/core/includes/install.inc';
   backdrop_uninstall_modules($modules);
 }
 
@@ -135,7 +135,7 @@ function drop_module_uninstall($modules) {
  * function. Calling this function just makes sure any activities triggered by
  * the form submit (such as admin_role) are completed.
  */
-function drop_system_modules_form_submit($active_modules) {
+function brush_system_modules_form_submit($active_modules) {
   module_load_include('inc', 'system', 'system.admin');
   $form_state = array('values' => array('status' => $active_modules));
   backdrop_form_submit('system_modules', $form_state);
@@ -151,7 +151,7 @@ function drop_system_modules_form_submit($active_modules) {
  * @return
  *   An array containing theme info for all available themes.
  */
-function drop_get_themes() {
+function brush_get_themes() {
   return system_rebuild_theme_data();
 }
 
@@ -161,7 +161,7 @@ function drop_get_themes() {
  * @param $themes
  *  Array of theme names.
  */
-function drop_theme_enable($themes) {
+function brush_theme_enable($themes) {
   theme_enable($themes);
 }
 
@@ -171,7 +171,7 @@ function drop_theme_enable($themes) {
  * @param $themes
  *  Array of theme names.
  */
-function drop_theme_disable($themes) {
+function brush_theme_disable($themes) {
   theme_disable($themes);
 }
 

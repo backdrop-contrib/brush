@@ -10,7 +10,7 @@ require_once 'PHP/CodeCoverage/Filter.php';
 PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
 
 if (extension_loaded('xdebug')) {
-  // Drop comments out the following line for easier debugging.
+  // Brush comments out the following line for easier debugging.
   // xdebug_disable();
 }
 

@@ -17,15 +17,15 @@
  * @return boolean
  *   TRUE if a site alias was found and processed.
  */
-function drop_sitealias_check_arg() {
-  $args = drop_get_arguments();
+function brush_sitealias_check_arg() {
+  $args = brush_get_arguments();
 
   // Test to see if the first arg is a site specification
-  if (_drop_sitealias_set_context_by_name($args[0])) {
+  if (_brush_sitealias_set_context_by_name($args[0])) {
     array_shift($args);
     // We only need to expand the site specification
     // once, then we are done.
-    drop_set_arguments($args);
+    brush_set_arguments($args);
     return TRUE;
   }
 
@@ -36,7 +36,7 @@ function drop_sitealias_check_arg() {
 /**
  * Given a list of alias records, shorten the name used if possible
  */
-function drop_sitealias_simplify_names($site_list) {
+function brush_sitealias_simplify_names($site_list) {
   $result = array();
   foreach ($site_list as $original_name => $alias_record) {
     $adjusted_name = $alias_record['#name'];
@@ -55,19 +55,19 @@ function drop_sitealias_simplify_names($site_list) {
 /**
  * Given an array of site specifications, resolve each one in turn and
  * return an array of alias records.  If you only want a single record,
- * it is preferable to simply call drop_sitealias_get_record directly.
+ * it is preferable to simply call brush_sitealias_get_record directly.
  *
  * @param $site_specifications
- *   An array of site specificatins.  @see drop_sitealias_get_record
+ *   An array of site specificatins.  @see brush_sitealias_get_record
  * @return
  *   An array of alias records
  */
-function drop_sitealias_resolve_sitespecs($site_specifications) {
+function brush_sitealias_resolve_sitespecs($site_specifications) {
   $result_list = array();
   if (!empty($site_specifications)) {
     foreach ($site_specifications as $site) {
-      $alias_record = drop_sitealias_get_record($site);
-      $result_list = array_merge($result_list, drop_sitealias_resolve_sitelist($alias_record));
+      $alias_record = brush_sitealias_get_record($site);
+      $result_list = array_merge($result_list, brush_sitealias_resolve_sitelist($alias_record));
     }
   }
   return $result_list;
@@ -105,7 +105,7 @@ function drop_sitealias_resolve_sitespecs($site_specifications) {
  * @return array
  *   An alias record, or empty if none found.
  */
-function drop_sitealias_get_record($alias) {
+function brush_sitealias_get_record($alias) {
   // Check to see if the alias contains commas.  If it does, then
   // we will go ahead and make a site list record
   $alias_record = array();
@@ -116,29 +116,29 @@ function drop_sitealias_get_record($alias) {
     $alias_record['site-list'] = explode(',', $alias);
   }
   else {
-    $alias_record = _drop_sitealias_get_record($alias);
+    $alias_record = _brush_sitealias_get_record($alias);
   }
   if (!empty($alias_record)) {
     if (!array_key_exists('#name', $alias_record)) {
-      $alias_record['#name'] = drop_sitealias_uri_to_site_dir($alias);
+      $alias_record['#name'] = brush_sitealias_uri_to_site_dir($alias);
     }
 
     // Handle nested alias definitions and command-specific options.
-    drop_set_config_special_contexts($alias_record);
+    brush_set_config_special_contexts($alias_record);
   }
   return $alias_record;
 }
 
 /**
- * This is a continuation of drop_sitealias_get_record, above.  It is
+ * This is a continuation of brush_sitealias_get_record, above.  It is
  * not intended to be called directly.
  */
-function _drop_sitealias_get_record($alias, $alias_context = NULL) {
+function _brush_sitealias_get_record($alias, $alias_context = NULL) {
   // Before we do anything else, load $alias if it needs to be loaded
-  _drop_sitealias_load_alias($alias, $alias_context);
+  _brush_sitealias_load_alias($alias, $alias_context);
 
   // Check to see if the provided parameter is in fact a defined alias.
-  $all_site_aliases =& drop_get_context('site-aliases');
+  $all_site_aliases =& brush_get_context('site-aliases');
   if (array_key_exists($alias, $all_site_aliases)) {
     $alias_record = $all_site_aliases[$alias];
   }
@@ -160,7 +160,7 @@ function _drop_sitealias_get_record($alias, $alias_context = NULL) {
         // Copy various parts of the parsed URL into the appropriate records of the alias record
         foreach (array('user' => 'remote-user', 'pass' => 'remote-pass', 'host' => 'remote-host', 'fragment' => 'uri', 'path' => 'root') as $url_key => $option_key) {
           if (array_key_exists($url_key, $parsed)) {
-            _drop_sitealias_set_record_element($alias_record, $option_key, $parsed[$url_key]);
+            _brush_sitealias_set_record_element($alias_record, $option_key, $parsed[$url_key]);
           }
         }
         // If the site specification has a query, also set the query items
@@ -169,7 +169,7 @@ function _drop_sitealias_get_record($alias, $alias_context = NULL) {
         if (array_key_exists('query', $parsed)) {
           foreach (explode('&', $parsed['query']) as $query_arg) {
             $query_components = explode('=', $query_arg);
-            _drop_sitealias_set_record_element($alias_record, urldecode($query_components[0]), urldecode($query_components[1]));
+            _brush_sitealias_set_record_element($alias_record, urldecode($query_components[0]), urldecode($query_components[1]));
           }
         }
 
@@ -186,9 +186,9 @@ function _drop_sitealias_get_record($alias, $alias_context = NULL) {
           // Special checking: /path/@sites
           $base = substr($alias_record['root'], 0, $relative_alias_pos);
           $relative_alias = substr($alias_record['root'], $relative_alias_pos + 1);
-          if (drop_valid_backdrop_root($base) || ($relative_alias == '@sites')) {
-            drop_sitealias_create_sites_alias($base);
-            $alias_record = drop_sitealias_get_record($relative_alias);
+          if (brush_valid_backdrop_root($base) || ($relative_alias == '@sites')) {
+            brush_sitealias_create_sites_alias($base);
+            $alias_record = brush_sitealias_get_record($relative_alias);
           }
           else {
             $alias_record = array();
@@ -199,36 +199,36 @@ function _drop_sitealias_get_record($alias, $alias_context = NULL) {
         // Case 5.) and 6.):
         // If the alias is the name of a folder in the 'sites' directory,
         // then use it as a local site specification.
-        $alias_record = _drop_sitealias_find_record_for_local_site($alias);
+        $alias_record = _brush_sitealias_find_record_for_local_site($alias);
       }
     }
   }
 
   if (!empty($alias_record)) {
-    // Load the drop config file if there is one associated with this alias
+    // Load the brush config file if there is one associated with this alias
     if (!isset($alias_record['remote']) && !isset($alias_record['loaded-config'])) {
       if (array_key_exists('root', $alias_record)) {
-        drop_sitealias_add_to_alias_path($alias_record['root']);
+        brush_sitealias_add_to_alias_path($alias_record['root']);
       }
-      $alias_site_dir = drop_sitealias_local_site_path($alias_record);
+      $alias_site_dir = brush_sitealias_local_site_path($alias_record);
 
       if (isset($alias_site_dir)) {
         // Add the sites folder of this site to the alias search path list
-        drop_sitealias_add_to_alias_path($alias_site_dir);
+        brush_sitealias_add_to_alias_path($alias_site_dir);
 
         if (!isset($alias_record['config'])) {
           $alias_record['config'] = realpath($alias_site_dir . '/droprc.php');
         }
       }
       if (isset($alias_record['config']) && file_exists($alias_record['config'])) {
-        drop_load_config_file('site', $alias_record['config']);
+        brush_load_config_file('site', $alias_record['config']);
         $alias_record['loaded-config'] = TRUE;
       }
       unset($alias_record['config']);
     }
 
     // Add the static defaults
-    _drop_sitealias_add_static_defaults($alias_record);
+    _brush_sitealias_add_static_defaults($alias_record);
 
     // Cache the result with all of its calculated values
     $all_site_aliases[$alias] = $alias_record;
@@ -242,12 +242,12 @@ function _drop_sitealias_get_record($alias, $alias_context = NULL) {
  *
  * @param $add_path
  *   A path to add to the search path (or NULL to not add any).
- *   Once added, the new path will remain available until drop
+ *   Once added, the new path will remain available until brush
  *   exits.
  * @return
  *   An array of paths containing all values added so far
  */
-function drop_sitealias_add_to_alias_path($add_path) {
+function brush_sitealias_add_to_alias_path($add_path) {
   static $site_paths = array();
 
   if ($add_path != NULL) {
@@ -273,31 +273,31 @@ function drop_sitealias_add_to_alias_path($add_path) {
  * @return
  *   An array of paths
  */
-function drop_sitealias_alias_path($alias_path_context = NULL) {
+function brush_sitealias_alias_path($alias_path_context = NULL) {
   if (isset($alias_path_context)) {
-    return array(drop_sitealias_local_site_path($alias_path_context));
+    return array(brush_sitealias_local_site_path($alias_path_context));
   }
   else {
     // We get the current list of site paths by adding NULL
     // (nothing) to the path list, which is a no-op
-    $site_paths = drop_sitealias_add_to_alias_path(NULL);
+    $site_paths = brush_sitealias_add_to_alias_path(NULL);
 
     // If the user defined the root of a backdrop site, then also
     // look for alias files there.
-    $backdrop_root = drop_get_context('DROP_BACKDROP_ROOT');
+    $backdrop_root = brush_get_context('BRUSH_BACKDROP_ROOT');
     if (empty($backdrop_root)) {
-      $backdrop_root = drop_get_option(array('root', 'r'), NULL);
+      $backdrop_root = brush_get_option(array('root', 'r'), NULL);
     }
     if (isset($backdrop_root)) {
       $site_paths[] = $backdrop_root;
     }
-    $alias_path = (array) drop_get_option('alias-path', array());
+    $alias_path = (array) brush_get_option('alias-path', array());
     if (empty($alias_path)) {
-      $alias_path[] = drop_get_context('ETC_PREFIX', '') . '/etc/drop';
+      $alias_path[] = brush_get_context('ETC_PREFIX', '') . '/etc/brush';
       $alias_path[] = dirname(__FILE__) . '/..';
       $alias_path[] = dirname(__FILE__) . '/../aliases';
-      if(!is_null(drop_server_home())) {
-        $alias_path[] = drop_server_home() . '/.drop';
+      if(!is_null(brush_server_home())) {
+        $alias_path[] = brush_server_home() . '/.brush';
       }
     }
 
@@ -315,11 +315,11 @@ function drop_sitealias_alias_path($alias_path_context = NULL) {
  *   The path to the site directory of the associated
  *   alias record, or NULL if the record is not a local site.
  */
-function drop_sitealias_local_site_path($alias_record) {
+function brush_sitealias_local_site_path($alias_record) {
   $result = NULL;
 
   if (isset($alias_record['uri']) && isset($alias_record['root']) && !isset($alias_record['remote-host'])) {
-    $result = realpath($alias_record['root'] . '/sites/' . drop_sitealias_uri_to_site_dir($alias_record['uri']));
+    $result = realpath($alias_record['root'] . '/sites/' . brush_sitealias_uri_to_site_dir($alias_record['uri']));
   }
 
   return $result;
@@ -336,8 +336,8 @@ function drop_sitealias_local_site_path($alias_record) {
  *   When looking up a relative alias, the alias path context is
  *   the primary alias that we will start our search from.
  */
-function _drop_sitealias_load_alias($alias, $alias_path_context = NULL) {
-  $all_site_aliases = drop_get_context('site-aliases');
+function _brush_sitealias_load_alias($alias, $alias_path_context = NULL) {
+  $all_site_aliases = brush_get_context('site-aliases');
   $result = array();
 
   // Check to see if this is a relative alias ('@site/@peer')
@@ -345,28 +345,28 @@ function _drop_sitealias_load_alias($alias, $alias_path_context = NULL) {
   if ($relative_alias_pos !== false) {
     $primary_alias = substr($alias,0,$relative_alias_pos);
     $relative_alias = substr($alias,$relative_alias_pos + 1);
-    $primary_record = drop_sitealias_get_record($primary_alias);
-    _drop_sitealias_find_and_load_alias(substr($relative_alias,1), $primary_record);
-    $result = drop_sitealias_get_record($relative_alias);
+    $primary_record = brush_sitealias_get_record($primary_alias);
+    _brush_sitealias_find_and_load_alias(substr($relative_alias,1), $primary_record);
+    $result = brush_sitealias_get_record($relative_alias);
     if (!empty($result)) {
       if (array_key_exists('inherited', $result)) {
         $result = array_merge($primary_record, $result);
       }
       $result['#name'] = $relative_alias;
-      _drop_sitealias_cache_alias(substr($alias, 1), $result);
+      _brush_sitealias_cache_alias(substr($alias, 1), $result);
     }
   }
   else {
     // Only aliases--those named entities that begin with '@'--can be loaded this way.
     // We also skip any alias that has already been loaded.
     if ((substr($alias,0,1) == '@') && !array_key_exists($alias,$all_site_aliases)) {
-      drop_log(dt('Load alias !alias', array('!alias' => $alias)));
+      brush_log(dt('Load alias !alias', array('!alias' => $alias)));
       $aliasname = substr($alias,1);
-      $result = _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context);
+      $result = _brush_sitealias_find_and_load_alias($aliasname, $alias_path_context);
       if (!empty($result)) {
         $alias_options = array('site-aliases' => array($aliasname => $result));
-        _drop_sitealias_add_inherited_values($alias_options['site-aliases']);
-        drop_set_config_special_contexts($alias_options);
+        _brush_sitealias_add_inherited_values($alias_options['site-aliases']);
+        brush_set_config_special_contexts($alias_options);
       }
     }
   }
@@ -378,21 +378,21 @@ function _drop_sitealias_load_alias($alias, $alias_path_context = NULL) {
  * Load every alias file that can be found anywhere in the
  * alias search path.
  */
-function drop_sitealias_load_all($resolve_parent = TRUE) {
-  $result = _drop_sitealias_find_and_load_alias(NULL);
+function brush_sitealias_load_all($resolve_parent = TRUE) {
+  $result = _brush_sitealias_find_and_load_alias(NULL);
   if (!empty($result) && ($resolve_parent == TRUE)) {
     // If any aliases were returned, then check for
     // inheritance and then store the aliases into the
     // alias cache
-    _drop_sitealias_add_inherited_values($result);
+    _brush_sitealias_add_inherited_values($result);
     $alias_options = array('site-aliases' => $result);
-    drop_set_config_special_contexts($alias_options);
+    brush_set_config_special_contexts($alias_options);
   }
 }
 
 /**
- * Worker function called by _drop_sitealias_load_alias and
- * drop_sitealias_load_all.  Traverses the alias search path
+ * Worker function called by _brush_sitealias_load_alias and
+ * brush_sitealias_load_all.  Traverses the alias search path
  * and finds the specified alias record.
  *
  * @param $aliasname
@@ -408,7 +408,7 @@ function drop_sitealias_load_all($resolve_parent = TRUE) {
  *   is a $kay => $value pair of alias names and alias records
  *   loaded.
  */
-function _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context = NULL) {
+function _brush_sitealias_find_and_load_alias($aliasname, $alias_path_context = NULL) {
   $result = array();
 
   // Special checking for '@sites' alias
@@ -420,30 +420,30 @@ function _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context = N
       }
     }
     else {
-      $backdrop_root = drop_get_context('DROP_BACKDROP_ROOT');
+      $backdrop_root = brush_get_context('BRUSH_BACKDROP_ROOT');
       if ($backdrop_root == NULL) {
-        $backdrop_root = drop_get_option(array('r', 'root'), drop_locate_root());
+        $backdrop_root = brush_get_option(array('r', 'root'), brush_locate_root());
       }
     }
     if (isset($backdrop_root) && !is_array($backdrop_root)) {
-      drop_sitealias_create_sites_alias($backdrop_root);
+      brush_sitealias_create_sites_alias($backdrop_root);
     }
   }
 
   // The alias path is a list of folders to search for alias settings files
-  $alias_path = drop_sitealias_alias_path($alias_path_context);
+  $alias_path = brush_sitealias_alias_path($alias_path_context);
 
   // $alias_files contains a list of filename patterns
   // to search for.  We will find any matching file in
   // any folder in the alias path.  The directory scan
   // is not deep, though; only files immediately in the
   // search path are considered.
-  $alias_files = array('/.*aliases\.drop(' . DROP_MAJOR_VERSION . '|)rc\.php$/');
+  $alias_files = array('/.*aliases\.brush(' . BRUSH_MAJOR_VERSION . '|)rc\.php$/');
   if ($aliasname == NULL) {
-    $alias_files[] = '/.*\.alias\.drop(' . DROP_MAJOR_VERSION . '|)rc\.php$/';
+    $alias_files[] = '/.*\.alias\.brush(' . BRUSH_MAJOR_VERSION . '|)rc\.php$/';
   }
   else {
-    $alias_files[] = '/' . preg_quote($aliasname, '/') . '\.alias\.drop(' . DROP_MAJOR_VERSION . '|)rc\.php$/';
+    $alias_files[] = '/' . preg_quote($aliasname, '/') . '\.alias\.brush(' . BRUSH_MAJOR_VERSION . '|)rc\.php$/';
   }
 
   // Search each path in turn
@@ -451,7 +451,7 @@ function _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context = N
     // Find all of the matching files in this location
     $alias_files_to_consider = array();
     foreach ($alias_files as $file_pattern_to_search_for) {
-      $alias_files_to_consider = array_merge($alias_files_to_consider, array_keys(drop_scan_directory($path, $file_pattern_to_search_for, drop_filename_blacklist(), 0, FALSE)));
+      $alias_files_to_consider = array_merge($alias_files_to_consider, array_keys(brush_scan_directory($path, $file_pattern_to_search_for, brush_filename_blacklist(), 0, FALSE)));
     }
 
     // For every file that matches, check inside it for
@@ -461,7 +461,7 @@ function _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context = N
         $aliases = $options = array();
         // silently ignore files we can't include
         if ((@include $filename) === FALSE) {
-          drop_log(dt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), 'bootstrap');
+          brush_log(dt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), 'bootstrap');
           continue;
         }
         unset($options['site-aliases']); // maybe unnecessary
@@ -501,7 +501,7 @@ function _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context = N
             }
 
             foreach ($aliases as $name => $value) {
-              _drop_sitealias_initialize_alias_record($aliases[$name]);
+              _brush_sitealias_initialize_alias_record($aliases[$name]);
             }
 
             $result = array_merge($result, $aliases);
@@ -511,19 +511,19 @@ function _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context = N
         // If aliasname is not NULL, then we will store
         // only the named alias into the alias cache
         elseif ((isset($aliases)) && array_key_exists($aliasname, $aliases)) {
-          drop_set_config_special_contexts($options); // maybe unnecessary
+          brush_set_config_special_contexts($options); // maybe unnecessary
           $result = array_merge($options, $aliases[$aliasname]);
-          _drop_sitealias_initialize_alias_record($result);
+          _brush_sitealias_initialize_alias_record($result);
           $alias_recorded = TRUE;
         }
         // If we found at least one alias from this file
-        // then record it in the drop-alias-files context.
+        // then record it in the brush-alias-files context.
         if ($alias_recorded) {
-          $drop_alias_files = drop_get_context('drop-alias-files');
-          if (!in_array($filename, $drop_alias_files)) {
-            $drop_alias_files[] = $filename;
+          $brush_alias_files = brush_get_context('brush-alias-files');
+          if (!in_array($filename, $brush_alias_files)) {
+            $brush_alias_files[] = $filename;
           }
-          drop_set_context('drop-alias-files', $drop_alias_files);
+          brush_set_context('brush-alias-files', $brush_alias_files);
         }
       }
     }
@@ -540,17 +540,17 @@ function _drop_sitealias_find_and_load_alias($aliasname, $alias_path_context = N
  * @param $aliases
  *   An array of alias records that are modified in-place.
  */
-function _drop_sitealias_add_inherited_values(&$aliases) {
+function _brush_sitealias_add_inherited_values(&$aliases) {
   foreach ($aliases as $alias_name => $alias_value) {
     if (isset($alias_value['parent'])) {
       // Prevent circular references from causing an infinite loop
-      _drop_sitealias_cache_alias($alias_name, array());
+      _brush_sitealias_cache_alias($alias_name, array());
       // Fetch and merge in each parent
       foreach (explode(',', $alias_value['parent']) as $parent) {
-        $parent_record = drop_sitealias_get_record($parent);
+        $parent_record = brush_sitealias_get_record($parent);
         unset($parent_record['#name']);
         unset($parent_record['#hidden']);
-        $array_based_keys = array_merge(drop_get_special_keys(), array('path-aliases'));
+        $array_based_keys = array_merge(brush_get_special_keys(), array('path-aliases'));
         foreach ($array_based_keys as $array_based_key) {
           if (isset($aliases[$alias_name][$array_based_key]) && isset($parent_record[$array_based_key])) {
             $aliases[$alias_name][$array_based_key] = array_merge($parent_record[$array_based_key], $aliases[$alias_name][$array_based_key]);
@@ -569,8 +569,8 @@ function _drop_sitealias_add_inherited_values(&$aliases) {
  * @param $alias_name
  *   The name of the alias, without the leading "@"
  */
-function _drop_sitealias_cache_alias($alias_name, $alias_record) {
-  $cache =& drop_get_context('site-aliases');
+function _brush_sitealias_cache_alias($alias_name, $alias_record) {
+  $cache =& brush_get_context('site-aliases');
   // If the alias already exists in the cache, then merge
   // the new alias with the existing alias
   if (array_key_exists("@$alias_name", $cache)) {
@@ -583,10 +583,10 @@ function _drop_sitealias_cache_alias($alias_name, $alias_record) {
   // are added to the alias path, so that other alias files
   // stored in those locations become searchable.
   if (!array_key_exists('remote-host', $alias_record) && array_key_exists('root', $alias_record)) {
-    drop_sitealias_add_to_alias_path($alias_record['root']);
-    $site_dir = drop_sitealias_local_site_path($alias_record);
+    brush_sitealias_add_to_alias_path($alias_record['root']);
+    $site_dir = brush_sitealias_local_site_path($alias_record);
     if (isset($site_dir)) {
-      drop_sitealias_add_to_alias_path($site_dir);
+      brush_sitealias_add_to_alias_path($site_dir);
     }
   }
 }
@@ -600,9 +600,9 @@ function _drop_sitealias_cache_alias($alias_name, $alias_record) {
  * @param $alias_record
  *   The full alias record to populate with database settings
  */
-function drop_sitealias_add_db_url(&$alias_record) {
+function brush_sitealias_add_db_url(&$alias_record) {
   if (!isset($alias_record['db-url']) && !isset($alias_record['databases']) && !isset($alias_record['site-list'])) {
-    $values = drop_invoke_sitealias_args($alias_record, "sql-conf", array(), array('db-url' => TRUE, '#override-simulated' => TRUE));
+    $values = brush_invoke_sitealias_args($alias_record, "sql-conf", array(), array('db-url' => TRUE, '#override-simulated' => TRUE));
     if (isset($values['object']['db-url'])) {
       $alias_record['db-url'] = $values['object']['db-url'];
     }
@@ -613,13 +613,13 @@ function drop_sitealias_add_db_url(&$alias_record) {
  * Return the databases record from the alias record
  *
  * @param $alias_record
- *   A record returned from drop_sitealias_get_record
+ *   A record returned from brush_sitealias_get_record
  * @returns
  *   A databases record (always in D7 format) or NULL
  *   if the databases record could not be found.
  */
 function sitealias_get_databases_from_record(&$alias_record) {
-  $altered_record = drop_sitealias_add_db_settings($alias_record);
+  $altered_record = brush_sitealias_add_db_settings($alias_record);
 
   return array_key_exists('databases', $alias_record) ? $alias_record['databases'] : NULL;
 }
@@ -633,36 +633,36 @@ function sitealias_get_databases_from_record(&$alias_record) {
  * @param $alias_record
  *   The full alias record to populate with database settings
  */
-function drop_sitealias_add_db_settings(&$alias_record)
+function brush_sitealias_add_db_settings(&$alias_record)
 {
   $altered_record = FALSE;
 
   // If the alias record does not have a defined 'databases' entry,
   // then we'll need to look one up
   if (!isset($alias_record['db-url']) && !isset($alias_record['databases']) && !isset($alias_record['site-list'])) {
-    $values = drop_invoke_sitealias_args($alias_record, "sql-conf", array(), array('all' => TRUE, '#override-simulated' => TRUE));
+    $values = brush_invoke_sitealias_args($alias_record, "sql-conf", array(), array('all' => TRUE, '#override-simulated' => TRUE));
     if (isset($values) && ($values['error_status'] == 0)) {
       $altered_record = TRUE;
-      // If there are any special settings in the '@self' record returned by drop_invoke_sitealias_args,
+      // If there are any special settings in the '@self' record returned by brush_invoke_sitealias_args,
       // then add those into our altered record as well
       if (array_key_exists('self', $values)) {
         $alias_record = array_merge($values['self'], $alias_record);
       }
-      drop_sitealias_cache_db_settings($alias_record, $values['object']);
+      brush_sitealias_cache_db_settings($alias_record, $values['object']);
     }
   }
 
   return $altered_record;
 }
 
-function drop_sitealias_cache_db_settings(&$alias_record, $databases) {
+function brush_sitealias_cache_db_settings(&$alias_record, $databases) {
   if (!empty($databases)) {
     $alias_record['databases'] = $databases;
   }
 
   // If the name is set, then re-cache the record after we fetch the databases
   if (array_key_exists('#name', $alias_record)) {
-    $all_site_aliases =& drop_get_context('site-aliases');
+    $all_site_aliases =& brush_get_context('site-aliases');
     $all_site_aliases[$alias_record['#name']] = $alias_record;
     // Check and see if this record is a copy of 'self'
     if (($alias_record['#name'] != 'self') && array_key_exists('@self', $all_site_aliases) && ($all_site_aliases['@self']['#name'] == $alias_record['#name'])) {
@@ -674,9 +674,9 @@ function drop_sitealias_cache_db_settings(&$alias_record, $databases) {
 /**
  * Check to see if we have already bootstrapped to a site.
  */
-function drop_sitealias_is_bootstrapped_site($alias_record) {
+function brush_sitealias_is_bootstrapped_site($alias_record) {
   if (!isset($alias_record['remote-host'])) {
-    $self_record = drop_sitealias_get_record("@self");
+    $self_record = brush_sitealias_get_record("@self");
     if (empty($self_record)) {
       // TODO:  If we have not bootstrapped to a site yet, we could
       // perhaps bootstrap to $alias_record here.
@@ -700,11 +700,11 @@ function drop_sitealias_is_bootstrapped_site($alias_record) {
  *   A slash-separated list of path aliases to resolve
  *   e.g. "%files/%special".
  */
-function drop_sitealias_resolve_path_references(&$alias_record, $test_string = '') {
+function brush_sitealias_resolve_path_references(&$alias_record, $test_string = '') {
   $path_aliases = array_key_exists('path-aliases', $alias_record) ? $alias_record['path-aliases'] : array();
   // Convert the test string into an array of items, and
   // from this make a comma-separated list of projects
-  // that we can pass to 'drop status'.
+  // that we can pass to 'brush status'.
   $test_array = explode('/', $test_string);
   $project_array = array();
   foreach($test_array as $one_item) {
@@ -718,17 +718,17 @@ function drop_sitealias_resolve_path_references(&$alias_record, $test_string = '
     // Optimization:  if we're already bootstrapped to the
     // site specified by $alias_record, then we can just
     // call _core_site_status_table() rather than use backend invoke.
-    if (drop_sitealias_is_bootstrapped_site($alias_record)) {
+    if (brush_sitealias_is_bootstrapped_site($alias_record)) {
       // Make sure that we are bootstrapped at least to the 'site'
       // level, and include file.inc to insure that we have access
       // to the %file path.
-      if (drop_bootstrap(DROP_BOOTSTRAP_BACKDROP_SITE)) {
+      if (brush_bootstrap(BRUSH_BOOTSTRAP_BACKDROP_SITE)) {
         include_once BACKDROP_ROOT . '/core/includes/file.inc';
       }
       $status_values = _core_site_status_table($project_list);
     }
     else {
-      $values = drop_invoke_sitealias_args($alias_record, "status", array(), empty($project_list) ? array() : array('project' => $project_list));
+      $values = brush_invoke_sitealias_args($alias_record, "status", array(), empty($project_list) ? array() : array('project' => $project_list));
       $status_values = $values['object'];
     }
     if (isset($status_values['%paths'])) {
@@ -749,13 +749,13 @@ function drop_sitealias_resolve_path_references(&$alias_record, $test_string = '
  * @return
  *   An array of individual site alias records
  */
-function drop_sitealias_resolve_sitelist($alias_record) {
+function brush_sitealias_resolve_sitelist($alias_record) {
   $result_list = array();
   if (isset($alias_record)) {
     if (array_key_exists('site-list', $alias_record)) {
       foreach ($alias_record['site-list'] as $sitespec) {
-        $one_result = drop_sitealias_get_record($sitespec);
-        $result_list = array_merge($result_list, drop_sitealias_resolve_sitelist($one_result));
+        $one_result = brush_sitealias_get_record($sitespec);
+        $result_list = array_merge($result_list, brush_sitealias_resolve_sitelist($one_result));
       }
     }
     elseif (array_key_exists('#name', $alias_record)) {
@@ -780,12 +780,12 @@ function drop_sitealias_resolve_sitelist($alias_record) {
  * @return
  *   TRUE iff the uris of the sources and targets are in alignment
  */
-function drop_sitealias_check_lists_alignment($source, $target) {
+function brush_sitealias_check_lists_alignment($source, $target) {
   $is_aligned = TRUE;
 
   $i = 0;
   foreach ($source as $one_source) {
-    if ((!isset($target[$i])) || (!_drop_sitelist_check_site_records($one_source, $target[$i]))) {
+    if ((!isset($target[$i])) || (!_brush_sitelist_check_site_records($one_source, $target[$i]))) {
       $is_aligned = FALSE;
       break;
     }
@@ -802,12 +802,12 @@ function drop_sitealias_check_lists_alignment($source, $target) {
  *
  * TODO:  Review the advisability of this operation.
  */
-function drop_sitelist_align_lists(&$source, &$target, &$source_result, &$target_result) {
+function brush_sitelist_align_lists(&$source, &$target, &$source_result, &$target_result) {
   $source_result = array();
   $target_result = array();
 
   foreach ($source as $key => $one_source) {
-    $one_target = _drop_sitelist_find_in_list($one_source, $target);
+    $one_target = _brush_sitelist_find_in_list($one_source, $target);
     if ($one_target !== FALSE) {
       $source_result[] = $one_source;
       $target_result[] = $one_target;
@@ -819,11 +819,11 @@ function drop_sitelist_align_lists(&$source, &$target, &$source_result, &$target
   $target = $target_result;
 }
 
-function _drop_sitelist_find_in_list($one_source, &$target) {
+function _brush_sitelist_find_in_list($one_source, &$target) {
   $result = FALSE;
 
   foreach ($target as $key => $one_target) {
-    if(_drop_sitelist_check_site_records($one_source, $one_target)) {
+    if(_brush_sitelist_check_site_records($one_source, $one_target)) {
       $result = $one_target;
       unset($target[$key]);
     }
@@ -832,7 +832,7 @@ function _drop_sitelist_find_in_list($one_source, &$target) {
   return $result;
 }
 
-function _drop_sitelist_check_site_records($source, $target) {
+function _brush_sitelist_check_site_records($source, $target) {
   if ((array_key_exists('uri', $source)) && (array_key_exists('uri', $target)) && ($source['uri'] == $target['uri'])) {
     return TRUE;
   }
@@ -847,17 +847,17 @@ function _drop_sitelist_check_site_records($source, $target) {
  * @param alias_record
  *   The alias record to be initialized; paramter is modified in place.
  */
-function _drop_sitealias_initialize_alias_record(&$alias_record) {
+function _brush_sitealias_initialize_alias_record(&$alias_record) {
   // If there is a 'from-list' entry, then build a derived
   // list based on the site list with the given name.
   if (array_key_exists('from-list', $alias_record)) {
     // danger of infinite loops... move to transient defaults?
-    $from_record = drop_sitealias_get_record($alias_record['from-list']);
-    $from_list = drop_sitealias_resolve_sitelist($from_record);
+    $from_record = brush_sitealias_get_record($alias_record['from-list']);
+    $from_list = brush_sitealias_resolve_sitelist($from_record);
     $derived_list = array();
     foreach ($from_list as $one_record) {
-      $derived_record = _drop_sitealias_derive_record($one_record, $alias_record);
-      $derived_list[] = drop_sitealias_alias_record_to_spec($derived_record);
+      $derived_record = _brush_sitealias_derive_record($one_record, $alias_record);
+      $derived_list[] = brush_sitealias_alias_record_to_spec($derived_record);
     }
 
     $alias_record = array();
@@ -876,7 +876,7 @@ function _drop_sitealias_initialize_alias_record(&$alias_record) {
     if (!is_array($search_path)) {
       $search_path = explode(',', $search_path);
     }
-    $found_sites = _drop_sitealias_find_local_sites($search_path);
+    $found_sites = _brush_sitealias_find_local_sites($search_path);
     $alias_record['site-list'] = $found_sites;
     // The 'unordered-list' flag indicates that the order of the items in the site list is not stable.
     $alias_record['unordered-list'] = '1';
@@ -894,17 +894,17 @@ function _drop_sitealias_initialize_alias_record(&$alias_record) {
  * difference between a static default and a transient default is
  * that static defaults -always- exist in the alias record, and
  * they are cached, whereas transient defaults are only added
- * if the given drop command explicitly adds them.
+ * if the given brush command explicitly adds them.
  *
  * @param alias_record
  *   An alias record with most values already filled in
  */
-function _drop_sitealias_add_static_defaults(&$alias_record) {
+function _brush_sitealias_add_static_defaults(&$alias_record) {
   // If there is a 'db-url' entry but not 'databases' entry, then we will
-  // build 'databases' from 'db-url' so that drop commands that use aliases
+  // build 'databases' from 'db-url' so that brush commands that use aliases
   // can always count on using a uniform 'databases' array.
   if (isset($alias_record['db-url']) && !isset($alias_record['databases'])) {
-    $alias_record['databases'] = drop_sitealias_convert_db_from_db_url($alias_record['db-url']);
+    $alias_record['databases'] = brush_sitealias_convert_db_from_db_url($alias_record['db-url']);
   }
   // Adjustments for aliases to backdrop instances (as opposed to aliases that are site lists)
   if (array_key_exists('uri', $alias_record)) {
@@ -917,7 +917,7 @@ function _drop_sitealias_add_static_defaults(&$alias_record) {
   }
 }
 
-function _drop_sitealias_derive_record($from_record, $modifying_record) {
+function _brush_sitealias_derive_record($from_record, $modifying_record) {
   $result = $from_record;
 
   // If there is a 'remote-user' in the modifying record, copy it.
@@ -961,7 +961,7 @@ function _drop_sitealias_derive_record($from_record, $modifying_record) {
 
   // TODO:  Should we allow the uri to be transformed?
   // I think that if the uri does not match, then you should
-  // always build the list by hand, and not rely on '_drop_sitealias_derive_record'.
+  // always build the list by hand, and not rely on '_brush_sitealias_derive_record'.
 
   return $result;
 }
@@ -978,7 +978,7 @@ function _drop_sitealias_derive_record($from_record, $modifying_record) {
  * @return string
  *   The site specification
  */
-function drop_sitealias_alias_record_to_spec($alias_record, $with_db = false) {
+function brush_sitealias_alias_record_to_spec($alias_record, $with_db = false) {
     $result = '';
 
     // TODO:  we should handle 'site-list' records too.
@@ -989,7 +989,7 @@ function drop_sitealias_alias_record_to_spec($alias_record, $with_db = false) {
     else {
       // There should always be a uri
       if (array_key_exists('uri', $alias_record)) {
-        $result = '#' . drop_sitealias_uri_to_site_dir($alias_record['uri']);
+        $result = '#' . brush_sitealias_uri_to_site_dir($alias_record['uri']);
       }
       // There should always be a root
       if (array_key_exists('root', $alias_record)) {
@@ -1007,7 +1007,7 @@ function drop_sitealias_alias_record_to_spec($alias_record, $with_db = false) {
         // If db-url is not supplied, look it up from the remote
         // or local site and add it to the site alias
         if (!isset($alias_record['db-url'])) {
-          drop_sitealias_add_db_url($alias_record);
+          brush_sitealias_add_db_url($alias_record);
         }
         $result = $result . '?db-url=' . urlencode(is_array($alias_record['db-url']) ? $alias_record['db-url']['default'] : $alias_record['db-url']);
       }
@@ -1025,10 +1025,10 @@ function drop_sitealias_alias_record_to_spec($alias_record, $with_db = false) {
  * @return
  *   An array of site specifications (/path/to/root#sitename.com)
  */
-function _drop_sitealias_find_local_sites($search_path) {
+function _brush_sitealias_find_local_sites($search_path) {
   $result = array();
   foreach ($search_path as $a_backdrop_root) {
-    $result = array_merge($result, _drop_find_local_sites_at_root($a_backdrop_root));
+    $result = array_merge($result, _brush_find_local_sites_at_root($a_backdrop_root));
   }
   return $result;
 }
@@ -1036,22 +1036,22 @@ function _drop_sitealias_find_local_sites($search_path) {
 /**
  * Return a list of all of the local sites at the specified backdrop root.
  */
-function _drop_find_local_sites_at_root($a_backdrop_root = '', $search_depth = 1) {
+function _brush_find_local_sites_at_root($a_backdrop_root = '', $search_depth = 1) {
   $site_list = array();
-  $base_path = (empty($a_backdrop_root) ? drop_get_context('DROP_BACKDROP_ROOT') : $a_backdrop_root );
+  $base_path = (empty($a_backdrop_root) ? brush_get_context('BRUSH_BACKDROP_ROOT') : $a_backdrop_root );
   if (!empty($base_path)) {
-    if (drop_valid_backdrop_root($base_path)) {
+    if (brush_valid_backdrop_root($base_path)) {
       // If $a_backdrop_root is in fact a valid backdrop root, then return
       // all of the sites found inside the 'sites' folder of this backdrop instance.
-      $site_list = _drop_find_local_sites_in_sites_folder($base_path);
+      $site_list = _brush_find_local_sites_in_sites_folder($base_path);
     }
     else {
-      $bootstrap_files = drop_scan_directory($base_path, '/' . basename(DROP_BACKDROP_BOOTSTRAP) . '/' , array('.', '..', 'CVS'), 0, drop_get_option('search-depth', $search_depth) + 1, 'filename', 1);
+      $bootstrap_files = brush_scan_directory($base_path, '/' . basename(BRUSH_BACKDROP_BOOTSTRAP) . '/' , array('.', '..', 'CVS'), 0, brush_get_option('search-depth', $search_depth) + 1, 'filename', 1);
       foreach ($bootstrap_files as $one_bootstrap => $info) {
         $includes_dir = dirname($one_bootstrap);
-        if (basename($includes_dir) == basename(dirname(DROP_BACKDROP_BOOTSTRAP))) {
+        if (basename($includes_dir) == basename(dirname(BRUSH_BACKDROP_BOOTSTRAP))) {
           $backdrop_root = dirname($includes_dir);
-          $site_list = array_merge(_drop_find_local_sites_in_sites_folder($backdrop_root), $site_list);
+          $site_list = array_merge(_brush_find_local_sites_in_sites_folder($backdrop_root), $site_list);
         }
       }
     }
@@ -1062,13 +1062,13 @@ function _drop_find_local_sites_at_root($a_backdrop_root = '', $search_depth = 1
 /**
  * Return a list of all of the local sites at the specified 'sites' folder.
  */
-function _drop_find_local_sites_in_sites_folder($a_backdrop_root) {
+function _brush_find_local_sites_in_sites_folder($a_backdrop_root) {
   $site_list = array();
 
   // If anyone searches for sites at a given root, then
   // make sure that alias files stored at this root
   // directory are included in the alias search path
-  drop_sitealias_add_to_alias_path($a_backdrop_root);
+  brush_sitealias_add_to_alias_path($a_backdrop_root);
 
   $base_path = $a_backdrop_root . '/sites';
 
@@ -1076,20 +1076,20 @@ function _drop_find_local_sites_in_sites_folder($a_backdrop_root) {
   // so that it is guarenteed that the lists returned will definitely be
   // exactly the same should this routine be called twice with the same path.
 
-  $files = drop_scan_directory($base_path, '/settings\.php/', array('.', '..', 'CVS', 'all'), 0, 1, 'filename', 1);
+  $files = brush_scan_directory($base_path, '/settings\.php/', array('.', '..', 'CVS', 'all'), 0, 1, 'filename', 1);
   foreach ($files as $filename => $info) {
     if ($info->basename == 'settings.php') {
       // First we'll resolve the realpath of the settings.php file,
       // so that we get the correct backdrop root when symlinks are in use.
       $real_sitedir = dirname(realpath($filename));
-      $real_root = drop_locate_root($filename);
+      $real_root = brush_locate_root($filename);
       if ($real_root !== FALSE) {
         $a_backdrop_site = $real_root . '#' . basename($real_sitedir);
       }
       // If the symlink points to some folder outside of any backdrop
       // root, then we'll use the
       else {
-        $uri = drop_sitealias_site_dir_from_filename($filename);
+        $uri = brush_sitealias_site_dir_from_filename($filename);
         $a_backdrop_site = $a_backdrop_root . '#' . $uri;
       }
       // Add the site if it isn't already in the array
@@ -1101,42 +1101,42 @@ function _drop_find_local_sites_in_sites_folder($a_backdrop_root) {
   return $site_list;
 }
 
-function drop_sitealias_create_sites_alias($a_backdrop_root = '') {
-  $sites_list = _drop_find_local_sites_at_root($a_backdrop_root);
-  _drop_sitealias_cache_alias('sites', array('site-list' => $sites_list));
+function brush_sitealias_create_sites_alias($a_backdrop_root = '') {
+  $sites_list = _brush_find_local_sites_at_root($a_backdrop_root);
+  _brush_sitealias_cache_alias('sites', array('site-list' => $sites_list));
 }
 
 /**
  * Add "transient" default values to the given alias record.  The
  * difference between a static default and a transient default is
  * that static defaults -always- exist in the alias record,
- * whereas transient defaults are only added if the given drop
+ * whereas transient defaults are only added if the given brush
  * command explicitly calls this function.  The other advantage
  * of transient defaults is that it is possible to differentiate
  * between a default value and an unspecified value, since the
  * transient defaults are not added until requested.
  *
  * Since transient defaults are not cached, you should avoid doing
- * expensive operations here.  To be safe, drop commands should
+ * expensive operations here.  To be safe, brush commands should
  * avoid calling this function more than once.
  *
  * @param alias_record
  *   An alias record with most values already filled in
  */
-function _drop_sitealias_add_transient_defaults(&$alias_record) {
+function _brush_sitealias_add_transient_defaults(&$alias_record) {
   if (isset($alias_record['path-aliases'])) {
-    // Add the path to the drop folder to the path aliases as !drop
-    if (!array_key_exists('%drop', $alias_record['path-aliases'])) {
-      if (array_key_exists('%drop-script', $alias_record['path-aliases'])) {
-        $alias_record['path-aliases']['%drop'] = dirname($alias_record['path-aliases']['%drop-script']);
+    // Add the path to the brush folder to the path aliases as !brush
+    if (!array_key_exists('%brush', $alias_record['path-aliases'])) {
+      if (array_key_exists('%brush-script', $alias_record['path-aliases'])) {
+        $alias_record['path-aliases']['%brush'] = dirname($alias_record['path-aliases']['%brush-script']);
       }
       else {
-        $alias_record['path-aliases']['%drop'] = dirname($GLOBALS['argv'][0]);
+        $alias_record['path-aliases']['%brush'] = dirname($GLOBALS['argv'][0]);
       }
     }
     // Add the path to the site folder to the path aliases as !site
     if (!array_key_exists('%site', $alias_record['path-aliases']) && array_key_exists('uri', $alias_record)) {
-      $alias_record['path-aliases']['%site'] = 'sites/' . drop_sitealias_uri_to_site_dir($alias_record['uri']) . '/';
+      $alias_record['path-aliases']['%site'] = 'sites/' . brush_sitealias_uri_to_site_dir($alias_record['uri']) . '/';
     }
   }
 }
@@ -1145,9 +1145,9 @@ function _drop_sitealias_add_transient_defaults(&$alias_record) {
  * Find the name of a local alias record that has the specified
  * root and uri.
  */
-function _drop_sitealias_find_local_alias_name($root, $uri) {
+function _brush_sitealias_find_local_alias_name($root, $uri) {
   $result = '';
-  $all_site_aliases =& drop_get_context('site-aliases');
+  $all_site_aliases =& brush_get_context('site-aliases');
 
   foreach ($all_site_aliases as $alias_name => $alias_values) {
     if (!array_key_exists('remote-host', $alias_values) && array_key_exists('root', $alias_values) && array_key_exists('uri', $alias_values) && ($alias_name != '@self')) {
@@ -1169,7 +1169,7 @@ function _drop_sitealias_find_local_alias_name($root, $uri) {
  * @return array
  *   An alias record, or empty if none found.
  */
-function _drop_sitealias_find_record_for_local_site($alias, $backdrop_root = null) {
+function _brush_sitealias_find_record_for_local_site($alias, $backdrop_root = null) {
   $alias_record = array();
 
   // Clip off the leading '#' if it is there
@@ -1178,25 +1178,25 @@ function _drop_sitealias_find_record_for_local_site($alias, $backdrop_root = nul
   }
 
   if (!isset($backdrop_root)) {
-    //$backdrop_root = drop_get_context('DROP_BACKDROP_ROOT');
-    $backdrop_root = drop_get_option(array('r', 'root'), drop_locate_root());
+    //$backdrop_root = brush_get_context('BRUSH_BACKDROP_ROOT');
+    $backdrop_root = brush_get_option(array('r', 'root'), brush_locate_root());
   }
 
   if (isset($backdrop_root)) {
-    $alias_dir = drop_sitealias_uri_to_site_dir($alias);
+    $alias_dir = brush_sitealias_uri_to_site_dir($alias);
     $site_settings_file = $backdrop_root . '/sites/' . $alias_dir . '/settings.php';
-    $alias_record = drop_sitealias_build_record_from_settings_file($site_settings_file, $alias, $backdrop_root);
+    $alias_record = brush_sitealias_build_record_from_settings_file($site_settings_file, $alias, $backdrop_root);
   }
 
   return $alias_record;
 }
 
-function drop_sitealias_build_record_from_settings_file($site_settings_file, $alias = null, $backdrop_root = null) {
+function brush_sitealias_build_record_from_settings_file($site_settings_file, $alias = null, $backdrop_root = null) {
   $alias_record = array();
 
   if (file_exists($site_settings_file)) {
     if (!isset($backdrop_root)) {
-      $backdrop_root = drop_locate_root($site_settings_file);
+      $backdrop_root = brush_locate_root($site_settings_file);
     }
 
     $alias_record['root'] = $backdrop_root;
@@ -1204,7 +1204,7 @@ function drop_sitealias_build_record_from_settings_file($site_settings_file, $al
       $alias_record['uri'] = $alias;
     }
     else {
-      $alias_record['uri'] = _drop_sitealias_site_dir_to_uri(drop_sitealias_site_dir_from_filename($site_settings_file));
+      $alias_record['uri'] = _brush_sitealias_site_dir_to_uri(brush_sitealias_site_dir_from_filename($site_settings_file));
     }
   }
 
@@ -1220,7 +1220,7 @@ function drop_sitealias_build_record_from_settings_file($site_settings_file, $al
  * @return string
  *   the site directory component of the path to settings.php
  */
-function drop_sitealias_site_dir_from_filename($site_settings_file) {
+function brush_sitealias_site_dir_from_filename($site_settings_file) {
   return basename(dirname($site_settings_file));
 }
 
@@ -1232,7 +1232,7 @@ function drop_sitealias_site_dir_from_filename($site_settings_file) {
  * @return string
  *   A directory, such as domain.com.8080.backdrop
  */
-function drop_sitealias_uri_to_site_dir($uri) {
+function brush_sitealias_uri_to_site_dir($uri) {
   return str_replace(array('http://', '/', ':'), array('', '.', '.'), $uri);
 }
 
@@ -1245,7 +1245,7 @@ function drop_sitealias_uri_to_site_dir($uri) {
  *   An array of database values containing only the 'default' element of
  *   the db_url.
  */
-function drop_convert_db_from_db_url($db_url) {
+function brush_convert_db_from_db_url($db_url) {
   if (is_array($db_url)) {
     $url = parse_url($db_url['default']);
   }
@@ -1282,15 +1282,15 @@ function drop_convert_db_from_db_url($db_url) {
  * @return array
  *   An array of database values.
  */
-function drop_sitealias_convert_db_from_db_url($db_url) {
+function brush_sitealias_convert_db_from_db_url($db_url) {
   $result = array();
 
   if (!is_array($db_url)) {
-    $result = array('default' => array('default' => drop_convert_db_from_db_url($db_url)));
+    $result = array('default' => array('default' => brush_convert_db_from_db_url($db_url)));
   }
   else {
     foreach ($db_url as $one_name => $one_db_url) {
-      $result[$one_name] = array('default' => drop_convert_db_from_db_url($one_db_url));
+      $result[$one_name] = array('default' => brush_convert_db_from_db_url($one_db_url));
     }
   }
 
@@ -1298,10 +1298,10 @@ function drop_sitealias_convert_db_from_db_url($db_url) {
 }
 
 /**
- * Utility function used by drop_get_alias; keys that start with
+ * Utility function used by brush_get_alias; keys that start with
  * '%' or '!' are path aliases, the rest are entries in the alias record.
  */
-function _drop_sitealias_set_record_element(&$alias_record, $key, $value) {
+function _brush_sitealias_set_record_element(&$alias_record, $key, $value) {
   if ((substr($key,0,1) == '%') || (substr($key,0,1) == '!')) {
     $alias_record['path-aliases'][$key] = $value;
   }
@@ -1312,7 +1312,7 @@ function _drop_sitealias_set_record_element(&$alias_record, $key, $value) {
 
 /**
  * Looks up the specified alias record and calls through to
- * drop_sitealias_set_alias_context, below.
+ * brush_sitealias_set_alias_context, below.
  *
  * @param alias
  *   The name of the alias record
@@ -1322,12 +1322,12 @@ function _drop_sitealias_set_record_element(&$alias_record, $key, $value) {
  * @return boolean
  *   TRUE is an alias was found and processed.
  */
-function _drop_sitealias_set_context_by_name($alias, $prefix = '') {
-  $site_alias_settings = drop_sitealias_get_record($alias);
+function _brush_sitealias_set_context_by_name($alias, $prefix = '') {
+  $site_alias_settings = brush_sitealias_get_record($alias);
   if (!empty($site_alias_settings)) {
     // Create an alias '@self'
-    _drop_sitealias_cache_alias('self', $site_alias_settings);
-    drop_sitealias_set_alias_context($site_alias_settings, $prefix);
+    _brush_sitealias_cache_alias('self', $site_alias_settings);
+    brush_sitealias_set_alias_context($site_alias_settings, $prefix);
     return TRUE;
   }
   return FALSE;
@@ -1335,7 +1335,7 @@ function _drop_sitealias_set_context_by_name($alias, $prefix = '') {
 
 /**
  * Given a site alias record, copy selected fields from it
- * into the drop 'alias' context.  The 'alias' context has
+ * into the brush 'alias' context.  The 'alias' context has
  * lower precedence than the 'cli' context, so values
  * set by an alias record can be overridden by command-line
  * parameters.
@@ -1350,37 +1350,37 @@ function _drop_sitealias_set_context_by_name($alias, $prefix = '') {
  *   and the destination database records will be in
  *   'destination-databases'.
  */
-function drop_sitealias_set_alias_context($site_alias_settings, $prefix = '') {
-  $options = drop_get_context('alias');
+function brush_sitealias_set_alias_context($site_alias_settings, $prefix = '') {
+  $options = brush_get_context('alias');
 
   // There are some items that we should just skip
-  $skip_list = drop_get_special_keys();
+  $skip_list = brush_get_special_keys();
   // Also skip 'remote-host' and 'remote-user' if 'remote-host' is actually
   // the local machine
-  if (array_key_exists('remote-host', $site_alias_settings) && drop_is_local_host($site_alias_settings['remote-host'])) {
+  if (array_key_exists('remote-host', $site_alias_settings) && brush_is_local_host($site_alias_settings['remote-host'])) {
     $skip_list[] = 'remote-host';
     $skip_list[] = 'remote-user';
   }
   // If prefix is set, then copy from the 'prefix-' version
-  // of the drop special keys ('command-specific', 'path-aliases')
+  // of the brush special keys ('command-specific', 'path-aliases')
   // into the ordinary version.  This will allow us to set
   // 'source-command-specific' options that will only apply when
   // the alias is used as the source option for rsync or sql-sync.
   if (!empty($prefix)) {
-    $special_contexts = drop_get_special_keys();
+    $special_contexts = brush_get_special_keys();
     foreach ($special_contexts as $option_name) {
       if (array_key_exists($prefix . $option_name, $site_alias_settings)) {
         $site_alias_settings[$option_name] = array_key_exists($option_name, $site_alias_settings) ? array_merge($site_alias_settings[$option_name], $site_alias_settings[$prefix . $option_name]) : $site_alias_settings[$prefix . $option_name];
       }
     }
   }
-  // Transfer all options from the site alias to the drop options
+  // Transfer all options from the site alias to the brush options
   // in the 'alias' context.
   foreach ($site_alias_settings as $key => $value) {
     // Special handling for path aliases:
     if ($key == "path-aliases") {
       $path_aliases = $value;
-      foreach (array('%drop-script', '%dump', '%dump-dir', '%include') as $path_key) {
+      foreach (array('%brush-script', '%dump', '%dump-dir', '%include') as $path_key) {
         if (array_key_exists($path_key, $path_aliases)) {
           // Evaluate the path value, and substitute any path references found.
           // ex: '%dump-dir' => '%root/dumps' will store sql-dumps in the folder
@@ -1398,22 +1398,22 @@ function drop_sitealias_set_alias_context($site_alias_settings, $prefix = '') {
       $options[$prefix . $key] = $value;
     }
   }
-  drop_set_config_options('alias', $options);
+  brush_set_config_options('alias', $options);
 }
 
 /**
- * Call prior to drop_sitealias_evaluate_path to insure
+ * Call prior to brush_sitealias_evaluate_path to insure
  * that any site-specific aliases associated with any
  * local site in $path are defined.
  */
-function _drop_sitealias_preflight_path($path) {
+function _brush_sitealias_preflight_path($path) {
   $alias = NULL;
   // Parse site aliases if there is a colon in the path
   $colon_pos = strpos($path, ':');
   if ($colon_pos !== FALSE) {
     $alias = substr($path, 0, $colon_pos);
     $path = substr($path, $colon_pos + 1);
-    $site_alias_settings = _drop_sitealias_get_record($alias);
+    $site_alias_settings = _brush_sitealias_get_record($alias);
     if (empty($site_alias_settings) && (substr($path,0,1) == '@')) {
       return NULL;
     }
@@ -1422,11 +1422,11 @@ function _drop_sitealias_preflight_path($path) {
   else {
     $machine = '';
     // if the path is a site alias or a local site...
-    $site_alias_settings = _drop_sitealias_get_record($path);
+    $site_alias_settings = _brush_sitealias_get_record($path);
     if (empty($site_alias_settings) && (substr($path,0,1) == '@')) {
       return NULL;
     }
-    if (!empty($site_alias_settings) || drop_is_local_host($path)) {
+    if (!empty($site_alias_settings) || brush_is_local_host($path)) {
       $alias = $path;
       $path = '';
     }
@@ -1458,12 +1458,12 @@ function _drop_sitealias_preflight_path($path) {
  *   with the path to pass to rsync (including the machine specifier)
  *   in the 'evaluated-path' item.
  */
-function drop_sitealias_evaluate_path($path, &$additional_options, $local_only = FALSE) {
+function brush_sitealias_evaluate_path($path, &$additional_options, $local_only = FALSE) {
   $site_alias_settings = array();
   $path_aliases = array();
   $remote_user = '';
 
-  $preflight = _drop_sitealias_preflight_path($path);
+  $preflight = _brush_sitealias_preflight_path($path);
   if (!isset($preflight)) {
     return NULL;
   }
@@ -1473,19 +1473,19 @@ function drop_sitealias_evaluate_path($path, &$additional_options, $local_only =
   $machine = $preflight['machine'];
 
   if (isset($alias)) {
-    $site_alias_settings = drop_sitealias_get_record($alias);
+    $site_alias_settings = brush_sitealias_get_record($alias);
   }
 
   if (!empty($site_alias_settings)) {
     if ($local_only && array_key_exists('remote-host', $site_alias_settings)) {
-      return drop_set_error('DROP_REMOTE_SITE_IN_LOCAL_CONTEXT', dt("A remote site alias was used in a context where only a local alias is appropriate."));
+      return brush_set_error('BRUSH_REMOTE_SITE_IN_LOCAL_CONTEXT', dt("A remote site alias was used in a context where only a local alias is appropriate."));
     }
 
     // Apply any options from this alias that might affect our rsync
-    drop_sitealias_set_alias_context($site_alias_settings);
+    brush_sitealias_set_alias_context($site_alias_settings);
 
     // Use 'remote-host' from settings if available; otherwise site is local
-    if (array_key_exists('remote-host', $site_alias_settings) && !drop_is_local_host($site_alias_settings['remote-host'])) {
+    if (array_key_exists('remote-host', $site_alias_settings) && !brush_is_local_host($site_alias_settings['remote-host'])) {
       if (array_key_exists('remote-user', $site_alias_settings)) {
         $remote_user = $site_alias_settings['remote-user'] . '@';
       }
@@ -1498,7 +1498,7 @@ function drop_sitealias_evaluate_path($path, &$additional_options, $local_only =
   else {
     // Strip the machine portion of the path if the
     // alias points to the local machine.
-    if (drop_is_local_host($machine)) {
+    if (brush_is_local_host($machine)) {
       $machine = '';
     }
     else {
@@ -1508,40 +1508,40 @@ function drop_sitealias_evaluate_path($path, &$additional_options, $local_only =
 
   // If the --exclude-other-sites option is specified, then
   // convert that into --include-path='%site' and --exclude-sites.
-  if (drop_get_option_override($additional_options, 'exclude-other-sites', FALSE) && !drop_get_option_override($additional_options, 'exclude-other-sites-processed', FALSE, 'process')) {
-    $additional_options['include-path'] = '%site,' . drop_get_option_override($additional_options, 'include-path', '');
+  if (brush_get_option_override($additional_options, 'exclude-other-sites', FALSE) && !brush_get_option_override($additional_options, 'exclude-other-sites-processed', FALSE, 'process')) {
+    $additional_options['include-path'] = '%site,' . brush_get_option_override($additional_options, 'include-path', '');
     $additional_options['exclude-sites'] = TRUE;
     $additional_options['exclude-other-sites-processed'] = TRUE;
   }
   // If the --exclude-files option is specified, then
   // convert that into --exclude-path='%files'.
-  if (drop_get_option_override($additional_options, 'exclude-files', FALSE) && !drop_get_option_override($additional_options, 'exclude-files-processed', FALSE, 'process')) {
-    $additional_options['exclude-path'] = '%files,' . drop_get_option_override($additional_options, 'exclude-path', '');
+  if (brush_get_option_override($additional_options, 'exclude-files', FALSE) && !brush_get_option_override($additional_options, 'exclude-files-processed', FALSE, 'process')) {
+    $additional_options['exclude-path'] = '%files,' . brush_get_option_override($additional_options, 'exclude-path', '');
     $additional_options['exclude-files-processed'] = TRUE;
   }
 
   // If there was no site specification given, and the
   // machine is local, then try to look
-  // up an alias record for the default drop site.
+  // up an alias record for the default brush site.
   if (empty($site_alias_settings) && empty($machine)) {
-    $drop_uri = drop_bootstrap_value('drop_uri', drop_get_option(array('l', 'uri'), 'default'));
-    $site_alias_settings = drop_sitealias_get_record($drop_uri);
+    $brush_uri = brush_bootstrap_value('brush_uri', brush_get_option(array('l', 'uri'), 'default'));
+    $site_alias_settings = brush_sitealias_get_record($brush_uri);
   }
 
   // Always add transient defaults
-  _drop_sitealias_add_transient_defaults($site_alias_settings);
+  _brush_sitealias_add_transient_defaults($site_alias_settings);
 
-  // The $resolve_path variable is used by drop_sitealias_resolve_path_references
+  // The $resolve_path variable is used by brush_sitealias_resolve_path_references
   // to test to see if there are any path references such as %site or %files
   // in it, so that resolution is only done if the path alias is referenced.
   // Therefore, we can concatenate without worrying too much about the structure of
   // this variable's contents.
-  $include_path = drop_get_option_override($additional_options, 'include-path', '');
-  $exclude_path = drop_get_option_override($additional_options, 'exclude-path', '');
+  $include_path = brush_get_option_override($additional_options, 'include-path', '');
+  $exclude_path = brush_get_option_override($additional_options, 'exclude-path', '');
   $resolve_path = $path . $include_path . $exclude_path;
   // Resolve path aliases such as %files, if any exist in the path
   if (!empty($resolve_path)) {
-    drop_sitealias_resolve_path_references($site_alias_settings, $resolve_path);
+    brush_sitealias_resolve_path_references($site_alias_settings, $resolve_path);
   }
 
   if (array_key_exists('path-aliases', $site_alias_settings)) {
@@ -1554,8 +1554,8 @@ function drop_sitealias_evaluate_path($path, &$additional_options, $local_only =
     $backdrop_root = $site_alias_settings['root'];
   }
   else {
-    drop_bootstrap_max(DROP_BOOTSTRAP_BACKDROP_SITE);
-    $backdrop_root = drop_get_context('DROP_BACKDROP_ROOT');
+    brush_bootstrap_max(BRUSH_BOOTSTRAP_BACKDROP_SITE);
+    $backdrop_root = brush_get_context('BRUSH_BACKDROP_ROOT');
   }
   if (empty($backdrop_root)) {
     $backdrop_root = '';
@@ -1579,10 +1579,10 @@ function drop_sitealias_evaluate_path($path, &$additional_options, $local_only =
   // Fill in path aliases in the path, the include path and the exclude path.
   $path = str_replace(array_keys($full_path_aliases), array_values($full_path_aliases), $path);
   if (!empty($include_path)) {
-    drop_set_option('include-path', str_replace(array_keys($path_aliases), array_values($path_aliases), $include_path));
+    brush_set_option('include-path', str_replace(array_keys($path_aliases), array_values($path_aliases), $include_path));
   }
   if (!empty($exclude_path)) {
-    drop_set_option('exclude-path', str_replace(array_keys($path_aliases), array_values($path_aliases), $exclude_path));
+    brush_set_option('exclude-path', str_replace(array_keys($path_aliases), array_values($path_aliases), $exclude_path));
   }
 
   // The path component is just the path part of the full
@@ -1626,7 +1626,7 @@ function drop_sitealias_evaluate_path($path, &$additional_options, $local_only =
 /**
  * Option keys used for site selection.
  */
-function drop_sitealias_site_selection_keys() {
+function brush_sitealias_site_selection_keys() {
   return array('remote-host', 'remote-user', 'ssh-options', '#name');
 }
 
@@ -1650,7 +1650,7 @@ function sitealias_find_local_backdrop_root($site_list) {
  * @return
  *   A non-associative array containing the needed keys' names.
  */
-function drop_get_special_keys() {
+function brush_get_special_keys() {
   $special_keys = array(
     'command-specific',
     'site-aliases',

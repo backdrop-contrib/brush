@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Functions used by drop to query the environment and
+ * Functions used by brush to query the environment and
  * setting the current configuration.
  */
 
 /**
  * The indicator for a Backdrop installation folder.
  */
-define('DROP_BACKDROP_BOOTSTRAP', 'core/includes/bootstrap.inc');
+define('BRUSH_BACKDROP_BOOTSTRAP', 'core/includes/bootstrap.inc');
 
 /**
- * @name Drop bootstrap phases
+ * @name Brush bootstrap phases
  * @{
- * Sequential Drop bootstrapping phases.
+ * Sequential Brush bootstrapping phases.
  */
 
 /**
@@ -23,24 +23,24 @@ define('DROP_BACKDROP_BOOTSTRAP', 'core/includes/bootstrap.inc');
  * This constant is only used to indicate that the bootstrap process has
  * not started yet.  It is not possible to have no bootstrap.
  */
-define('DROP_BOOTSTRAP_NONE', -1);
+define('BRUSH_BOOTSTRAP_NONE', -1);
 
 /**
- * Use drop_bootstrap_max instead of drop_bootstrap_to_phase
+ * Use brush_bootstrap_max instead of brush_bootstrap_to_phase
  *
  * This constant is only usable as the value of the 'bootstrap'
  * item of a command object, or as the parameter to
- * drop_bootstrap_to_phase.  It is not a real bootstrap state.
+ * brush_bootstrap_to_phase.  It is not a real bootstrap state.
  */
-define('DROP_BOOTSTRAP_MAX', -2);
+define('BRUSH_BOOTSTRAP_MAX', -2);
 
 /**
- * Only bootstrap Drop, without any Backdrop specific code.
+ * Only bootstrap Brush, without any Backdrop specific code.
  *
- * Any code that operates on the Drop installation, and not specifically
+ * Any code that operates on the Brush installation, and not specifically
  * any Backdrop directory, should bootstrap to this phase.
  */
-define('DROP_BOOTSTRAP_DROP', 0);
+define('BRUSH_BOOTSTRAP_DROP', 0);
 
 /**
  * Set up and test for a valid backdrop root, either through the -r/--root options,
@@ -49,22 +49,22 @@ define('DROP_BOOTSTRAP_DROP', 0);
  * Any code that interacts with an entire Backdrop installation, and not a specific
  * site on the Backdrop installation should use this bootstrap phase.
  */
-define('DROP_BOOTSTRAP_BACKDROP_ROOT',  1);
+define('BRUSH_BOOTSTRAP_BACKDROP_ROOT',  1);
 
 /**
  * Set up a Backdrop site directory and the correct environment variables to
  * allow Backdrop to find the configuration file.
  *
- * If no site is specified with the -l / --uri options, Drop will assume the
+ * If no site is specified with the -l / --uri options, Brush will assume the
  * site is 'default', which mimics Backdrop's behaviour.
  *
  * If you want to avoid this behaviour, it is recommended that you use the
- * DROP_BOOTSTRAP_BACKDROP_ROOT bootstrap phase instead.
+ * BRUSH_BOOTSTRAP_BACKDROP_ROOT bootstrap phase instead.
  *
  * Any code that needs to modify or interact with a specific Backdrop site's
  * settings.php file should bootstrap to this phase.
  */
-define('DROP_BOOTSTRAP_BACKDROP_SITE', 2);
+define('BRUSH_BOOTSTRAP_BACKDROP_SITE', 2);
 
 /**
  * Load the settings from the Backdrop sites directory.
@@ -75,7 +75,7 @@ define('DROP_BOOTSTRAP_BACKDROP_SITE', 2);
  * This phase is commonly used for code that interacts with the Backdrop install API,
  * as both install.php and update.php start at this phase.
  */
-define('DROP_BOOTSTRAP_BACKDROP_CONFIGURATION', 3);
+define('BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION', 3);
 
 /**
  * Connect to the Backdrop database using the database credentials loaded
@@ -87,7 +87,7 @@ define('DROP_BOOTSTRAP_BACKDROP_CONFIGURATION', 3);
  * Any code that needs to interact with the Backdrop database API needs to
  * be bootstrapped to at least this phase.
  */
-define('DROP_BOOTSTRAP_BACKDROP_DATABASE', 4);
+define('BRUSH_BOOTSTRAP_BACKDROP_DATABASE', 4);
 
 /**
  * Fully initialize Backdrop.
@@ -98,7 +98,7 @@ define('DROP_BOOTSTRAP_BACKDROP_DATABASE', 4);
  * Any code that interacts with the general Backdrop API should be
  * bootstrapped to this phase.
  */
-define('DROP_BOOTSTRAP_BACKDROP_FULL', 5);
+define('BRUSH_BOOTSTRAP_BACKDROP_FULL', 5);
 
 /**
  * Log in to the initialiased Backdrop site.
@@ -116,36 +116,36 @@ define('DROP_BOOTSTRAP_BACKDROP_FULL', 5);
  * to information for a specific user, such as listing nodes that might
  * be different based on who is logged in.
  */
-define('DROP_BOOTSTRAP_BACKDROP_LOGIN', 6);
+define('BRUSH_BOOTSTRAP_BACKDROP_LOGIN', 6);
 
 /**
  * Supported version of Console Table. This is displayed in the manual install help.
  */
-define('DROP_TABLE_VERSION', '1.1.3');
+define('BRUSH_TABLE_VERSION', '1.1.3');
 
 /**
  * URL for automatic file download for supported version of Console Table.
  */
-define('DROP_TABLE_URL', 'http://svn.php.net/viewvc/pear/packages/Console_Table/trunk/Table.php?revision=267580&view=co');
+define('BRUSH_TABLE_URL', 'http://svn.php.net/viewvc/pear/packages/Console_Table/trunk/Table.php?revision=267580&view=co');
 
 /**
  * Helper function listing phases.
  *
  * For commands that need to iterate through the phases, such as help
  */
-function _drop_bootstrap_phases($function_names = FALSE, $init_phases_only = FALSE) {
+function _brush_bootstrap_phases($function_names = FALSE, $init_phases_only = FALSE) {
   static $functions = array(
-    DROP_BOOTSTRAP_DROP                  => '_drop_bootstrap_drop',
-    DROP_BOOTSTRAP_BACKDROP_ROOT            => '_drop_bootstrap_backdrop_root',
-    DROP_BOOTSTRAP_BACKDROP_SITE            => '_drop_bootstrap_backdrop_site',
-    DROP_BOOTSTRAP_BACKDROP_CONFIGURATION   => '_drop_bootstrap_backdrop_configuration',
-    DROP_BOOTSTRAP_BACKDROP_DATABASE        => '_drop_bootstrap_backdrop_database',
-    DROP_BOOTSTRAP_BACKDROP_FULL            => '_drop_bootstrap_backdrop_full',
-    DROP_BOOTSTRAP_BACKDROP_LOGIN           => '_drop_bootstrap_backdrop_login');
+    BRUSH_BOOTSTRAP_DROP                  => '_brush_bootstrap_brush',
+    BRUSH_BOOTSTRAP_BACKDROP_ROOT            => '_brush_bootstrap_backdrop_root',
+    BRUSH_BOOTSTRAP_BACKDROP_SITE            => '_brush_bootstrap_backdrop_site',
+    BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION   => '_brush_bootstrap_backdrop_configuration',
+    BRUSH_BOOTSTRAP_BACKDROP_DATABASE        => '_brush_bootstrap_backdrop_database',
+    BRUSH_BOOTSTRAP_BACKDROP_FULL            => '_brush_bootstrap_backdrop_full',
+    BRUSH_BOOTSTRAP_BACKDROP_LOGIN           => '_brush_bootstrap_backdrop_login');
 
   $result = array();
   if ($init_phases_only) {
-    foreach (array(DROP_BOOTSTRAP_DROP, DROP_BOOTSTRAP_BACKDROP_FULL) as $phase) {
+    foreach (array(BRUSH_BOOTSTRAP_DROP, BRUSH_BOOTSTRAP_BACKDROP_FULL) as $phase) {
       $result[$phase] = $functions[$phase];
     }
   }
@@ -159,11 +159,11 @@ function _drop_bootstrap_phases($function_names = FALSE, $init_phases_only = FAL
 }
 
 /**
- * @} End of Drop bootstrap phases.
+ * @} End of Brush bootstrap phases.
  */
 
 /**
- * Bootstrap Drop to the desired phase.
+ * Bootstrap Brush to the desired phase.
  *
  * This function will sequentially bootstrap each
  * lower phase up to the phase that has been requested.
@@ -171,45 +171,45 @@ function _drop_bootstrap_phases($function_names = FALSE, $init_phases_only = FAL
  * @param phase
  *   The bootstrap phase to bootstrap to.
  *   Any of the following constants :
- *     DROP_BOOTSTRAP_DROP                = Only Drop.
- *     DROP_BOOTSTRAP_BACKDROP_ROOT          = Find a valid Backdrop root.
- *     DROP_BOOTSTRAP_BACKDROP_SITE          = Find a valid Backdrop site.
- *     DROP_BOOTSTRAP_BACKDROP_CONFIGURATION = Load the site's settings.
- *     DROP_BOOTSTRAP_BACKDROP_DATABASE      = Initialize the database.
- *     DROP_BOOTSTRAP_BACKDROP_FULL          = Initialize Backdrop fully.
- *     DROP_BOOTSTRAP_BACKDROP_LOGIN         = Log into Backdrop with a valid user.
+ *     BRUSH_BOOTSTRAP_DROP                = Only Brush.
+ *     BRUSH_BOOTSTRAP_BACKDROP_ROOT          = Find a valid Backdrop root.
+ *     BRUSH_BOOTSTRAP_BACKDROP_SITE          = Find a valid Backdrop site.
+ *     BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION = Load the site's settings.
+ *     BRUSH_BOOTSTRAP_BACKDROP_DATABASE      = Initialize the database.
+ *     BRUSH_BOOTSTRAP_BACKDROP_FULL          = Initialize Backdrop fully.
+ *     BRUSH_BOOTSTRAP_BACKDROP_LOGIN         = Log into Backdrop with a valid user.
  */
-function drop_bootstrap($phase, $phase_max = FALSE) {
+function brush_bootstrap($phase, $phase_max = FALSE) {
   static $phases;
   if (!$phases) {
-    $phases = _drop_bootstrap_phases(TRUE);
+    $phases = _brush_bootstrap_phases(TRUE);
   }
   static $phase_index = 0;
 
-  drop_set_context('DROP_BOOTSTRAPPING', TRUE);
+  brush_set_context('BRUSH_BOOTSTRAPPING', TRUE);
   while ($phase >= $phase_index && isset($phases[$phase_index])) {
-    if (drop_bootstrap_validate($phase_index)) {
+    if (brush_bootstrap_validate($phase_index)) {
       $current_phase = $phases[$phase_index];
-      if (function_exists($current_phase) && !drop_get_error()) {
-        drop_log(dt("Drop bootstrap phase : !function()", array('!function' => $current_phase)), 'bootstrap');
+      if (function_exists($current_phase) && !brush_get_error()) {
+        brush_log(dt("Brush bootstrap phase : !function()", array('!function' => $current_phase)), 'bootstrap');
         $current_phase();
 
         // Find any command files that are available during this bootstrap phase.
-        _drop_find_commandfiles($phase_index, $phase_max);
+        _brush_find_commandfiles($phase_index, $phase_max);
       }
-      drop_set_context('DROP_BOOTSTRAP_PHASE', $phase_index);
+      brush_set_context('BRUSH_BOOTSTRAP_PHASE', $phase_index);
     }
     else {
-      $errors = drop_get_context('DROP_BOOTSTRAP_ERRORS', array());
+      $errors = brush_get_context('BRUSH_BOOTSTRAP_ERRORS', array());
       foreach ($errors as $code => $message) {
-        drop_set_error($code, $message);
+        brush_set_error($code, $message);
       }
     }
     unset($phases[$phase_index++]);
   }
-  drop_set_context('DROP_BOOTSTRAPPING', FALSE);
+  brush_set_context('BRUSH_BOOTSTRAPPING', FALSE);
 
-  return !drop_get_error();
+  return !brush_get_error();
 }
 
 /**
@@ -221,8 +221,8 @@ function drop_bootstrap($phase, $phase_max = FALSE) {
  * @returns
  *   TRUE if the specified bootstrap phase has completed.
  */
-function drop_has_boostrapped($phase) {
-  $phase_index = drop_get_context('DROP_BOOTSTRAP_PHASE');
+function brush_has_boostrapped($phase) {
+  $phase_index = brush_get_context('BRUSH_BOOTSTRAP_PHASE');
 
   return isset($phase_index) && ($phase_index >= $phase);
 }
@@ -241,28 +241,28 @@ function drop_has_boostrapped($phase) {
  * @param phase
  *   The bootstrap phase to validate to.
  *   Any of the following constants :
- *     DROP_BOOTSTRAP_DROP                = Only Drop.
- *     DROP_BOOTSTRAP_BACKDROP_ROOT          = Find a valid Backdrop root.
- *     DROP_BOOTSTRAP_BACKDROP_SITE          = Find a valid Backdrop site.
- *     DROP_BOOTSTRAP_BACKDROP_CONFIGURATION = Load the site's settings.
- *     DROP_BOOTSTRAP_BACKDROP_DATABASE      = Initialize the database.
- *     DROP_BOOTSTRAP_BACKDROP_FULL          = Initialize Backdrop fully.
- *     DROP_BOOTSTRAP_BACKDROP_LOGIN         = Log into Backdrop with a valid user.
+ *     BRUSH_BOOTSTRAP_DROP                = Only Brush.
+ *     BRUSH_BOOTSTRAP_BACKDROP_ROOT          = Find a valid Backdrop root.
+ *     BRUSH_BOOTSTRAP_BACKDROP_SITE          = Find a valid Backdrop site.
+ *     BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION = Load the site's settings.
+ *     BRUSH_BOOTSTRAP_BACKDROP_DATABASE      = Initialize the database.
+ *     BRUSH_BOOTSTRAP_BACKDROP_FULL          = Initialize Backdrop fully.
+ *     BRUSH_BOOTSTRAP_BACKDROP_LOGIN         = Log into Backdrop with a valid user.
  *
  * @return
  *   True if bootstrap is possible, False if the validation failed.
  *
  */
-function drop_bootstrap_validate($phase) {
+function brush_bootstrap_validate($phase) {
   static $phases;
   static $result_cache = array();
   if (!$phases) {
-    $phases = _drop_bootstrap_phases(TRUE);
+    $phases = _brush_bootstrap_phases(TRUE);
   }
   static $phase_index = 0;
   if (!array_key_exists($phase, $result_cache)) {
-    drop_set_context('DROP_BOOTSTRAP_ERRORS', array());
-    drop_set_context('DROP_BOOTSTRAP_VALUES', array());
+    brush_set_context('BRUSH_BOOTSTRAP_ERRORS', array());
+    brush_set_context('BRUSH_BOOTSTRAP_VALUES', array());
 
     while ($phase >= $phase_index && isset($phases[$phase_index])) {
       $current_phase = $phases[$phase_index] . '_validate';
@@ -272,7 +272,7 @@ function drop_bootstrap_validate($phase) {
       else {
         $result_cache[$phase_index] = TRUE;
       }
-      drop_set_context('DROP_BOOTSTRAP_VALIDATION_PHASE', $phase_index);
+      brush_set_context('BRUSH_BOOTSTRAP_VALIDATION_PHASE', $phase_index);
       unset($phases[$phase_index++]);
     }
   }
@@ -285,18 +285,18 @@ function drop_bootstrap_validate($phase) {
  * @param $max_phase_index
  *   Only attempt bootstrap to the specified level.
  */
-function drop_bootstrap_to_phase($max_phase_index) {
-  // If $max_phase_index is DROP_BOOTSTRAP_MAX, then
-  // we will bootstrap as far as we can.  drop_bootstrap_max
-  // is different than drop_bootstrap_to_phase in that
-  // it is not an error if DROP_BOOTSTRAP_LOGIN is not reached.
-  if ($max_phase_index == DROP_BOOTSTRAP_MAX) {
-    drop_bootstrap_max();
+function brush_bootstrap_to_phase($max_phase_index) {
+  // If $max_phase_index is BRUSH_BOOTSTRAP_MAX, then
+  // we will bootstrap as far as we can.  brush_bootstrap_max
+  // is different than brush_bootstrap_to_phase in that
+  // it is not an error if BRUSH_BOOTSTRAP_LOGIN is not reached.
+  if ($max_phase_index == BRUSH_BOOTSTRAP_MAX) {
+    brush_bootstrap_max();
     return TRUE;
   }
 
-  drop_log(dt("Bootstrap to phase !phase.", array('!phase' => $max_phase_index)), 'bootstrap');
-  $phases = _drop_bootstrap_phases();
+  brush_log(dt("Bootstrap to phase !phase.", array('!phase' => $max_phase_index)), 'bootstrap');
+  $phases = _brush_bootstrap_phases();
   $result = TRUE;
 
   // Try to bootstrap to the maximum possible level, without generating errors
@@ -306,9 +306,9 @@ function drop_bootstrap_to_phase($max_phase_index) {
       break;
     }
 
-    if (drop_bootstrap_validate($phase_index)) {
-      if ($phase_index > drop_get_context('DROP_BOOTSTRAP_PHASE')) {
-        $result = drop_bootstrap($phase_index, $max_phase_index);
+    if (brush_bootstrap_validate($phase_index)) {
+      if ($phase_index > brush_get_context('BRUSH_BOOTSTRAP_PHASE')) {
+        $result = brush_bootstrap($phase_index, $max_phase_index);
       }
     }
     else {
@@ -325,9 +325,9 @@ function drop_bootstrap_to_phase($max_phase_index) {
  * @param $max_phase_index
  *   Only attempt bootstrap to the specified level.
  */
-function drop_bootstrap_max($max_phase_index = FALSE) {
-  $phases = _drop_bootstrap_phases();
-  $phase_index = DROP_BOOTSTRAP_DROP;
+function brush_bootstrap_max($max_phase_index = FALSE) {
+  $phases = _brush_bootstrap_phases();
+  $phase_index = BRUSH_BOOTSTRAP_DROP;
   if (!$max_phase_index) {
     $max_phase_index = count($phases);
   }
@@ -339,9 +339,9 @@ function drop_bootstrap_max($max_phase_index = FALSE) {
       break;
     }
 
-    if (drop_bootstrap_validate($phase_index)) {
-      if ($phase_index > drop_get_context('DROP_BOOTSTRAP_PHASE')) {
-        drop_bootstrap($phase_index, $max_phase_index);
+    if (brush_bootstrap_validate($phase_index)) {
+      if ($phase_index > brush_get_context('BRUSH_BOOTSTRAP_PHASE')) {
+        brush_bootstrap($phase_index, $max_phase_index);
       }
     }
     else {
@@ -349,7 +349,7 @@ function drop_bootstrap_max($max_phase_index = FALSE) {
     }
   }
 
-  return drop_get_context('DROP_BOOTSTRAP_PHASE');
+  return brush_get_context('BRUSH_BOOTSTRAP_PHASE');
 }
 
 /**
@@ -358,16 +358,16 @@ function drop_bootstrap_max($max_phase_index = FALSE) {
  *
  * @param $site_record
  *   The alias record for the given site alias.
- *   @see drop_sitealias_get_record().
+ *   @see brush_sitealias_get_record().
  * @param $max_phase_index
  *   Only attempt bootstrap to the specified level.
  * @returns TRUE if attempted to bootstrap, or FALSE
  *   if no bootstrap attempt was made.
  */
-function drop_bootstrap_max_to_sitealias($site_record, $max_phase_index = NULL) {
+function brush_bootstrap_max_to_sitealias($site_record, $max_phase_index = NULL) {
   if ((array_key_exists('root', $site_record) && !array_key_exists('remote-host', $site_record))) {
-    drop_sitealias_set_alias_context($site_record);
-    drop_bootstrap_max($max_phase_index);
+    brush_sitealias_set_alias_context($site_record);
+    brush_bootstrap_max($max_phase_index);
     return TRUE;
   }
   return FALSE;
@@ -377,18 +377,18 @@ function drop_bootstrap_max_to_sitealias($site_record, $max_phase_index = NULL) 
  * Helper function to collect any errors that occur during the bootstrap process.
  * Always returns FALSE, for convenience.
  */
-function drop_bootstrap_error($code, $message = null) {
-  $errors = drop_get_context('DROP_BOOTSTRAP_ERRORS');
+function brush_bootstrap_error($code, $message = null) {
+  $errors = brush_get_context('BRUSH_BOOTSTRAP_ERRORS');
   $errors[$code] = $message;
-  drop_set_context('DROP_BOOTSTRAP_ERRORS', $errors);
+  brush_set_context('BRUSH_BOOTSTRAP_ERRORS', $errors);
   return FALSE;
 }
 
 /**
- * Log PHP errors to the Drop log. This is in effect until Backdrop's error
+ * Log PHP errors to the Brush log. This is in effect until Backdrop's error
  * handler takes over.
  */
-function drop_error_handler($errno, $message, $filename, $line, $context) {
+function brush_error_handler($errno, $message, $filename, $line, $context) {
   // E_DEPRECATED was added in PHP 5.3. Backdrop will not fix all the
   // deprecated errors, but suppresses them. So we suppress them as well.
   if (defined('E_DEPRECATED')) {
@@ -396,10 +396,10 @@ function drop_error_handler($errno, $message, $filename, $line, $context) {
   }
 
   // "error_reporting" is usually set in php.ini, but may be changed by
-  // drop_errors_on() and drop_errors_off().
+  // brush_errors_on() and brush_errors_off().
   if ($errno & error_reporting()) {
     // By default we log notices.
-    $type = drop_get_option('php-notices', 'notice');
+    $type = brush_get_option('php-notices', 'notice');
 
     // Bitmask value that constitutes an error needing to be logged.
     $error = E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR;
@@ -413,7 +413,7 @@ function drop_error_handler($errno, $message, $filename, $line, $context) {
       $type = 'warning';
     }
 
-    drop_log($message . ' ' . basename($filename) . ':' . $line, $type);
+    brush_log($message . ' ' . basename($filename) . ':' . $line, $type);
 
     return TRUE;
   }
@@ -422,8 +422,8 @@ function drop_error_handler($errno, $message, $filename, $line, $context) {
 /**
  * Helper function to store any context settings that are being validated.
  */
-function drop_bootstrap_value($context, $value = null) {
-  $values =& drop_get_context('DROP_BOOTSTRAP_VALUES', array());
+function brush_bootstrap_value($context, $value = null) {
+  $values =& brush_get_context('BRUSH_BOOTSTRAP_VALUES', array());
 
   if (!is_null($value)) {
     $values[$context] = $value;
@@ -441,12 +441,12 @@ function drop_bootstrap_value($context, $value = null) {
  * varies depending on whether the php_ini_loaded_file()
  * is available or not.
  */
-function _drop_php_ini_loaded_file_message() {
+function _brush_php_ini_loaded_file_message() {
   if (function_exists('php_ini_loaded_file')) {
-    return dt('Please check your configuration settings in !phpini or in your drop.ini file; see examples/example.drop.ini for details.', array('!phpini' => php_ini_loaded_file()));
+    return dt('Please check your configuration settings in !phpini or in your brush.ini file; see examples/example.brush.ini for details.', array('!phpini' => php_ini_loaded_file()));
   }
   else {
-    return dt('Please check your configuration settings in your php.ini file or in your drop.ini file; see examples/example.drop.ini for details.');
+    return dt('Please check your configuration settings in your php.ini file or in your brush.ini file; see examples/example.brush.ini for details.');
   }
 }
 
@@ -455,11 +455,11 @@ function _drop_php_ini_loaded_file_message() {
  * see if we can determine any configuration settings that the user might
  * want to adjust.
  */
-function _drop_postmortem() {
+function _brush_postmortem() {
   // Make sure that the memory limit has been bumped up from the minimum default value of 32M.
-  $php_memory_limit = drop_memory_limit();
-  if (($php_memory_limit > 0) && ($php_memory_limit <= 32*DROP_BACKDROP_KILOBYTE*DROP_BACKDROP_KILOBYTE)) {
-    drop_set_error('DROP_MEMORY_LIMIT', dt('Your memory limit is set to !memory_limit; drop needs as much memory to run as Backdrop.  !php_ini_msg', array('!memory_limit' => $php_memory_limit / (DROP_BACKDROP_KILOBYTE*DROP_BACKDROP_KILOBYTE) . 'M', '!php_ini_msg' => _drop_php_ini_loaded_file_message())));
+  $php_memory_limit = brush_memory_limit();
+  if (($php_memory_limit > 0) && ($php_memory_limit <= 32*BRUSH_BACKDROP_KILOBYTE*BRUSH_BACKDROP_KILOBYTE)) {
+    brush_set_error('BRUSH_MEMORY_LIMIT', dt('Your memory limit is set to !memory_limit; brush needs as much memory to run as Backdrop.  !php_ini_msg', array('!memory_limit' => $php_memory_limit / (BRUSH_BACKDROP_KILOBYTE*BRUSH_BACKDROP_KILOBYTE) . 'M', '!php_ini_msg' => _brush_php_ini_loaded_file_message())));
   }
 }
 
@@ -468,7 +468,7 @@ function _drop_postmortem() {
  * begins.  If the php environment is too restrictive, then
  * notify the user that a setting change is needed and abort.
  */
-function _drop_environment_check_php_ini() {
+function _brush_environment_check_php_ini() {
   $ini_checks = array('safe_mode' => '', 'open_basedir' => '', 'disable_functions' => array('exec', 'system'), 'disable_classes' => '');
 
   // Test to insure that certain php ini restrictions have not been enabled
@@ -491,23 +491,23 @@ function _drop_environment_check_php_ini() {
     }
   }
   if (!empty($prohibited_list)) {
-    drop_log(dt('The following restricted PHP modes have non-empty values: !prohibited_list. This configuration is incompatible with drop.  !php_ini_msg', array('!prohibited_list' => implode(' and ', $prohibited_list), '!php_ini_msg' => _drop_php_ini_loaded_file_message())), 'error');
+    brush_log(dt('The following restricted PHP modes have non-empty values: !prohibited_list. This configuration is incompatible with brush.  !php_ini_msg', array('!prohibited_list' => implode(' and ', $prohibited_list), '!php_ini_msg' => _brush_php_ini_loaded_file_message())), 'error');
   }
 
   return TRUE;
 }
 
 /**
- * Validate that Drop is running in a suitable environment.
+ * Validate that Brush is running in a suitable environment.
  */
-function _drop_bootstrap_drop_validate() {
-  // @todo _drop_environment_php_ini_checks() always returns TRUE.
-  $return = _drop_environment_check_php_ini();
+function _brush_bootstrap_brush_validate() {
+  // @todo _brush_environment_php_ini_checks() always returns TRUE.
+  $return = _brush_environment_check_php_ini();
   if ($return !== TRUE) {
     return $return;
   }
 
-  if (drop_environment_table_inc() === FALSE) {
+  if (brush_environment_table_inc() === FALSE) {
     return FALSE;
   }
 
@@ -518,40 +518,40 @@ function _drop_bootstrap_drop_validate() {
  * To disable the warning about Windows support, set $options['check_os'] = FALSE
  * in droprc.php. See examples/example.droprc.php.
  */
-function drop_environment_check_os() {
-  if (substr(PHP_OS, 0, 3) == 'WIN' && (drop_get_option('check_os', TRUE) !== 'i-want-4.x')) {
-    $msg = 'Drop 4.x has significant limitations on Windows; it is not advisable to use on that platform. Substantial progress has been made towards supporing Windows on the 5.x branch; please upgrade. See http://backdrop.org/project/drop for more information.';
-    drop_log(dt($msg), 'warning');
+function brush_environment_check_os() {
+  if (substr(PHP_OS, 0, 3) == 'WIN' && (brush_get_option('check_os', TRUE) !== 'i-want-4.x')) {
+    $msg = 'Brush 4.x has significant limitations on Windows; it is not advisable to use on that platform. Substantial progress has been made towards supporing Windows on the 5.x branch; please upgrade. See http://drupal.org/project/brush for more information.';
+    brush_log(dt($msg), 'warning');
   }
 }
 
-function drop_environment_table_inc() {
+function brush_environment_table_inc() {
   // try using the PEAR installed version of Console_Table
   $tablefile = 'Console/Table.php';
   if (@file_get_contents($tablefile, FILE_USE_INCLUDE_PATH) === FALSE) {
-    $tablefile = DROP_BASE_PATH . '/includes/table.inc';
+    $tablefile = BRUSH_BASE_PATH . '/includes/table.inc';
 
     // Attempt to download Console Table, via various methods.
-    if (!drop_file_not_empty($tablefile)) {
+    if (!brush_file_not_empty($tablefile)) {
       $targetpath = dirname($tablefile);
       // not point continuing if we can't write to the target path
       if (!is_writable($targetpath)) {
-        return drop_bootstrap_error('DROP_TABLES_INC', dt("Drop needs a copy of the PEAR Console_Table library in order to function, and the attempt to download this file automatically failed because you do not have permission to write files in !path. To continue you will need to download the !version package from http://pear.php.net/package/Console_Table, extract it, and copy the Table.php file into Drop's directory as !tablefile.", array('!path' => $targetpath, '!version' => DROP_TABLE_VERSION ,'!tablefile' => $tablefile)));
+        return brush_bootstrap_error('BRUSH_TABLES_INC', dt("Brush needs a copy of the PEAR Console_Table library in order to function, and the attempt to download this file automatically failed because you do not have permission to write files in !path. To continue you will need to download the !version package from http://pear.php.net/package/Console_Table, extract it, and copy the Table.php file into Brush's directory as !tablefile.", array('!path' => $targetpath, '!version' => BRUSH_TABLE_VERSION ,'!tablefile' => $tablefile)));
       }
 
-      if ($file = @file_get_contents(DROP_TABLE_URL)) {
+      if ($file = @file_get_contents(BRUSH_TABLE_URL)) {
         @file_put_contents($tablefile, $file);
       }
       if (!file_exists($tablefile)) {
-        drop_shell_exec("wget -q --timeout=30 -O $tablefile " . DROP_TABLE_URL);
+        brush_shell_exec("wget -q --timeout=30 -O $tablefile " . BRUSH_TABLE_URL);
         // wget creates an empty file on timeout. We remove it here.
-        if (file_exists($tablefile) && !drop_file_not_empty($tablefile)) {
+        if (file_exists($tablefile) && !brush_file_not_empty($tablefile)) {
           unlink($tablefile);
         }
         if (!file_exists($tablefile)) {
-          drop_shell_exec("curl -s  --connect-timeout 30 -o $tablefile " . DROP_TABLE_URL);
+          brush_shell_exec("curl -s  --connect-timeout 30 -o $tablefile " . BRUSH_TABLE_URL);
           if (!file_exists($tablefile)) {
-            return drop_bootstrap_error('DROP_TABLES_INC', dt("Drop needs a copy of the PEAR Console_Table library in order to function, and the attempt to download this file automatically failed. To continue you will need to download the !version package from http://pear.php.net/package/Console_Table, extract it, and copy the Table.php file into Drop's directory as !tablefile.", array('!version' => DROP_TABLE_VERSION ,'!tablefile' => $tablefile)));
+            return brush_bootstrap_error('BRUSH_TABLES_INC', dt("Brush needs a copy of the PEAR Console_Table library in order to function, and the attempt to download this file automatically failed. To continue you will need to download the !version package from http://pear.php.net/package/Console_Table, extract it, and copy the Table.php file into Brush's directory as !tablefile.", array('!version' => BRUSH_TABLE_VERSION ,'!tablefile' => $tablefile)));
           }
         }
       }
@@ -561,11 +561,11 @@ function drop_environment_table_inc() {
 }
 
 /**
- * Initial Drop bootstrap phase.
+ * Initial Brush bootstrap phase.
  *
- * During the initialization of Drop,
+ * During the initialization of Brush,
  * this is the first step where all we are
- * aware of is Drop itself.
+ * aware of is Brush itself.
  *
  * In this step we will register the shutdown function,
  * parse the command line arguments and store them in their
@@ -573,19 +573,19 @@ function drop_environment_table_inc() {
  *
  * Configuration files (droprc.php) that are
  *   a) Specified on the command line
- *   b) Stored in the root directory of drop.php
+ *   b) Stored in the root directory of brush.php
  *   c) Stored in the home directory of the system user.
  *
- * Additionally the DROP_QUIET and DROP_BACKEND contexts,
+ * Additionally the BRUSH_QUIET and BRUSH_BACKEND contexts,
  * will be evaluated now, as they need to be set very early in
  * the execution flow to be able to take affect/
  */
-function _drop_bootstrap_drop() {
+function _brush_bootstrap_brush() {
   // Create an alias '@none' to represent no Backdrop site
-  _drop_sitealias_cache_alias('none', array('root' => '', 'uri' => ''));
+  _brush_sitealias_cache_alias('none', array('root' => '', 'uri' => ''));
 
   // Set the terminal width, used for wrapping table output.
-  // Normally this is exported using tput in the drop script.
+  // Normally this is exported using tput in the brush script.
   // If this is not present we do an additional check using stty here.
   if (!($columns = getenv('COLUMNS'))) {
     exec('stty size 2>&1', $stty_output, $stty_status);
@@ -594,80 +594,80 @@ function _drop_bootstrap_drop() {
     if ($stty_status || !$stty_count) $columns = 80;
   }
   // If a caller wants to reserve some room to add additional
-  // information to the drop output via post-processing, the
+  // information to the brush output via post-processing, the
   // --reserve-margin flag can be used to declare how much
-  // space to leave out.  This only affects drop functions
-  // such as drop_print_table that wrap the output.
-  $columns -= drop_get_option('reserve-margin', 0);
-  drop_set_context('DROP_COLUMNS', $columns);
+  // space to leave out.  This only affects brush functions
+  // such as brush_print_table that wrap the output.
+  $columns -= brush_get_option('reserve-margin', 0);
+  brush_set_context('BRUSH_COLUMNS', $columns);
 
-  // Statically define a way to call drop again.
-  define('DROP_COMMAND', drop_find_drop());
+  // Statically define a way to call brush again.
+  define('BRUSH_COMMAND', brush_find_brush());
 
-  $drop_info = drop_read_drop_info();
-  define('DROP_VERSION', $drop_info['drop_version']);
-  $version_parts = explode('.', DROP_VERSION);
-  define('DROP_MAJOR_VERSION', $version_parts[0]);
-  define('DROP_MINOR_VERSION', $version_parts[1]);
+  $brush_info = brush_read_brush_info();
+  define('BRUSH_VERSION', $brush_info['brush_version']);
+  $version_parts = explode('.', BRUSH_VERSION);
+  define('BRUSH_MAJOR_VERSION', $version_parts[0]);
+  define('BRUSH_MINOR_VERSION', $version_parts[1]);
 
   // prime the CWD cache
-  drop_cwd();
+  brush_cwd();
 
   /* Copy ETC_PREFIX and SHARE_PREFIX from environment variables if available.
    * This alters where we check for server-wide config and alias files.
    * Used by unit test suite to provide a clean environment.
    */
-  if (getenv('ETC_PREFIX')) drop_set_context('ETC_PREFIX', getenv('ETC_PREFIX'));
-  if (getenv('SHARE_PREFIX')) drop_set_context('SHARE_PREFIX', getenv('SHARE_PREFIX'));
+  if (getenv('ETC_PREFIX')) brush_set_context('ETC_PREFIX', getenv('ETC_PREFIX'));
+  if (getenv('SHARE_PREFIX')) brush_set_context('SHARE_PREFIX', getenv('SHARE_PREFIX'));
 
-  drop_set_context('DOC_PREFIX', DROP_BASE_PATH);
-  if (!file_exists(DROP_BASE_PATH . '/README.txt') && file_exists(drop_get_context('SHARE_PREFIX', '/usr') . '/share/doc/drop') . '/README.txt') {
-    drop_set_context('DOC_PREFIX', drop_get_context('SHARE_PREFIX', '/usr') . '/share/doc/drop');
+  brush_set_context('DOC_PREFIX', BRUSH_BASE_PATH);
+  if (!file_exists(BRUSH_BASE_PATH . '/README.txt') && file_exists(brush_get_context('SHARE_PREFIX', '/usr') . '/share/doc/brush') . '/README.txt') {
+    brush_set_context('DOC_PREFIX', brush_get_context('SHARE_PREFIX', '/usr') . '/share/doc/brush');
   }
 
-  // Load a droprc.php file in the drop.php's directory.
-  drop_load_config('drop');
+  // Load a droprc.php file in the brush.php's directory.
+  brush_load_config('brush');
 
-  // Load a droprc.php file in the $ETC_PREFIX/etc/drop directory.
-  drop_load_config('system');
+  // Load a droprc.php file in the $ETC_PREFIX/etc/brush directory.
+  brush_load_config('system');
 
   // Load a droprc.php file at ~/.droprc.php.
-  drop_load_config('user');
+  brush_load_config('user');
 
-  // Load a droprc.php file in the ~/.drop directory.
-  drop_load_config('home.drop');
+  // Load a droprc.php file in the ~/.brush directory.
+  brush_load_config('home.brush');
 
   // Load a custom config specified with the --config option.
-  drop_load_config('custom');
+  brush_load_config('custom');
 
   // Process the site alias that specifies which instance
-  // of drop (local or remote) this command will operate on.
+  // of brush (local or remote) this command will operate on.
   // We must do this after we load our config files (so that
   // site aliases are available), but before the rest
-  // of the drop and backdrop root bootstrap phases are
+  // of the brush and backdrop root bootstrap phases are
   // done, since site aliases may set option values that
   // affect these phases.
-  // TODO: Note that this function will call drop_locate_root
-  // (from within _drop_sitealias_find_record_for_local_site),
-  // and drop_locate_root will be called again when bootstrapping
+  // TODO: Note that this function will call brush_locate_root
+  // (from within _brush_sitealias_find_record_for_local_site),
+  // and brush_locate_root will be called again when bootstrapping
   // the backdrop root below.  Is there a good way to refactor this
   // so that we do not need to search for the root twice?
-  drop_sitealias_check_arg();
+  brush_sitealias_check_arg();
 
-  $backend = drop_set_context('DROP_BACKEND', drop_get_option(array('b', 'backend')));
+  $backend = brush_set_context('BRUSH_BACKEND', brush_get_option(array('b', 'backend')));
 
   if ($backend) {
     // Load options passed as a JSON encoded string through STDIN.
-    $stdin_options = _drop_backend_get_stdin();
+    $stdin_options = _brush_backend_get_stdin();
     if (is_array($stdin_options)) {
-      drop_set_context('stdin', $stdin_options);
+      brush_set_context('stdin', $stdin_options);
     }
   }
 
   // Pipe implies quiet.
-  $quiet = drop_set_context('DROP_QUIET', drop_get_option(array('q', 'quiet', 'p', 'pipe')));
+  $quiet = brush_set_context('BRUSH_QUIET', brush_get_option(array('q', 'quiet', 'p', 'pipe')));
 
-  drop_set_context('DROP_PIPE', drop_get_option(array('p', 'pipe')));
+  brush_set_context('BRUSH_PIPE', brush_get_option(array('p', 'pipe')));
 
   // When running in backend mode, all output is buffered, and returned
   // as a property of a JSON encoded associative array.
@@ -675,22 +675,22 @@ function _drop_bootstrap_drop() {
     ob_start();
   }
 
-  _drop_bootstrap_global_options();
+  _brush_bootstrap_global_options();
 }
 
-function _drop_bootstrap_global_options() {
+function _brush_bootstrap_global_options() {
   // Debug implies verbose
-  drop_set_context('DROP_VERBOSE',     drop_get_option(array('v', 'verbose', 'd', 'debug'), FALSE));
-  drop_set_context('DROP_DEBUG', drop_get_option(array('d', 'debug')));
+  brush_set_context('BRUSH_VERBOSE',     brush_get_option(array('v', 'verbose', 'd', 'debug'), FALSE));
+  brush_set_context('BRUSH_DEBUG', brush_get_option(array('d', 'debug')));
 
   // Backend implies affirmative unless negative is explicitly specified
-  drop_set_context('DROP_NEGATIVE',    drop_get_option(array('n', 'no'), FALSE));
-  drop_set_context('DROP_AFFIRMATIVE', drop_get_option(array('y', 'yes'), FALSE) || (drop_get_context('DROP_BACKEND') && !drop_get_context('DROP_NEGATIVE')));
-  drop_set_context('DROP_SIMULATE',    drop_get_option(array('s', 'simulate'), FALSE));
+  brush_set_context('BRUSH_NEGATIVE',    brush_get_option(array('n', 'no'), FALSE));
+  brush_set_context('BRUSH_AFFIRMATIVE', brush_get_option(array('y', 'yes'), FALSE) || (brush_get_context('BRUSH_BACKEND') && !brush_get_context('BRUSH_NEGATIVE')));
+  brush_set_context('BRUSH_SIMULATE',    brush_get_option(array('s', 'simulate'), FALSE));
 
   // Suppress colored logging if --nocolor option is explicitly given or if
   // terminal does not support it.
-  $nocolor = (drop_get_option(array('nocolor'), FALSE));
+  $nocolor = (brush_get_option(array('nocolor'), FALSE));
   if (!$nocolor) {
     // Check for colorless terminal.  If there is no terminal, then
     // 'tput colors 2>&1' will return "tput: No value for $TERM and no -T specified",
@@ -698,61 +698,61 @@ function _drop_bootstrap_global_options() {
     $colors = exec('tput colors 2>&1');
     $nocolor = !($colors === FALSE || (is_numeric($colors) && $colors >= 3));
   }
-  drop_set_context('DROP_NOCOLOR', $nocolor);
+  brush_set_context('BRUSH_NOCOLOR', $nocolor);
 }
 
 /**
- * Validate the DROP_BOOTSTRAP_BACKDROP_ROOT phase.
+ * Validate the BRUSH_BOOTSTRAP_BACKDROP_ROOT phase.
  *
  * In this function, we will check if a valid Backdrop directory is available.
- * We also determine the value that will be stored in the DROP_BACKDROP_ROOT
+ * We also determine the value that will be stored in the BRUSH_BACKDROP_ROOT
  * context and BACKDROP_ROOT constant if it is considered a valid option.
  */
-function _drop_bootstrap_backdrop_root_validate() {
-  $backdrop_root = drop_get_option(array('r', 'root'), drop_locate_root());
+function _brush_bootstrap_backdrop_root_validate() {
+  $backdrop_root = brush_get_option(array('r', 'root'), brush_locate_root());
 
   if (empty($backdrop_root)) {
-    return drop_bootstrap_error('DROP_NO_BACKDROP_ROOT', dt("A Backdrop installation directory could not be found"));
+    return brush_bootstrap_error('BRUSH_NO_BACKDROP_ROOT', dt("A Backdrop installation directory could not be found"));
   }
-  if (!drop_valid_backdrop_root($backdrop_root)) {
-    return drop_bootstrap_error('DROP_INVALID_BACKDROP_ROOT', dt("The directory !backdrop_root does not contain a valid Backdrop installation", array('!backdrop_root' => $backdrop_root)));
+  if (!brush_valid_backdrop_root($backdrop_root)) {
+    return brush_bootstrap_error('BRUSH_INVALID_BACKDROP_ROOT', dt("The directory !backdrop_root does not contain a valid Backdrop installation", array('!backdrop_root' => $backdrop_root)));
   }
 
-  drop_bootstrap_value('backdrop_root', $backdrop_root);
+  brush_bootstrap_value('backdrop_root', $backdrop_root);
 
   return TRUE;
 }
 
 /**
- * Bootstrap Drop with a valid Backdrop Directory.
+ * Bootstrap Brush with a valid Backdrop Directory.
  *
  * In this function, the pwd will be moved to the root
  * of the Backdrop installation.
  *
- * The DROP_BACKDROP_ROOT context and the BACKDROP_ROOT constant are
+ * The BRUSH_BACKDROP_ROOT context and the BACKDROP_ROOT constant are
  * populated from the value that we determined during the validation phase.
  *
  * We also now load the droprc.php for this specific platform.
  * We can now include files from the Backdrop Tree, and figure
  * out more context about the platform, such as the version of Backdrop.
  */
-function _drop_bootstrap_backdrop_root() {
-  $backdrop_root = drop_set_context('DROP_BACKDROP_ROOT', drop_bootstrap_value('backdrop_root'));
+function _brush_bootstrap_backdrop_root() {
+  $backdrop_root = brush_set_context('BRUSH_BACKDROP_ROOT', brush_bootstrap_value('backdrop_root'));
   define('BACKDROP_ROOT', $backdrop_root);
 
   chdir($backdrop_root);
-  drop_load_config('backdrop');
-  require_once BACKDROP_ROOT . '/' . DROP_BACKDROP_BOOTSTRAP;
-  $version = drop_set_context('DROP_BACKDROP_VERSION', drop_backdrop_version());
-  $major_version = drop_set_context('DROP_BACKDROP_MAJOR_VERSION', drop_backdrop_major_version());
+  brush_load_config('backdrop');
+  require_once BACKDROP_ROOT . '/' . BRUSH_BACKDROP_BOOTSTRAP;
+  $version = brush_set_context('BRUSH_BACKDROP_VERSION', brush_backdrop_version());
+  $major_version = brush_set_context('BRUSH_BACKDROP_MAJOR_VERSION', brush_backdrop_major_version());
 
-  _drop_bootstrap_global_options();
+  _brush_bootstrap_global_options();
 
-  drop_log(dt("Initialized Backdrop !version root directory at !backdrop_root", array("!version" => $version, '!backdrop_root' => $backdrop_root)));
+  brush_log(dt("Initialized Backdrop !version root directory at !backdrop_root", array("!version" => $version, '!backdrop_root' => $backdrop_root)));
 }
 
 /**
- * VALIDATE the DROP_BOOTSTRAP_BACKDROP_SITE phase.
+ * VALIDATE the BRUSH_BOOTSTRAP_BACKDROP_SITE phase.
  *
  * In this function we determine the URL used for the command,
  * and check for a valid settings.php file.
@@ -761,8 +761,8 @@ function _drop_bootstrap_backdrop_root() {
  * to allow us to use conf_path to determine what Backdrop will load
  * as a configuration file.
  */
-function _drop_bootstrap_backdrop_site_validate() {
-  $site_path = drop_site_path();
+function _brush_bootstrap_backdrop_site_validate() {
+  $site_path = brush_site_path();
   $elements = explode('/', $site_path);
   $current = array_pop($elements);
   if (!$current) {
@@ -770,16 +770,16 @@ function _drop_bootstrap_backdrop_site_validate() {
   }
   $uri = 'http://'. $current;
 
-  $drop_uri = drop_bootstrap_value('drop_uri', drop_get_option(array('l', 'uri'), $uri));
+  $brush_uri = brush_bootstrap_value('brush_uri', brush_get_option(array('l', 'uri'), $uri));
 
   // Fake the necessary HTTP headers that Backdrop needs:
-  if ($drop_uri) {
-    $backdrop_base_url = parse_url($drop_uri);
+  if ($brush_uri) {
+    $backdrop_base_url = parse_url($brush_uri);
     // If there's no url scheme set, add http:// and re-parse the url
     // so the host and path values are set accurately.
     if (!array_key_exists('scheme', $backdrop_base_url)) {
-      $drop_uri = 'http://' . $drop_uri;
-      $backdrop_base_url = parse_url($drop_uri);
+      $brush_uri = 'http://' . $brush_uri;
+      $backdrop_base_url = parse_url($brush_uri);
     }
     // Fill in defaults.
     $backdrop_base_url += array(
@@ -813,12 +813,12 @@ function _drop_bootstrap_backdrop_site_validate() {
   $_SERVER['SERVER_SOFTWARE'] = NULL;
   $_SERVER['HTTP_USER_AGENT'] = NULL;
 
-  $site = drop_bootstrap_value('site', $_SERVER['HTTP_HOST']);
+  $site = brush_bootstrap_value('site', $_SERVER['HTTP_HOST']);
 
-  $conf_path = drop_bootstrap_value('conf_path', conf_path(TRUE, TRUE));
+  $conf_path = brush_bootstrap_value('conf_path', conf_path(TRUE, TRUE));
   $conf_file = "./$conf_path/settings.php";
   if (!file_exists($conf_file)) {
-    return drop_bootstrap_error('BACKDROP_SITE_SETTINGS_NOT_FOUND', dt("Could not find a Backdrop settings.php file at !file.",
+    return brush_bootstrap_error('BACKDROP_SITE_SETTINGS_NOT_FOUND', dt("Could not find a Backdrop settings.php file at !file.",
        array('!file' => $conf_file)));
   }
 
@@ -826,21 +826,21 @@ function _drop_bootstrap_backdrop_site_validate() {
 }
 
 /**
- * Called by _drop_bootstrap_backdrop_site to do the main work
- * of the drop backdrop site bootstrap.
+ * Called by _brush_bootstrap_backdrop_site to do the main work
+ * of the brush backdrop site bootstrap.
  */
-function _drop_bootstrap_do_backdrop_site() {
-  $drop_uri = drop_set_context('DROP_URI', drop_bootstrap_value('drop_uri'));
-  $site = drop_set_context('DROP_BACKDROP_SITE', drop_bootstrap_value('site'));
-  $conf_path = drop_set_context('DROP_BACKDROP_SITE_ROOT', drop_bootstrap_value('conf_path'));
+function _brush_bootstrap_do_backdrop_site() {
+  $brush_uri = brush_set_context('BRUSH_URI', brush_bootstrap_value('brush_uri'));
+  $site = brush_set_context('BRUSH_BACKDROP_SITE', brush_bootstrap_value('site'));
+  $conf_path = brush_set_context('BRUSH_BACKDROP_SITE_ROOT', brush_bootstrap_value('conf_path'));
 
   // Create an alias '@self'
-  _drop_sitealias_cache_alias('self', array('root' => drop_get_context('DROP_BACKDROP_ROOT'), 'uri' => $drop_uri));
+  _brush_sitealias_cache_alias('self', array('root' => brush_get_context('BRUSH_BACKDROP_ROOT'), 'uri' => $brush_uri));
 
-  drop_log(dt("Initialized Backdrop site !site at !site_root", array('!site' => $site, '!site_root' => $conf_path)));
-  drop_load_config('site');
+  brush_log(dt("Initialized Backdrop site !site at !site_root", array('!site' => $site, '!site_root' => $conf_path)));
+  brush_load_config('site');
 
-  _drop_bootstrap_global_options();
+  _brush_bootstrap_global_options();
 }
 
 /**
@@ -849,42 +849,42 @@ function _drop_bootstrap_do_backdrop_site() {
  * We now set various contexts that we determined and confirmed to be valid.
  * Additionally we load an optional droprc.php file in the site directory.
  */
-function _drop_bootstrap_backdrop_site() {
-  _drop_bootstrap_do_backdrop_site();
-  _drop_bootstrap_redo_backdrop_site();
+function _brush_bootstrap_backdrop_site() {
+  _brush_bootstrap_do_backdrop_site();
+  _brush_bootstrap_redo_backdrop_site();
 }
 
 /**
  * Re-do the backdrop site bootstrap (and possibly the
  * backdrop root bootstrap) if a site alias was processed
  * after the site bootstrap phase completed.  This will
- * happen when processing "drop sitealias command" for
+ * happen when processing "brush sitealias command" for
  * a site alias defined in a droprc.php file in the
- * default site's drop configuration directory.
+ * default site's brush configuration directory.
  */
-function _drop_bootstrap_redo_backdrop_site() {
-  // If drop_load_config defined a site alias that did not
+function _brush_bootstrap_redo_backdrop_site() {
+  // If brush_load_config defined a site alias that did not
   // exist before, then sitealias check arg might now match
   // against one of those aliases.
-  if (drop_sitealias_check_arg() === TRUE) {
-    $remote_host = drop_get_option('remote-host');
+  if (brush_sitealias_check_arg() === TRUE) {
+    $remote_host = brush_get_option('remote-host');
     if (!isset($remote_host)) {
       // Check to see if the backdrop root changed.
       // If it has, we will set remote-host to cause
       // this command to be executed via the backend invoke
       // process.
-      $sitealias_backdrop_root = drop_get_option(array('r', 'root'));
+      $sitealias_backdrop_root = brush_get_option(array('r', 'root'));
       if (($sitealias_backdrop_root != null) && (BACKDROP_ROOT != $sitealias_backdrop_root)) {
-        drop_set_option('remote-host', 'localhost');
+        brush_set_option('remote-host', 'localhost');
       }
       else {
         // If we set an alias, then we need to bootstrap the
         // backdrop site once again.  It is possible to re-bootstrap
         // the site at this point because settings.php has not
         // been included yet.
-        drop_log(dt("Re-bootstrap backdrop site."));
-        _drop_bootstrap_backdrop_site_validate();
-        _drop_bootstrap_do_backdrop_site();
+        brush_log(dt("Re-bootstrap backdrop site."));
+        _brush_bootstrap_backdrop_site_validate();
+        _brush_bootstrap_do_backdrop_site();
       }
     }
   }
@@ -897,22 +897,22 @@ function _drop_bootstrap_redo_backdrop_site() {
  * from the loaded configuration file, so we can validate them
  * and access them easily in the future.
  */
-function _drop_bootstrap_backdrop_configuration() {
-  global $conf, $drop_conf_override;
+function _brush_bootstrap_backdrop_configuration() {
+  global $conf, $brush_conf_override;
 
   backdrop_bootstrap(BACKDROP_BOOTSTRAP_CONFIGURATION);
 
-  // Unset backdrop error handler and restore drop's one.
+  // Unset backdrop error handler and restore brush's one.
 
   restore_error_handler();
 
   // Overriding the $conf array from backdrop CONFIGURATION bootstrap with the
-  // Overrides we collected on the loaded config files on DROP_BOOTSTRAP_DROP
-  $conf = is_array($conf) && is_array($drop_conf_override) ? array_merge($conf, $drop_conf_override) : $conf;
+  // Overrides we collected on the loaded config files on BRUSH_BOOTSTRAP_DROP
+  $conf = is_array($conf) && is_array($brush_conf_override) ? array_merge($conf, $brush_conf_override) : $conf;
 
-  // Populate the DROP_DB_CREDENTIALS with the fields loaded from the configuration.
+  // Populate the BRUSH_DB_CREDENTIALS with the fields loaded from the configuration.
   $creds = array();
-  switch (drop_backdrop_major_version()) {
+  switch (brush_backdrop_major_version()) {
      case 5:
      case 6:
        if (!empty($GLOBALS['db_url'])) {
@@ -952,19 +952,19 @@ function _drop_bootstrap_backdrop_configuration() {
        break;
   }
 
-  drop_set_context('DROP_DB_CREDENTIALS', $creds);
+  brush_set_context('BRUSH_DB_CREDENTIALS', $creds);
 }
 
 /**
- * Validate the DROP_BOOTSTRAP_BACKDROP_DATABASE phase
+ * Validate the BRUSH_BOOTSTRAP_BACKDROP_DATABASE phase
  *
  * Attempt to making a working database connection using the
  * database credentials that were loaded during the previous
  * phase.
  */
-function _drop_bootstrap_backdrop_database_validate() {
-  if (!drop_valid_db_credentials()) {
-    return drop_bootstrap_error('DROP_BACKDROP_DB_ERROR');
+function _brush_bootstrap_backdrop_database_validate() {
+  if (!brush_valid_db_credentials()) {
+    return brush_bootstrap_error('BRUSH_BACKDROP_DB_ERROR');
   }
   return TRUE;
 }
@@ -972,15 +972,15 @@ function _drop_bootstrap_backdrop_database_validate() {
 /**
  * Boostrap the Backdrop database.
  */
-function _drop_bootstrap_backdrop_database() {
-  drop_log(dt("Successfully connected to the Backdrop database."), 'bootstrap');
+function _brush_bootstrap_backdrop_database() {
+  brush_log(dt("Successfully connected to the Backdrop database."), 'bootstrap');
   backdrop_bootstrap(BACKDROP_BOOTSTRAP_DATABASE);
 }
 
 /**
  * Attempt to load the full Backdrop system.
  */
-function _drop_bootstrap_backdrop_full() {
+function _brush_bootstrap_backdrop_full() {
   ob_start();
   backdrop_bootstrap(BACKDROP_BOOTSTRAP_FULL);
   ob_end_clean();
@@ -992,29 +992,29 @@ function _drop_bootstrap_backdrop_full() {
     module_implements('watchdog', FALSE, TRUE);
   }
 
-  _drop_log_backdrop_messages();
+  _brush_log_backdrop_messages();
 }
 
 /**
  * Log into the bootstrapped Backdrop site with a specific
  * username or user id.
  */
-function _drop_bootstrap_backdrop_login() {
-  $drop_user = drop_set_context('DROP_USER', drop_get_option(array('u', 'user'), 0));
+function _brush_bootstrap_backdrop_login() {
+  $brush_user = brush_set_context('BRUSH_USER', brush_get_option(array('u', 'user'), 0));
 
-  drop_backdrop_login($drop_user);
-  _drop_log_backdrop_messages();
+  brush_backdrop_login($brush_user);
+  _brush_log_backdrop_messages();
 }
 
 
 /**
  * Returns the current working directory.
  *
- * This is the directory as it was when drop was started, not the
+ * This is the directory as it was when brush was started, not the
  * directory we are currently in. For that, use getcwd() directly.
  */
-function drop_cwd() {
-  if ($path = drop_get_context('DROP_OLDCWD')) {
+function brush_cwd() {
+  if ($path = brush_get_context('BRUSH_OLDCWD')) {
     return $path;
   }
   // We use PWD if available because getcwd() resolves symlinks, which
@@ -1026,10 +1026,10 @@ function drop_cwd() {
   }
 
   // Convert windows paths.
-  $path = _drop_convert_path($path);
+  $path = _brush_convert_path($path);
 
   // Save original working dir case some command wants it.
-  drop_set_context('DROP_OLDCWD', $path);
+  brush_set_context('BRUSH_OLDCWD', $path);
 
   return $path;
 }
@@ -1039,7 +1039,7 @@ function drop_cwd() {
  * Also converts a cygwin "drive emulation" path (/cygdrive/c/dir1) into a
  * proper drive path, still with Unix slashes (c:/dir1).
  */
-function _drop_convert_path($path) {
+function _brush_convert_path($path) {
   $path = str_replace('\\','/', $path);
   $path = preg_replace('/^\/cygdrive\/([A-Za-z])(.*)$/', '\1:\2', $path);
 
@@ -1055,7 +1055,7 @@ function _drop_convert_path($path) {
  * @return string
  *   Parent path of given path.
  */
-function _drop_shift_path_up($path) {
+function _brush_shift_path_up($path) {
   if (empty($path)) {
     return FALSE;
   }
@@ -1077,20 +1077,20 @@ function _drop_shift_path_up($path) {
  * @return
  *   Current site path (folder containing settings.php) or FALSE if not found.
  */
-function drop_site_path($path = NULL) {
+function brush_site_path($path = NULL) {
   static $site_path;
 
   if (!isset($site_path)) {
     $site_path = FALSE;
 
-    $path = empty($path) ? drop_cwd() : $path;
+    $path = empty($path) ? brush_cwd() : $path;
     // Check the current path.
     if (file_exists($path . '/settings.php')) {
       $site_path = $path;
     }
     else {
       // Move up dir by dir and check each.
-      while ($path = _drop_shift_path_up($path)) {
+      while ($path = _brush_shift_path_up($path)) {
         if (file_exists($path . '/settings.php')) {
           $site_path = $path;
           break;
@@ -1098,7 +1098,7 @@ function drop_site_path($path = NULL) {
       }
     }
 
-    $site_root = drop_locate_root();
+    $site_root = brush_locate_root();
     if (file_exists($site_root . '/sites/sites.php')) {
       $sites = array();
       // This will overwrite $sites with the desired mappings.
@@ -1124,34 +1124,34 @@ function drop_site_path($path = NULL) {
 
 /**
  * Exhaustive depth-first search to try and locate the Backdrop root directory.
- * This makes it possible to run drop from a subdirectory of the backdrop root.
+ * This makes it possible to run brush from a subdirectory of the backdrop root.
  *
  * @param
  *   Search start path. Defaults to current working directory.
  * @return
  *   A path to backdrop root, or FALSE if not found.
  */
-function drop_locate_root($start_path = NULL) {
+function brush_locate_root($start_path = NULL) {
   $backdrop_root = FALSE;
 
-  $start_path = empty($start_path) ? drop_cwd() : $start_path;
+  $start_path = empty($start_path) ? brush_cwd() : $start_path;
   foreach (array(TRUE, FALSE) as $follow_symlinks) {
     $path = $start_path;
     if ($follow_symlinks && is_link($path)) {
       $path = realpath($path);
     }
     // Check the start path.
-    if (drop_valid_backdrop_root($path)) {
+    if (brush_valid_backdrop_root($path)) {
       $backdrop_root = $path;
       break;
     }
     else {
       // Move up dir by dir and check each.
-      while ($path = _drop_shift_path_up($path)) {
+      while ($path = _brush_shift_path_up($path)) {
         if ($follow_symlinks && is_link($path)) {
           $path = realpath($path);
         }
-        if (drop_valid_backdrop_root($path)) {
+        if (brush_valid_backdrop_root($path)) {
           $backdrop_root = $path;
           break 2;
         }
@@ -1171,21 +1171,21 @@ function drop_locate_root($start_path = NULL) {
  * @return boolean
  *   True if given path seems to be a Backdrop root, otherwise FALSE.
  */
-function drop_valid_backdrop_root($path) {
-  return !empty($path) && is_dir($path) && file_exists($path . '/' . DROP_BACKDROP_BOOTSTRAP);
+function brush_valid_backdrop_root($path) {
+  return !empty($path) && is_dir($path) && file_exists($path . '/' . BRUSH_BACKDROP_BOOTSTRAP);
 }
 
 /**
  * Tests the currently loaded database credentials to ensure a database connection can be made.
  */
-function drop_valid_db_credentials() {
-  $creds = drop_get_context('DROP_DB_CREDENTIALS');
+function brush_valid_db_credentials() {
+  $creds = brush_get_context('BRUSH_DB_CREDENTIALS');
   // Do minimal checking that we have the necessary information.
   if (count($creds) == 0) {
     return FALSE;
   }
   $type = $creds['driver'];
-  switch (drop_backdrop_major_version()) {
+  switch (brush_backdrop_major_version()) {
     case 5:
     case 6:
       // Check availability of db extension in PHP and also Backdrop support.
@@ -1193,12 +1193,12 @@ function drop_valid_db_credentials() {
         require_once './includes/install.'. $type .'.inc';
         $function = $type .'_is_available';
         if (!$function()) {
-          drop_log(dt('!type extension for PHP is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
+          brush_log(dt('!type extension for PHP is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
           return FALSE;
         }
       }
       else {
-        drop_log(dt('!type database type is unsupported.', array('!type' => $type)), 'bootstrap');
+        brush_log(dt('!type database type is unsupported.', array('!type' => $type)), 'bootstrap');
         return FALSE;
       }
       // Verify connection settings.
@@ -1207,7 +1207,7 @@ function drop_valid_db_credentials() {
           $hostspec = $creds['port'] ? $creds['host'] . ':' . $creds['port'] : $creds['host'];
           $connection = @mysql_connect($hostspec, $creds['user'], $creds['pass']);
           if (!$connection || !mysql_select_db($creds['name'])) {
-            drop_log(mysql_error(), 'bootstrap');
+            brush_log(mysql_error(), 'bootstrap');
             return FALSE;
           }
           break;
@@ -1215,7 +1215,7 @@ function drop_valid_db_credentials() {
           $connection = mysqli_init();
           @mysqli_real_connect($connection, $creds['host'], $creds['user'], $creds['pass'], $creds['name'], (int)$creds['port']);
           if (mysqli_connect_errno() > 0) {
-            drop_log(mysqli_connect_error(), 'bootstrap');
+            brush_log(mysqli_connect_error(), 'bootstrap');
             return FALSE;
           }
           break;
@@ -1233,7 +1233,7 @@ function drop_valid_db_credentials() {
           $connection = @pg_connect($conn_string);
           if (!$connection) {
             require_once './includes/unicode.inc';
-            drop_log(decode_entities($php_errormsg), 'bootstrap');
+            brush_log(decode_entities($php_errormsg), 'bootstrap');
             // Restore error tracking setting
             ini_set('track_errors', $track_errors_previous);
             return FALSE;
@@ -1245,15 +1245,15 @@ function drop_valid_db_credentials() {
       break;
     case 7:
     default:
-      // Backdrop >=7 requires PDO and drop requires php 5.2, that ships with PDO
+      // Backdrop >=7 requires PDO and brush requires php 5.2, that ships with PDO
       // but it may be compiled with --disable-pdo.
       if (!class_exists('PDO')) {
-        drop_log(dt('PDO support is required.'), 'bootstrap');
+        brush_log(dt('PDO support is required.'), 'bootstrap');
         return FALSE;
       }
       // Check the database specific driver is available.
       if (!in_array($type, PDO::getAvailableDrivers())) {
-        drop_log(dt('!type extension for PHP PDO is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
+        brush_log(dt('!type extension for PHP PDO is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
         return FALSE;
       }
       // Build the connection string.
@@ -1271,7 +1271,7 @@ function drop_valid_db_credentials() {
         $db = null;
       }
       catch (PDOException $e) {
-        drop_log($e->getMessage(), 'bootstrap');
+        brush_log($e->getMessage(), 'bootstrap');
         return FALSE;
       }
       break;
@@ -1281,18 +1281,18 @@ function drop_valid_db_credentials() {
 }
 
 /**
- * Determine a proper way to call drop again
+ * Determine a proper way to call brush again
  *
  * This check if we were called directly or as an argument to some
  * wrapper command (php and sudo are checked now).
  *
- * Calling ./drop.php directly yields the following environment:
+ * Calling ./brush.php directly yields the following environment:
  *
- * _SERVER["argv"][0] => ./drop.php
+ * _SERVER["argv"][0] => ./brush.php
  *
- * Calling php ./drop.php also yields the following:
+ * Calling php ./brush.php also yields the following:
  *
- * _SERVER["argv"][0] => ./drop.php
+ * _SERVER["argv"][0] => ./brush.php
  *
  * Note that the $_ global is defined only in bash and therefore cannot
  * be relied upon.
@@ -1302,28 +1302,28 @@ function drop_valid_db_credentials() {
  * working and valid, unless a PHP constant is defined, which can be
  * done by the shell wrapper.
  *
- * The DROP_COMMAND constant is initialised to the value of this
+ * The BRUSH_COMMAND constant is initialised to the value of this
  * function when environment.inc is loaded.
  *
- * @see DROP_COMMAND
+ * @see BRUSH_COMMAND
  */
-function drop_find_drop() {
- $php = drop_get_option('php');
+function brush_find_brush() {
+ $php = brush_get_option('php');
  if (isset($php)) {
-    $drop = $php . " " . realpath($_SERVER['argv'][0]) . " --php='$php'";
+    $brush = $php . " " . realpath($_SERVER['argv'][0]) . " --php='$php'";
   } else {
-    $drop = realpath($_SERVER['argv']['0']);
+    $brush = realpath($_SERVER['argv']['0']);
   }
-  return $drop;
+  return $brush;
 }
 
 /**
- * Read the drop info file.
+ * Read the brush info file.
  */
-function drop_read_drop_info() {
-  $drop_info_file = dirname(__FILE__) . '/../drop.info';
+function brush_read_brush_info() {
+  $brush_info_file = dirname(__FILE__) . '/../brush.info';
 
-  return parse_ini_file($drop_info_file);
+  return parse_ini_file($brush_info_file);
 }
 
 /**
@@ -1335,7 +1335,7 @@ function drop_read_drop_info() {
  * @return
  *   True if the host is local.
  */
-function drop_is_local_host($host) {
+function brush_is_local_host($host) {
   // In order for this to work right, you must use 'localhost' or '127.0.0.1'
   // or the machine returned by 'uname -n' for your 'remote-host' entry in
   // your site alias.
@@ -1358,7 +1358,7 @@ function drop_is_local_host($host) {
 /**
  * Return the user's home directory.
  */
-function drop_server_home() {
+function brush_server_home() {
   $home = NULL;
   // $_SERVER['HOME'] isn't set on windows and generates a Notice.
   if (!empty($_SERVER['HOME'])) {
@@ -1374,12 +1374,12 @@ function drop_server_home() {
 /*
  * The path to the global cache directory.
  */
-function drop_directory_cache() {
+function brush_directory_cache() {
   if (getenv('CACHE_PREFIX')) {
     return getenv('CACHE_PREFIX') . '/cache';
   }
-  elseif ($home = drop_server_home()) {
-    return "$home/.drop/cache";
+  elseif ($home = brush_server_home()) {
+    return "$home/.brush/cache";
   }
   else {
     return FALSE;
@@ -1392,9 +1392,9 @@ function drop_directory_cache() {
  * @return
  *   An array containing info for all available extensions.
  */
-function drop_get_extensions() {
-  drop_include_engine('backdrop', 'environment');
-  return array_merge(drop_get_modules(), drop_get_themes());
+function brush_get_extensions() {
+  brush_include_engine('backdrop', 'environment');
+  return array_merge(brush_get_modules(), brush_get_themes());
 }
 
 /**
@@ -1403,7 +1403,7 @@ function drop_get_extensions() {
  * @param $file Extension object as returned by system_rebuild_module_data().
  * @return TRUE if the extension is incompatible.
  */
-function drop_extension_check_incompatibility($file) {
+function brush_extension_check_incompatibility($file) {
   if (!isset($file->info['backdrop'])
        || $file->info['backdrop'] != BACKDROP_CORE_COMPATIBILITY
        || version_compare(phpversion(), $file->info['php']) < 0) {
@@ -1415,9 +1415,9 @@ function drop_extension_check_incompatibility($file) {
 /**
  *
  */
-function drop_backdrop_required_modules($modules) {
-  drop_include_engine('backdrop', 'environment');
-  return _drop_backdrop_required_modules($modules);
+function brush_backdrop_required_modules($modules) {
+  brush_include_engine('backdrop', 'environment');
+  return _brush_backdrop_required_modules($modules);
 }
 
 /**
@@ -1426,11 +1426,11 @@ function drop_backdrop_required_modules($modules) {
  * @return
  *  Machine name of the default theme.
  */
-function drop_theme_get_default() {
-  // Commands like `drop bd module` call this function without bootstraping,
+function brush_theme_get_default() {
+  // Commands like `brush bd module` call this function without bootstraping,
   // so run this check to use config_get().
-  if (drop_get_context('DROP_BOOTSTRAP_PHASE') < 5) {
-    drop_bootstrap(DROP_BOOTSTRAP_BACKDROP_FULL);
+  if (brush_get_context('BRUSH_BOOTSTRAP_PHASE') < 5) {
+    brush_bootstrap(BRUSH_BOOTSTRAP_BACKDROP_FULL);
   }
   $theme_default = config_get('system.core', 'theme_default');
   $theme_default = ucfirst($theme_default);
@@ -1443,15 +1443,15 @@ function drop_theme_get_default() {
  * @return
  *  Machine name of the administration theme.
  */
-function drop_theme_get_admin() {
+function brush_theme_get_admin() {
   // Just in case if this function is called without bootstraping,
   // run this check to use config_get().
-  if (drop_get_context('DROP_BOOTSTRAP_PHASE') < 5) {
-    drop_bootstrap(DROP_BOOTSTRAP_BACKDROP_FULL);
+  if (brush_get_context('BRUSH_BOOTSTRAP_PHASE') < 5) {
+    brush_bootstrap(BRUSH_BOOTSTRAP_BACKDROP_FULL);
   }
   if (config_get('system.core', 'admin_theme') == FALSE) {
     // Administration theme is set to Default theme, so returns 0.
-    $admin_theme = drop_theme_get_default();
+    $admin_theme = brush_theme_get_default();
   } else {
     $admin_theme = config_get('system.core', 'admin_theme');
     $admin_theme = ucfirst($admin_theme);

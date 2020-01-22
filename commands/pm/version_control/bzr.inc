@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @file Drop pm Bazaar extension
+ * @file Brush pm Bazaar extension
  */
 
-class drop_pm_version_control_bzr implements drop_pm_version_control {
+class brush_pm_version_control_bzr implements brush_pm_version_control {
 
   /**
    * Implementation of pre_update().
@@ -21,14 +21,14 @@ class drop_pm_version_control_bzr implements drop_pm_version_control {
     $args = array_keys($items_to_test);
     array_unshift($args, 'bzr status --short' . str_repeat(' %s', count($args)));
     array_unshift($args, $project['full_project_path']);
-    if (call_user_func_array('drop_shell_cd_and_exec', $args)) {
-      $output = preg_grep('/^[\sRCP][\sNDKM][\s\*]/', drop_shell_exec_output());
+    if (call_user_func_array('brush_shell_cd_and_exec', $args)) {
+      $output = preg_grep('/^[\sRCP][\sNDKM][\s\*]/', brush_shell_exec_output());
       if (!empty($output)) {
-        return drop_set_error('DROP_PM_BZR_LOCAL_CHANGES', dt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
+        return brush_set_error('BRUSH_PM_BZR_LOCAL_CHANGES', dt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
       }
     }
     else {
-      return drop_set_error('DROP_PM_BZR_NOT_FOUND', dt("Drop was unable to get the bzr status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", drop_shell_exec_output()))));
+      return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', dt("Brush was unable to get the bzr status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
     }
     return TRUE;
   }
@@ -37,14 +37,14 @@ class drop_pm_version_control_bzr implements drop_pm_version_control {
    * Implementation of rollback().
    */
   public function rollback($project) {
-    if (drop_shell_exec('bzr revert %s', $project['full_project_path'])) {
-      $output = drop_shell_exec_output();
+    if (brush_shell_exec('bzr revert %s', $project['full_project_path'])) {
+      $output = brush_shell_exec_output();
       if (!empty($output)) {
-        return drop_set_error('DROP_PM_BZR_LOCAL_CHANGES', dt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
+        return brush_set_error('BRUSH_PM_BZR_LOCAL_CHANGES', dt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
       }
     }
     else {
-      return drop_set_error('DROP_PM_BZR_NOT_FOUND', dt("Drop was unable to get the Bazaar status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", drop_shell_exec_output()))));
+      return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', dt("Brush was unable to get the Bazaar status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
     }
   }
 
@@ -73,35 +73,35 @@ class drop_pm_version_control_bzr implements drop_pm_version_control {
    * that have been deleted on the file system
    */
   private function sync($project) {
-    if (drop_get_option('bzrsync')) {
+    if (brush_get_option('bzrsync')) {
       $errors = '';
       $root = array();
-      if (drop_shell_exec('bzr status --short %s', $project['full_project_path'])) {
-        $output = drop_shell_exec_output();
+      if (brush_shell_exec('bzr status --short %s', $project['full_project_path'])) {
+        $output = brush_shell_exec_output();
         // All paths returned by bzr status are relative to the repository root.
-        if (drop_shell_exec('bzr root %s', $project['full_project_path'])) {
-          $root = drop_shell_exec_output();
+        if (brush_shell_exec('bzr root %s', $project['full_project_path'])) {
+          $root = brush_shell_exec_output();
         }
         foreach ($output as $line) {
           if (preg_match('/^\?\s+(.*)/', $line, $matches)) {
             $path = $root[0] .'/'. $matches[1];
-            if (!drop_shell_exec('bzr add --no-recurse %s', $path)) {
-              $errors .= implode("\n", drop_shell_exec_output());
+            if (!brush_shell_exec('bzr add --no-recurse %s', $path)) {
+              $errors .= implode("\n", brush_shell_exec_output());
             }
           }
           else if (preg_match('/^\s+D\s+(.*)/', $line, $matches)) {
             $path = $root[0] .'/'. $matches[1];
-            if (!drop_shell_exec('bzr remove %s', $path)) {
-              $errors .= implode("\n", drop_shell_exec_output());
+            if (!brush_shell_exec('bzr remove %s', $path)) {
+              $errors .= implode("\n", brush_shell_exec_output());
             }
           }
         }
         if (!empty($errors)) {
-          return drop_set_error('DROP_PM_BZR_SYNC_PROBLEMS', dt("Problems were encountered adding or removing files to/from Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => $errors)));
+          return brush_set_error('BRUSH_PM_BZR_SYNC_PROBLEMS', dt("Problems were encountered adding or removing files to/from Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => $errors)));
         }
       }
       else {
-        return drop_set_error('DROP_PM_BZR_NOT_FOUND', dt("Drop was unable to get the bzr status. Check that you have Bazaar \ninstalled and that the site is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", drop_shell_exec_output()))));
+        return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', dt("Brush was unable to get the bzr status. Check that you have Bazaar \ninstalled and that the site is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
       }
       return TRUE;
     }
@@ -111,20 +111,20 @@ class drop_pm_version_control_bzr implements drop_pm_version_control {
    * Automatically commit changes to the repository
    */
   private function commit($project) {
-    if (drop_get_option('bzrcommit')) {
-      $message = drop_get_option('bzrmessage');
+    if (brush_get_option('bzrcommit')) {
+      $message = brush_get_option('bzrmessage');
       if (empty($message)) {
-        $message = dt("Drop automatic commit.\nProject: @name @type\nCommand: @arguments", array('@name' => $project['name'], '@type' => $project['project_type'], '@arguments' => implode(' ', $_SERVER['argv'])));
+        $message = dt("Brush automatic commit.\nProject: @name @type\nCommand: @arguments", array('@name' => $project['name'], '@type' => $project['project_type'], '@arguments' => implode(' ', $_SERVER['argv'])));
       }
-      if (drop_shell_exec('bzr commit --message=%s %s', $message, $project['full_project_path'])) {
-        drop_log(dt('Project committed to Bazaar successfully'), 'ok');
+      if (brush_shell_exec('bzr commit --message=%s %s', $message, $project['full_project_path'])) {
+        brush_log(dt('Project committed to Bazaar successfully'), 'ok');
       }
       else {
-        drop_set_error('DROP_PM_BZR_COMMIT_PROBLEMS', dt("Problems were encountered committing your changes to Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", drop_shell_exec_output()))));
+        brush_set_error('BRUSH_PM_BZR_COMMIT_PROBLEMS', dt("Problems were encountered committing your changes to Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
       }
     }
     else {
-      drop_print(dt("You should consider committing the new code to your Bazaar repository.\nIf this version becomes undesireable, use Bazaar to roll back."));
+      brush_print(dt("You should consider committing the new code to your Bazaar repository.\nIf this version becomes undesireable, use Bazaar to roll back."));
     }
   }
 

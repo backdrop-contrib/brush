@@ -51,7 +51,7 @@ function update_extra_requirements($requirements = NULL) {
  * @param $context
  *   The batch context array
  */
-function drop_update_do_one($module, $number, $dependency_map,  &$context) {
+function brush_update_do_one($module, $number, $dependency_map,  &$context) {
   $function = $module . '_update_' . $number;
 
   // If this update was aborted in a previous step, or has a dependency that
@@ -70,7 +70,7 @@ function drop_update_do_one($module, $number, $dependency_map,  &$context) {
         Database::startLog($function);
       }
 
-      drop_log("Executing " . $function);
+      brush_log("Executing " . $function);
       $ret['results']['query'] = $function($context['sandbox']);
       $ret['results']['success'] = TRUE;
     }
@@ -78,7 +78,7 @@ function drop_update_do_one($module, $number, $dependency_map,  &$context) {
     // types, but for now we'll just print the message.
     catch (Exception $e) {
       $ret['#abort'] = array('success' => FALSE, 'query' => $e->getMessage());
-      drop_set_error('BACKDROP_EXCEPTION', $e->getMessage());
+      brush_set_error('BACKDROP_EXCEPTION', $e->getMessage());
     }
 
     if ($context['log']) {
@@ -142,7 +142,7 @@ function update_check_requirements() {
 function update_main_prepare() {
   // Some unavoidable errors happen because the database is not yet up-to-date.
   // Our custom error handler is not yet installed, so we just suppress them.
-  drop_errors_off();
+  brush_errors_off();
 
 
   // We prepare a minimal bootstrap for the update requirements check to avoid
@@ -181,10 +181,10 @@ function update_main_prepare() {
 
   // Now proceed with a full bootstrap.
 
-  drop_bootstrap(DROP_BOOTSTRAP_BACKDROP_FULL);
+  brush_bootstrap(BRUSH_BOOTSTRAP_BACKDROP_FULL);
   backdrop_maintenance_theme();
 
-  drop_errors_on();
+  brush_errors_on();
 
   include_once BACKDROP_ROOT . '/core/includes/batch.inc';
   backdrop_load_updates();
@@ -217,36 +217,36 @@ function update_main() {
 
   // Print a list of pending updates for this module and get confirmation.
   if (sizeof($pending)) {
-    drop_print(dt('The following updates are pending:'));
-    drop_print();
+    brush_print(dt('The following updates are pending:'));
+    brush_print();
     foreach ($pending as $module => $updates) {
       if (isset($updates['start']))  {
-        drop_print($module . ' module : ');
+        brush_print($module . ' module : ');
         if (isset($updates['start'])) {
           $start[$module] = $updates['start'];
           foreach ($updates['pending'] as $update) {
-            drop_print($update, 2);
+            brush_print($update, 2);
           }
         }
-        drop_print();
+        brush_print();
       }
     }
 
-    if (!drop_confirm(dt('Do you wish to run all pending updates?'))) {
-      return drop_user_abort();
+    if (!brush_confirm(dt('Do you wish to run all pending updates?'))) {
+      return brush_user_abort();
     }
 
-    drop_update_batch($start);
+    brush_update_batch($start);
   }
   else {
-    drop_log(dt("No database updates required"), 'success');
+    brush_log(dt("No database updates required"), 'success');
   }
 
 }
 
 function _update_batch_command($id) {
   update_main_prepare();
-  drop_batch_command($id);
+  brush_batch_command($id);
 }
 
 /**
@@ -265,7 +265,7 @@ function _update_batch_command($id) {
  *   (optional) Specify a function to be called to redirect to the progressive
  *   processing page.
  */
-function drop_update_batch($start) {
+function brush_update_batch($start) {
   // Resolve any update dependencies to determine the actual updates that will
   // be run and the order they will be run in.
   $updates = update_resolve_dependencies($start);
@@ -292,7 +292,7 @@ function drop_update_batch($start) {
       // Add this update function to the batch.
 
       $function = $update['module'] . '_update_' . $update['number'];
-      $operations[] = array('drop_update_do_one', array($update['module'], $update['number'], $dependency_map[$function]));
+      $operations[] = array('brush_update_do_one', array($update['module'], $update['number'], $dependency_map[$function]));
     }
   }
 
@@ -301,15 +301,15 @@ function drop_update_batch($start) {
     'title' => 'Updating',
     'init_message' => 'Starting updates',
     'error_message' => 'An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.',
-    'finished' => 'drop_update_finished',
+    'finished' => 'brush_update_finished',
     'file' => 'includes/update.inc',
   );
   batch_set($batch);
-  drop_backend_batch_process('updatedb-batch-process');
+  brush_backend_batch_process('updatedb-batch-process');
 }
 
 
 
-function drop_update_finished($success, $results, $operations) {
+function brush_update_finished($success, $results, $operations) {
   // Nothing to do here. All caches already cleared. Kept as documentation of 'finished' callback.
 }

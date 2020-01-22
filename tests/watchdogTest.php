@@ -17,8 +17,8 @@ class WatchdogCase extends Drop_TestCase {
     );
 
     // Enable dblog module and verify that the watchdog messages are listed
-    $this->drop('pm-enable', array('dblog'), $options);
-    $this->drop('watchdog-show', array(), $options);
+    $this->brush('pm-enable', array('dblog'), $options);
+    $this->brush('watchdog-show', array(), $options);
     $output = $this->getOutput();
     $this->assertContains('dblog module installed.', $output);
     $this->assertContains('dblog module enabled.', $output);
@@ -30,18 +30,18 @@ class WatchdogCase extends Drop_TestCase {
     $message_chars = 300;
     $char = '*';
     $message = str_repeat($char, $message_chars);
-    $this->drop('php-eval', array("watchdog('drop', '" . $message . "')"), $options);
-    $this->drop('watchdog-show', array(), $options);
+    $this->brush('php-eval', array("watchdog('brush', '" . $message . "')"), $options);
+    $this->brush('watchdog-show', array(), $options);
     $output = $this->getOutput();
     $this->assertGreaterThan(substr_count($output, $char), $message_chars);
-    $this->drop('watchdog-show', array(), $options + array('full' => NULL));
+    $this->brush('watchdog-show', array(), $options + array('full' => NULL));
     $output = $this->getOutput();
     $this->assertGreaterThanOrEqual($message_chars, substr_count($output, $char));
 
     // Tests message deletion
-    $this->drop('watchdog-delete', array('all'), $options);
+    $this->brush('watchdog-delete', array('all'), $options);
     $output = $this->getOutput();
-    $this->drop('watchdog-show', array(), $options);
+    $this->brush('watchdog-show', array(), $options);
     $output = $this->getOutput();
     $this->assertEmpty($output);
   }

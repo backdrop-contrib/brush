@@ -10,7 +10,7 @@ pm-uninstall: GOOD. testEnDisUnList().
 pm-list: GOOD. testEnDisUnList().
 pm-info:
 pm-refresh
-version-control: FAIR. See updatecode. To be deprecated all git workflow after git.backdrop.org?
+version-control: FAIR. See updatecode. To be deprecated all git workflow after git.drupal.org?
 package-hander:
 
 sql-cli:
@@ -55,7 +55,7 @@ backend: GOOD
 batch: FAIR. Implicit by siteUpgradeTest.
 command: FAIR
 context: FAIR
-drop: NONE.
+brush: NONE.
 environment
 sitealias. FAIR. Explicit test for alias lists. Single aliases implicitly tested by contextTest.
 dbtng: Good. Implicit by variable-*.
@@ -67,6 +67,6 @@ output
 
 ROOT
 -------------
-drop
-drop.php
-drop.bat
+brush
+brush.php
+brush.bat

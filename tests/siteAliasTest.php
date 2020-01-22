@@ -8,7 +8,7 @@ class saCase extends Drop_TestCase {
 
   /*
    * Assure that site lists work as expected.
-   * @todo Use --backend for structured return data. Depends on http://backdrop.org/node/1043922
+   * @todo Use --backend for structured return data. Depends on http://drupal.org/node/1043922
    */
   public function testSAList() {
     $this->setUpBackdrop('dev');
@@ -18,7 +18,7 @@ class saCase extends Drop_TestCase {
       'yes' => NULL,
       'root' => $this->sites['dev']['root'],
     );
-    $this->drop('php-eval', array($eval), $options, "#dev,#stage");
+    $this->brush('php-eval', array($eval), $options, "#dev,#stage");
     $expected = "You are about to execute 'php-eval print \"bon\";' on all of the following targets:
   #dev
   #stage
