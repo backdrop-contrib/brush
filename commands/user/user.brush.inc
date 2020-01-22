@@ -360,7 +360,7 @@ function brush_user_login($name = NULL) {
   }
 
   if ($user !== FALSE && $user->status) {
-    $link = user_pass_reset_url($user);
+    $link = user_pass_reset_url($user) . '/login';
     brush_print($link);
     return $link;
   }
