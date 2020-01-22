@@ -8,6 +8,8 @@ Brush is build on top of completely refactored pre-Symfony, pre-Composer Drupal 
 or
 - Drush Integration for Backdrop CMS (https://backdropcms.org/project/drush) has been gradually making Drush commands working for Backdrop, at the same time effectively blocking all the rest of commands.
 
+While each alternative has a limited list of commands working, almost all Drush commands work on Brush except just a few ones. To see the full list of avalable commands, install Brush and open the `help.html` file locally on your browser.
+
 Read https://forum.backdropcms.org/forum/drop-command-line-shell-and-unix-scripting-interface-backdrop-cms for the detailed information on three projects.
 
 REQUIREMENTS
