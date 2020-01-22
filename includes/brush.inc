@@ -199,7 +199,7 @@ function brush_check_self_update() {
   }
 
   if ($newer_version) {
-    brush_print(dt('A newer version of brush, !version, is available.  You are currently running brush version !currentversion; to update, run `brush self-update`.  To disable this check, put "$options[\'self-update\'] = FALSE;" in your droprc.php configuration file.' . "\n", array('!version' => $newer_version, '!currentversion' => BRUSH_VERSION)));
+    brush_print(dt('A newer version of brush, !version, is available.  You are currently running brush version !currentversion; to update, run `brush self-update`.  To disable this check, put "$options[\'self-update\'] = FALSE;" in your brushrc.php configuration file.' . "\n", array('!version' => $newer_version, '!currentversion' => BRUSH_VERSION)));
     return TRUE;
   }
   else {
@@ -340,7 +340,7 @@ function brush_get_global_options($brief = FALSE) {
   if (!$brief) {
     $options['quiet']            = array('short-form' => 'q', 'description' => dt('Hide all output'));
     $options['include']          = array('short-form' => 'i', 'description' => dt("A list of paths to search for brush commands"));
-    $options['config']           = array('short-form' => 'c', 'description' => dt("Specify a config file to use. See example.droprc.php"));
+    $options['config']           = array('short-form' => 'c', 'description' => dt("Specify a config file to use. See example.brushrc.php"));
     $options['user']             = array('short-form' => 'u', 'description' => dt("Specify a user to login with. May be a name or a number."));
     $options['backend']          = array('short-form' => 'b', 'description' => dt("Hide all output and return structured data (internal use only)."));
     $options['choice']           = dt("Provide an answer to a multiple-choice prompt.");
@@ -1353,7 +1353,7 @@ function brush_os($site_record = NULL) {
     $os = $site_record['os'];
   }
   // Otherwise, we will assume that all remote machines are Linux
-  // (or whatever value 'remote-os' is set to in droprc.php).
+  // (or whatever value 'remote-os' is set to in brushrc.php).
   elseif (isset($site_record) && array_key_exists('remote-host', $site_record) && !empty($site_record['remote-host'])) {
     $os = brush_get_option('remote-os', 'Linux');
   }

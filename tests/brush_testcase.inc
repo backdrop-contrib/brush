@@ -200,7 +200,7 @@ abstract class Drop_TestCase extends PHPUnit_Framework_TestCase {
     }
     // Make an alias for the site
     $alias_definition = array($env => array('root' => $root,  'uri' => $env));
-    file_put_contents(UNISH_SANDBOX . '/etc/brush/' . $env . '.alias.droprc.php', $this->file_aliases($alias_definition));
+    file_put_contents(UNISH_SANDBOX . '/etc/brush/' . $env . '.alias.brushrc.php', $this->file_aliases($alias_definition));
   }
 
   function brush_major_version() {

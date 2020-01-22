@@ -133,8 +133,8 @@ function core_brush_command() {
     'description' => 'Rsync the Backdrop tree to/from another server using ssh.',
     'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap.
     'arguments' => array(
-      'source' => 'May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php.',
-      'destination' => 'May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php.',
+      'source' => 'May be rsync path or site alias. See rsync documentation and example.aliases.brushrc.php.',
+      'destination' => 'May be rsync path or site alias. See rsync documentation and example.aliases.brushrc.php.',
     ),
     'options' => array(
       'mode' => 'The unary flags to pass to rsync; --mode=rultz implies rsync -rultz.  Default is -az.',
@@ -167,7 +167,7 @@ function core_brush_command() {
       'account-pass' => 'uid1 pass. defaults to admin',
       'account-mail' => 'uid1 email. defaults to admin@example.com',
       'db-url' => 'A Backdrop 5/6 style database URL. Only required for initial install - not re-install.',
-      'db-prefix' => 'An optional table prefix to use for initial install.  Can be a key-value array of tables/prefixes in a droprc file (not the command line).',
+      'db-prefix' => 'An optional table prefix to use for initial install.  Can be a key-value array of tables/prefixes in a brushrc file (not the command line).',
       'db-su' => 'Account to use when creating a new database. Optional.',
       'db-su-pw' => 'Password for the "db-su" account. Optional.',
       'locale' => 'A short language code. Sets the default site language. Language files must already be present. You may use download command to get them.',
@@ -326,13 +326,13 @@ function core_brush_help($section) {
       $message = dt("Brush was not able to start (bootstrap) the Backdrop database.\n");
       $message .= dt("Hint: This error often occurs when Brush is trying to bootstrap a site that has not been installed or does not have a configured database.\n");
       $message .= dt("\nDrop was attempting to connect to : \n!credentials\n", array('!credentials' => _core_site_credentials()));
-      $message .= dt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your droprc.php file.\n");
+      $message .= dt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your brushrc.php file.\n");
       return $message;
     case 'error:BRUSH_BACKDROP_BOOTSTRAP_ERROR':
       $message = dt("Brush was not able to start (bootstrap) Backdrop.\n");
       $message .= dt("Hint: This error can only occur once the database connection has already been successfully initiated, therefore this error generally points to a site configuration issue, and not a problem connecting to the database.\n");
       $message .= dt("\nDrop was attempting to connect to : \n!credentials\n", array('!credentials' => _core_site_credentials()));
-      $message .= dt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your droprc.php file.\n");
+      $message .= dt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your brushrc.php file.\n");
       return $message;
       break;
   }

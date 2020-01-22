@@ -516,7 +516,7 @@ function _brush_bootstrap_brush_validate() {
 
 /*
  * To disable the warning about Windows support, set $options['check_os'] = FALSE
- * in droprc.php. See examples/example.droprc.php.
+ * in brushrc.php. See examples/example.brushrc.php.
  */
 function brush_environment_check_os() {
   if (substr(PHP_OS, 0, 3) == 'WIN' && (brush_get_option('check_os', TRUE) !== 'i-want-4.x')) {
@@ -571,7 +571,7 @@ function brush_environment_table_inc() {
  * parse the command line arguments and store them in their
  * related contexts.
  *
- * Configuration files (droprc.php) that are
+ * Configuration files (brushrc.php) that are
  *   a) Specified on the command line
  *   b) Stored in the root directory of brush.php
  *   c) Stored in the home directory of the system user.
@@ -625,16 +625,16 @@ function _brush_bootstrap_brush() {
     brush_set_context('DOC_PREFIX', brush_get_context('SHARE_PREFIX', '/usr') . '/share/doc/brush');
   }
 
-  // Load a droprc.php file in the brush.php's directory.
+  // Load a brushrc.php file in the brush.php's directory.
   brush_load_config('brush');
 
-  // Load a droprc.php file in the $ETC_PREFIX/etc/brush directory.
+  // Load a brushrc.php file in the $ETC_PREFIX/etc/brush directory.
   brush_load_config('system');
 
-  // Load a droprc.php file at ~/.droprc.php.
+  // Load a brushrc.php file at ~/.brushrc.php.
   brush_load_config('user');
 
-  // Load a droprc.php file in the ~/.brush directory.
+  // Load a brushrc.php file in the ~/.brush directory.
   brush_load_config('home.brush');
 
   // Load a custom config specified with the --config option.
@@ -732,7 +732,7 @@ function _brush_bootstrap_backdrop_root_validate() {
  * The BRUSH_BACKDROP_ROOT context and the BACKDROP_ROOT constant are
  * populated from the value that we determined during the validation phase.
  *
- * We also now load the droprc.php for this specific platform.
+ * We also now load the brushrc.php for this specific platform.
  * We can now include files from the Backdrop Tree, and figure
  * out more context about the platform, such as the version of Backdrop.
  */
@@ -847,7 +847,7 @@ function _brush_bootstrap_do_backdrop_site() {
  * Initialize a site on the Backdrop root.
  *
  * We now set various contexts that we determined and confirmed to be valid.
- * Additionally we load an optional droprc.php file in the site directory.
+ * Additionally we load an optional brushrc.php file in the site directory.
  */
 function _brush_bootstrap_backdrop_site() {
   _brush_bootstrap_do_backdrop_site();
@@ -859,7 +859,7 @@ function _brush_bootstrap_backdrop_site() {
  * backdrop root bootstrap) if a site alias was processed
  * after the site bootstrap phase completed.  This will
  * happen when processing "brush sitealias command" for
- * a site alias defined in a droprc.php file in the
+ * a site alias defined in a brushrc.php file in the
  * default site's brush configuration directory.
  */
 function _brush_bootstrap_redo_backdrop_site() {

@@ -17,13 +17,13 @@ function upgrade_brush_command() {
     'brush dependencies' => array('sql', 'pm', 'core'),
     'core' => array(0), // Add 1 once brush supports 1 -> 2 upgrades.
     'arguments' => array(
-      'target' => "The name of a sitealias, which points to the destination site. 'root' and 'uri' keys are required; db-url is recommended. See examples/aliases.droprc.php for more information about creating a site alias.",
+      'target' => "The name of a sitealias, which points to the destination site. 'root' and 'uri' keys are required; db-url is recommended. See examples/aliases.brushrc.php for more information about creating a site alias.",
     ),
     'examples' => array(
       'brush site-upgrade @onward' => 'Upgrade from the current site to the site specified by @onward alias.',
     ),
     'options' => array(
-      'structure-tables-key' => 'A key in the structure-tables array. @see example.droprc.php. Defaults to \'common\'.',
+      'structure-tables-key' => 'A key in the structure-tables array. @see example.brushrc.php. Defaults to \'common\'.',
       'source-dump' => 'Path to dump file. Medium or large sized sites should set this. Optional; default is to create a temporary file.',
       'db-su' => 'DB username to use when dropping and creating the target database. Optional.',
       'db-su-pw' => 'DB password to use when dropping and creating the target database. Optional.',
@@ -80,11 +80,11 @@ function brush_upgrade_site_upgrade_validate($target_key = NULL) {
   }
 
   if (!$target_alias = brush_sitealias_get_record($target_key)) {
-    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Site alias not found: @target-key. See example.droprc.php.', array('@target-key' => $target_key)));
+    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Site alias not found: @target-key. See example.brushrc.php.', array('@target-key' => $target_key)));
   }
 
   if (!file_exists(dirname($target_alias['root']))) {
-    brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Parent directory for site alias root not found: @root; this folder must exist before running site-upgrade. See example.droprc.php.', array('@root' => dirname($target_alias['root']))));
+    brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Parent directory for site alias root not found: @root; this folder must exist before running site-upgrade. See example.brushrc.php.', array('@root' => dirname($target_alias['root']))));
   }
 
   if (realpath($target_alias['root']) == realpath(BACKDROP_ROOT)) {
@@ -274,7 +274,7 @@ function brush_upgrade_site_upgrade($target_key) {
   }
 
   // Copy source database to target database. The source DB is not changed.
-  // Always set 'common' at minimum. Sites that want other can create other key in droprc.php.
+  // Always set 'common' at minimum. Sites that want other can create other key in brushrc.php.
   if (!brush_get_option('structure-tables-key')) {
     brush_set_option('structure-tables-key', 'common');
   }

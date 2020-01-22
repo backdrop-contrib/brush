@@ -214,7 +214,7 @@ function brush_dispatch($command, $arguments = array()) {
   brush_set_command($command);
   $return = FALSE;
 
-  // Set warning for Windows users. We have already loaded site-specific droprc.
+  // Set warning for Windows users. We have already loaded site-specific brushrc.
   brush_environment_check_os();
 
   if ($command) {
@@ -933,7 +933,7 @@ function brush_is_command($command) {
  * Scans the following paths for brush command files:
  *
  * - The "/path/to/brush/commands" folder.
- * - Folders listed in the 'include' option (see example.droprc.php).
+ * - Folders listed in the 'include' option (see example.brushrc.php).
  * - The system-wide brush commands folder, e.g. /usr/share/brush/commands
  * - The ".brush" folder in the user's HOME folder.
  * - All modules in the current Backdrop installation whether they are enabled or

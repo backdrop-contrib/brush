@@ -296,8 +296,8 @@ Examples:
 
 
 Arguments:
- source                                    May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php.
- destination                               May be rsync path or site alias. See rsync documentation and example.aliases.droprc.php.
+ source                                    May be rsync path or site alias. See rsync documentation and example.aliases.brushrc.php.
+ destination                               May be rsync path or site alias. See rsync documentation and example.aliases.brushrc.php.
 
 
 Options:
@@ -533,7 +533,7 @@ Options:
  --account-mail                            uid1 email. defaults to admin@example.com
  --db-url                                  A Backdrop 5/6 style database URL. Only required for initial install - not re-install.
  --db-prefix                               An optional table prefix to use for initial install.  Can be a key-value array of
-                                           tables/prefixes in a droprc file (not the command line).
+                                           tables/prefixes in a brushrc file (not the command line).
  --db-su                                   Account to use when creating a new database. Optional.
  --db-su-pw                                Password for the "db-su" account. Optional.
  --locale                                  A short language code. Sets the default site language. Language files must already be present.
@@ -561,12 +561,12 @@ Examples:
 
 Arguments:
  target                                    The name of a sitealias, which points to the destination site. 'root' and 'uri' keys are
-                                           required; db-url is recommended. See examples/aliases.droprc.php for more information about
+                                           required; db-url is recommended. See examples/aliases.brushrc.php for more information about
                                            creating a site alias.
 
 
 Options:
- --structure-tables-key                    A key in the structure-tables array. @see example.droprc.php. Defaults to 'common'.
+ --structure-tables-key                    A key in the structure-tables array. @see example.brushrc.php. Defaults to 'common'.
  --source-dump                             Path to dump file. Medium or large sized sites should set this. Optional; default is to create a
                                            temporary file.
  --db-su                                   DB username to use when dropping and creating the target database. Optional.
@@ -937,7 +937,7 @@ Options:
                                            supported version control system).
    --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous
  --package-handler=git_backdroporg         Use git.drupal.org to checkout and update projects.
-   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.
+   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in brushrc.php.
                                            Omitting this prevents users from pushing changes back to git.drupal.org.
    --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and
                                            will continue to (not) use submodules regardless of this setting.
@@ -1089,7 +1089,7 @@ Options:
                                            supported version control system).
    --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous
  --package-handler=git_backdroporg         Use git.drupal.org to checkout and update projects.
-   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.
+   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in brushrc.php.
                                            Omitting this prevents users from pushing changes back to git.drupal.org.
    --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and
                                            will continue to (not) use submodules regardless of this setting.
@@ -1167,7 +1167,7 @@ Options:
                                            supported version control system).
    --cvscredentials                        A username and password that is sent for cvs checkout command. Defaults to anonymous:anonymous
  --package-handler=git_backdroporg         Use git.drupal.org to checkout and update projects.
-   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in droprc.php.
+   --gitusername                           Your git username as shown on user/[uid]/edit/git. Typically, this is set this in brushrc.php.
                                            Omitting this prevents users from pushing changes back to git.drupal.org.
    --gitsubmodule                          Use git submodules for checking out new projects. Existing git checkouts are unaffected, and
                                            will continue to (not) use submodules regardless of this setting.
@@ -1221,14 +1221,14 @@ Exports the Backdrop DB as SQL using mysqldump or equivalent.
 
 Examples:
  brush sql-dump --result-file=../18.sql     Save SQL dump to the directory above Backdrop root.
- brush sql-dump --skip-tables-key=common    Skip standard tables. @see example.droprc.php
+ brush sql-dump --skip-tables-key=common    Skip standard tables. @see example.brushrc.php
 
 
 Options:
  --result-file                             Save to a file. The file should be relative to Backdrop root. If --result-file is provided with
                                            no value, then date based filename will be created under ~/brush-backups directory.
- --skip-tables-key                         A key in the $skip_tables array. @see example.droprc.php. Optional.
- --structure-tables-key                    A key in the $structure_tables array. @see example.droprc.php. Optional.
+ --skip-tables-key                         A key in the $skip_tables array. @see example.brushrc.php. Optional.
+ --structure-tables-key                    A key in the $structure_tables array. @see example.brushrc.php. Optional.
  --tables-key                              A key in the $tables array. Optional.
  --tables-list                             A comma-separated list of tables to transfer. Optional.
  --ordered-dump                            Order by primary key and add line breaks for efficient diff in revision control. Also, faster
@@ -1278,8 +1278,8 @@ Arguments:
 
 
 Options:
- --skip-tables-key                         A key in the $skip_tables array. @see example.droprc.php. Optional.
- --structure-tables-key                    A key in the $structure_tables array. @see example.droprc.php. Optional.
+ --skip-tables-key                         A key in the $skip_tables array. @see example.brushrc.php. Optional.
+ --structure-tables-key                    A key in the $structure_tables array. @see example.brushrc.php. Optional.
  --tables-key                              A key in the $tables array. Optional.
  --tables-list                             A comma-separated list of tables to transfer. Optional.
  --cache                                   Skip dump if result file exists and is less than "cache" hours old. Optional; default is 24

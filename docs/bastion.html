@@ -59,7 +59,7 @@ to your company intranet.  I like to determine this by using the
 this is always the same on my intranet, and unlikely to be
 encountered in other places.
 <p>
-In <b>droprc.php:</b>
+In <b>brushrc.php:</b>
 <pre>
 # Figure out if we are inside our company intranet by testing our gateway address against a known value
 exec("route -n | grep '^0\.0\.0\.0' | awk '{ print $2; }' 2> /dev/null", $output);
@@ -71,7 +71,7 @@ After this code runs, the 'MY_INTRANET' context will be set if our
 gateway IP address matches the expected value, and unset otherwise.
 We can make use of this in our alias files.
 <p>
-In <b>aliases.droprc.php:</b>
+In <b>aliases.brushrc.php:</b>
 <pre>
 if (brush_get_context('MY_INTRANET', FALSE) === FALSE) {
   $aliases['intranet-proxy'] = array(

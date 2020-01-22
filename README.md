@@ -127,22 +127,22 @@ just restart automatically using bash. For example:
 EXAMPLES
 --------
 Inside the "examples" folder you will find some example files to help you
-get started with your brush configuration file (example.droprc.php),
-site alias definitions (example.aliases.droprc.php) and brush commands
+get started with your brush configuration file (example.brushrc.php),
+site alias definitions (example.aliases.brushrc.php) and brush commands
 (sandwich.brush.inc). You will also see an example 'policy' file which
 can be customized to block certain commands or arguments as your organization
 needs.
 
-DROPRC.PHP
+BRUSHRC.PHP
 --------
 If you get tired of typing options all the time, you can add them to your brush.php alias or
-create a droprc.php file. These provide additional options for your brush call. They provide
-great flexibility for a multi-site installation, for example. See example.droprc.php.
+create a brushrc.php file. These provide additional options for your brush call. They provide
+great flexibility for a multi-site installation, for example. See example.brushrc.php.
 
 SITE ALIASES
 --------
 Brush lets you run commands on a remote server, or even on a set of remote servers.
-See example.aliases.droprc.php for more information.
+See example.aliases.brushrc.php for more information.
 
 COMMANDS
 --------

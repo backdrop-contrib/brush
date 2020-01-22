@@ -47,7 +47,7 @@ function docs_brush_command() {
     'topic' => TRUE,
     'bootstrap' => BRUSH_BOOTSTRAP_DROP,
     'callback' => 'brush_print_file',
-    'callback arguments' => array($docs_dir . '/examples/example.droprc.php'),
+    'callback arguments' => array($docs_dir . '/examples/example.brushrc.php'),
   );
   $items['docs-aliases'] = array(
     'description' => 'Site aliases overview with examples',
@@ -55,7 +55,7 @@ function docs_brush_command() {
     'topic' => TRUE,
     'bootstrap' => BRUSH_BOOTSTRAP_DROP,
     'callback' => 'brush_print_file',
-    'callback arguments' => array($docs_dir . '/examples/example.aliases.droprc.php'),
+    'callback arguments' => array($docs_dir . '/examples/example.aliases.brushrc.php'),
   );
   $items['docs-ini-files'] = array(
     'description' => 'Configuring php.ini or brush.ini for use with brush.',

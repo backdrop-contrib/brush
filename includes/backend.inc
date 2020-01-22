@@ -49,8 +49,8 @@
  * If the key-based ssh authentication has been set up between the servers,
  * this will just work.  By default, brush is configured to disallow password
  * authentication; if you would like to enter a password for every connection,
- * then in your droprc.php file, set $options['ssh-options'] so that it does NOT
- * include '-o PasswordAuthentication=no'.  See examples/example.droprc.php.
+ * then in your brushrc.php file, set $options['ssh-options'] so that it does NOT
+ * include '-o PasswordAuthentication=no'.  See examples/example.brushrc.php.
  *
  * The results from backend API calls can be fetched via a call to
  * brush_backend_get_result().
@@ -100,7 +100,7 @@ function brush_backend_set_result($value) {
  *       the same error code.
  *     - context: The context item contains a representation of all option
  *       values that affected the operation of the command, including both
- *       the command line options, options set in a droprc.php configuration
+ *       the command line options, options set in a brushrc.php configuration
  *       files, and options set from the alias record used with the command.
  */
 function brush_backend_get_result() {

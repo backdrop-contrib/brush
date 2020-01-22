@@ -283,7 +283,7 @@ function brush_archive_restore($file, $site_id = NULL) {
       $sql_file = $tmp . '/' . $site['database-default-file'];
       if ($db_url = brush_get_option('db-url')) {
         if (empty($site_id) && count($ini) >= 3) {
-          // TODO: Use droprc to provide multiple db-urls for multi-restore?
+          // TODO: Use brushrc to provide multiple db-urls for multi-restore?
           return brush_set_error('BRUSH_ARCHIVE_UNABLE_MULTI_RESTORE', dt('You must specify a site to restore when the archive contains multiple sites and a db-url is provided.'));
         }
         $db_spec = brush_convert_db_from_db_url($db_url);

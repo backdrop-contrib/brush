@@ -29,8 +29,8 @@ class contextCase extends Drop_TestCase {
   }
 
   /**
-   * Try to write a tiny droprc.php to each place that brush checks. Also
-   * write a sites/dev/aliases.droprc.php file to the sandbox.
+   * Try to write a tiny brushrc.php to each place that brush checks. Also
+   * write a sites/dev/aliases.brushrc.php file to the sandbox.
    */
   function setup() {
     parent::setUp();
@@ -49,14 +49,14 @@ class contextCase extends Drop_TestCase {
 \$command_specific['unit-eval']['contextConfig'] = '$key-specific';
 
 EOD;
-      $path .= $key == 'user' ? '/.droprc.php' : '/droprc.php';
+      $path .= $key == 'user' ? '/.brushrc.php' : '/brushrc.php';
       if (file_put_contents($path, $contents)) {
         $this->written[] = $path;
       }
     }
 
     // Also write a site alias so we can test its supremacy in context hierarchy.
-    $path = $this->site . '/aliases.droprc.php';
+    $path = $this->site . '/aliases.brushrc.php';
     $aliases['contextAlias'] = array(
       'contextConfig' => 'alias1',
       'command-specific' => array (
@@ -137,7 +137,7 @@ EOD;
     $eval =  '$contextConfig = brush_get_option("contextConfig", "n/a");';
     $eval .= '$cli1 = brush_get_option("cli1");';
     $eval .= 'print json_encode(get_defined_vars());';
-    $config = UNISH_SANDBOX . '/droprc.php';
+    $config = UNISH_SANDBOX . '/brushrc.php';
     $options = array(
       'cli1' => NULL,
       'config' => $config,

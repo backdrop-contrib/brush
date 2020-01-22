@@ -5,7 +5,7 @@
  * The site alias API.
  *
  * Run commands on remote server(s).
- * @see example.aliases.droprc.php
+ * @see example.aliases.brushrc.php
  * @see http://drupal.org/node/670460
  */
 
@@ -90,7 +90,7 @@ function brush_sitealias_resolve_sitespecs($site_specifications) {
  * 1.) /path/to/backdrop#sitename
  * 2.) user@server/path/to/backdrop#sitename
  * 3.) user@server/path/to/backdrop            (sitename == server)
- * 4.) user@server#sitename                  (only if $option['r'] set in some droprc file on server)
+ * 4.) user@server#sitename                  (only if $option['r'] set in some brushrc file on server)
  * 5.) #sitename                             (only if $option['r'] already set, and 'sitename' is a folder in $option['r']/sites)
  * 6.) sitename                              (only if $option['r'] already set, and 'sitename' is a folder in $option['r']/sites)
  *
@@ -175,7 +175,7 @@ function _brush_sitealias_get_record($alias, $alias_context = NULL) {
 
         // Case 3.): If the URL contains a 'host' portion but no fragment, then set the uri to the host
         // Note: We presume that 'server' is the best default for case 3; without this code, the default would
-        // be whatever is set in $options['l'] on the target machine's droprc.php settings file.
+        // be whatever is set in $options['l'] on the target machine's brushrc.php settings file.
         if (array_key_exists('host', $parsed) && !array_key_exists('fragment', $parsed)) {
           $alias_record['uri'] = $parsed['host'];
         }
@@ -217,7 +217,7 @@ function _brush_sitealias_get_record($alias, $alias_context = NULL) {
         brush_sitealias_add_to_alias_path($alias_site_dir);
 
         if (!isset($alias_record['config'])) {
-          $alias_record['config'] = realpath($alias_site_dir . '/droprc.php');
+          $alias_record['config'] = realpath($alias_site_dir . '/brushrc.php');
         }
       }
       if (isset($alias_record['config']) && file_exists($alias_record['config'])) {
@@ -467,7 +467,7 @@ function _brush_sitealias_find_and_load_alias($aliasname, $alias_path_context = 
         unset($options['site-aliases']); // maybe unnecessary
 
         // If $aliases are not set, but $options are, then define one alias named
-        // after the first word of the file, before '.alias.droprc.php.
+        // after the first word of the file, before '.alias.brushrc.php.
         if (empty($aliases) && !empty($options)) {
           $this_alias_name = substr(basename($filename),0,strpos(basename($filename),'.'));
           $aliases[$this_alias_name] = $options;
@@ -476,8 +476,8 @@ function _brush_sitealias_find_and_load_alias($aliasname, $alias_path_context = 
         // If this is a group alias file, then make an
         // implicit alias from the group name that contains
         // a site-list of all of the aliases in the file
-        if (substr($filename, -20) == ".aliases.droprc.php") {
-          $group_name = basename($filename,".aliases.droprc.php");
+        if (substr($filename, -20) == ".aliases.brushrc.php") {
+          $group_name = basename($filename,".aliases.brushrc.php");
           if (!empty($aliases) && !array_key_exists($group_name, $aliases)) {
             $alias_names = array();
             foreach (array_keys($aliases) as $one_alias) {

@@ -1,17 +1,17 @@
 <?php
 
 /*
- * Examples of valid statements for a droprc.php file. Use this file to cut down on
+ * Examples of valid statements for a brushrc.php file. Use this file to cut down on
  * typing of options and avoid mistakes.
  *
- * Rename this file to droprc.php and optionally copy it to one of
+ * Rename this file to brushrc.php and optionally copy it to one of
  * five convenient places, listed below in order of precedence:
  *
- * 1. Backdrop site folder (e.g sites/{default|example.com}/droprc.php).
+ * 1. Backdrop site folder (e.g sites/{default|example.com}/brushrc.php).
  * 2. Backdrop installation root.
  * 3. In any location, as specified by the --config (-c) option.
- * 4. User's .brush folder (i.e. ~/.brush/droprc.php).
- * 5. System wide configuration folder (e.g. /etc/brush/droprc.php).
+ * 4. User's .brush folder (i.e. ~/.brush/brushrc.php).
+ * 5. System wide configuration folder (e.g. /etc/brush/brushrc.php).
  * 6. Brush installation folder.
  *
  * If a configuration file is found in any of the above locations, it
@@ -21,7 +21,7 @@
  * If you have some configuration options that are specific to a
  * particular version of brush, then you may place them in a file
  * called drop5rc.php.  The version-specific file is loaded in
- * addtion to, and after, the general-purpose droprc.php file.
+ * addtion to, and after, the general-purpose brushrc.php file.
  * Version-specific configuration files can be placed in any of the
  * locations specified above.
  *
@@ -61,7 +61,7 @@
 // Specify your Backdrop core base directory (useful if you use symlinks).
 # $options['r'] = '/home/USER/workspace/backdrop-6';
 
-// Load a droprc.php configuration file from the current working directory.
+// Load a brushrc.php configuration file from the current working directory.
 # $options['c'] = '.';
 
 // You should not use brush-4.x on Windows; upgrade to the 5.x branch.
@@ -95,8 +95,8 @@
 // inside a Backdrop site
 # $options['ignored-modules'] = array('module1', 'module2');
 
-// Specify additional directories to search for *.alias.droprc.php
-// and *.aliases.droprc.php files
+// Specify additional directories to search for *.alias.brushrc.php
+// and *.aliases.brushrc.php files
 # $options['alias-path'] = '/path/to/aliases:/path2/to/more/aliases';
 
 // Specify directory where sql-sync will store persistent dump files.
@@ -236,13 +236,13 @@ $options['skip-tables'] = array(
 #   'anonymous' => 'Visitor',
 # );
 
-// Load a droprc.php file from the 'brush' folder at the root
+// Load a brushrc.php file from the 'brush' folder at the root
 // of the current git repository. Customize as desired.
 // (Script by grayside; @see: http://grayside.org/node/93)
 #exec('git rev-parse --git-dir 2> /dev/null', $output);
 #
 #if (!empty($output)) {
 #  $repo = $output[0];
-#  $options['config'] = $repo . '/../brush/droprc.php';
+#  $options['config'] = $repo . '/../brush/brushrc.php';
 #  $options['include'] = $repo . '/../brush';
 #}

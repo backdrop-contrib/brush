@@ -61,12 +61,12 @@
  *
  *   Specified by config files :
  *     custom   : Loaded from the config file specified by --config or -c
- *     site     : Loaded from the droprc.php file in the Backdrop site directory.
- *     backdrop   : Loaded from the droprc.php file in the Backdrop root directory.
- *     user     : Loaded from the droprc.php file in the user's home directory.
- *     home.brush Loaded from the droprc.php file in the $HOME/.brush directory.
- *     system   : Loaded from the droprc.php file in the system's $PREFIX/etc/brush directory.
- *     brush    : Loaded from the droprc.php file in the same directory as brush.php.
+ *     site     : Loaded from the brushrc.php file in the Backdrop site directory.
+ *     backdrop   : Loaded from the brushrc.php file in the Backdrop root directory.
+ *     user     : Loaded from the brushrc.php file in the user's home directory.
+ *     home.brush Loaded from the brushrc.php file in the $HOME/.brush directory.
+ *     system   : Loaded from the brushrc.php file in the system's $PREFIX/etc/brush directory.
+ *     brush    : Loaded from the brushrc.php file in the same directory as brush.php.
  *
  *   Specified by the script, but has the lowest priority :
  *     default  : The script might provide some sensible defaults during init.
@@ -81,12 +81,12 @@ function brush_context_names() {
 }
 
 /**
- * Return a list of possible droprc file locations.
+ * Return a list of possible brushrc file locations.
  *
  * @context
  *   A valid brush context from brush_context_names().
  * @prefix
- *   Optional. Specify a prefix to prepend to ".droprc.php" when looking
+ *   Optional. Specify a prefix to prepend to ".brushrc.php" when looking
  *   for config files. Most likely used by contrib commands.
  * @return
  *   An associative array containing possible config files to load
@@ -101,7 +101,7 @@ function _brush_config_file($context, $prefix = NULL, $version = '') {
   // Did the user explicitly specify a config file?
   if ($config = brush_get_option(array('c', 'config'))) {
     if (is_dir($config)) {
-      $config = $config . '/droprc.php';
+      $config = $config . '/brushrc.php';
     }
     $configs['custom'] = $config;
   }
@@ -135,7 +135,7 @@ function _brush_config_file($context, $prefix = NULL, $version = '') {
 
 
 /**
- * Load droprc files (if available) from several possible locations.
+ * Load brushrc files (if available) from several possible locations.
  */
 function brush_load_config($context) {
   brush_load_config_file($context, _brush_config_file($context));
@@ -145,10 +145,10 @@ function brush_load_config($context) {
 function brush_load_config_file($context, $config) {
   if (file_exists($config)) {
     $options = $aliases = $command_specific = $override = array();
-    brush_log(dt('Loading droprc "!config" into "!context" scope.', array('!config' => realpath($config), '!context' => $context)), 'bootstrap');
+    brush_log(dt('Loading brushrc "!config" into "!context" scope.', array('!config' => realpath($config), '!context' => $context)), 'bootstrap');
     $ret = @include_once($config);
     if ($ret === FALSE) {
-      brush_log(dt('Cannot open droprc "!config", ignoring.', array('!config' => realpath($config))), 'warning');
+      brush_log(dt('Cannot open brushrc "!config", ignoring.', array('!config' => realpath($config))), 'warning');
       return FALSE;
     }
     if (!empty($options) || !empty($aliases) || !empty($command_specific) || !empty($override)) {
@@ -194,17 +194,17 @@ function brush_set_config_options($context, $options, $override = array()) {
     'cron_safe_threshold' => 0,
   );
   foreach ($defaults as $key => $value) {
-    // This can be overridden by a command or a droprc file if needed.
+    // This can be overridden by a command or a brushrc file if needed.
     if (!isset($brush_conf_override[$key])) {
       $brush_conf_override[$key] = $value;
     }
   }
 
   /**
-   * Allow the droprc.php file to override $conf settings.
+   * Allow the brushrc.php file to override $conf settings.
    * This is a separate variable because the $conf array gets
    * initialized to an empty array, in the backdrop bootstrap process,
-   * and changes in settings.php would wipe out the droprc.php settings.
+   * and changes in settings.php would wipe out the brushrc.php settings.
    */
   if (!empty($override)) {
     $brush_conf_override = array_merge($brush_conf_override, $override);
@@ -405,7 +405,7 @@ function brush_get_option($option, $default = NULL, $context = NULL) {
  * Get the value for an option and return it as a list.  If the
  * option in question is passed on the command line, its value should
  * be a comma-separated list (e.g. --flag=1,2,3).  If the option
- * was set in a droprc.php file, then its value may be either a
+ * was set in a brushrc.php file, then its value may be either a
  * comma-separated list or an array of values (e.g. $option['flag'] = array('1', '2', '3')).
  *
  * @param option
@@ -579,7 +579,7 @@ function brush_save_config($context) {
 
     $fp = fopen($filename, "w+");
     if (!$fp) {
-      return brush_set_error('BRUSH_PERM_ERROR', dt('Droprc (!filename) could not be written', array('!filename' => $filename)));
+      return brush_set_error('BRUSH_PERM_ERROR', dt('Brushrc (!filename) could not be written', array('!filename' => $filename)));
     }
     else {
       fwrite($fp, "<?php\n");
@@ -590,7 +590,7 @@ function brush_save_config($context) {
       }
       fwrite($fp, "\n");
       fclose($fp);
-      brush_log(dt('Droprc file (!filename) was written successfully', array('!filename' => $filename)));
+      brush_log(dt('Brushrc file (!filename) was written successfully', array('!filename' => $filename)));
       return TRUE;
     }
 

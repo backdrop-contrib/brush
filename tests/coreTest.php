@@ -83,7 +83,7 @@ brush_invoke("version", $arg);
 
     // Assure that we create a bash alias for site aliases.
     // First, write an alias file to the sandbox.
-    $path = UNISH_SANDBOX . '/aliases.droprc.php';
+    $path = UNISH_SANDBOX . '/aliases.brushrc.php';
     $aliases['cliAlias'] = array(
       'root' => $this->sites['dev']['root'],
       'uri' => 'dev',

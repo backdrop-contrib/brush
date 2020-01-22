@@ -28,15 +28,15 @@
  *
  * There are several ways to create alias files.
  *
- *   + Put each alias in a separate file called ALIASNAME.alias.droprc.php
- *   + Put multiple aliases in a single file called aliases.droprc.php
- *   + Put groups of aliases into files called GROUPNAME.aliases.droprc.php
+ *   + Put each alias in a separate file called ALIASNAME.alias.brushrc.php
+ *   + Put multiple aliases in a single file called aliases.brushrc.php
+ *   + Put groups of aliases into files called GROUPNAME.aliases.brushrc.php
  *
  * Brush will search for aliases in any of these files using
  * the alias search path.  The following locations are examined
  * for alias files:
  *
- *   1. In any path set in $options['alias-path'] in droprc.php,
+ *   1. In any path set in $options['alias-path'] in brushrc.php,
  *      or (equivalently) any path passed in via --alias-path=...
  *      on the command line.
  *   2. If 'alias-path' is not set, then in one of the default
@@ -50,7 +50,7 @@
  *      a parameter to a command
  *
  * Folders and files containing other versions of brush in their names will
- * be *skipped* (e.g. mysite.aliases.drop4rc.php or drop4/mysite.aliases.droprc.php).
+ * be *skipped* (e.g. mysite.aliases.drop4rc.php or drop4/mysite.aliases.brushrc.php).
  * Names containing the current version of brush (e.g. mysite.aliases.drop5rc.php)
  * will be loaded.
  *
@@ -63,7 +63,7 @@
  * Alias files that are named after the single alias they contain
  * may use the syntax for the canoncial alias shown at the top of
  * this file, or they may set values in $options, just
- * like a droprc.php configuration file:
+ * like a brushrc.php configuration file:
  *
  *   $options['uri'] = 'dev.mybackdropsite.com',
  *   $options['root'] = '/path/to/backdrop';
@@ -72,13 +72,13 @@
  * is taken from the first part of the alias filename.
  *
  * Alias groups (aliases stored together in files called
- * GROUPNAME.aliases.droprc.php, as mentioned above) also
+ * GROUPNAME.aliases.brushrc.php, as mentioned above) also
  * create an implicit namespace that is named after the group
  * name.
  *
  * For example:
  *
- *   # File: mysite.aliases.droprc.php
+ *   # File: mysite.aliases.brushrc.php
  *   $aliases['dev'] = array(
  *     'root' => '/path/to/backdrop',
  *     'uri' => 'dev.mybackdropsite.com',

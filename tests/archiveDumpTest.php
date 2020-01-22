@@ -21,7 +21,7 @@ class archiveDumpCase extends Drop_TestCase {
       'uri' => $env,
     );
     $contents = $this->file_aliases($aliases);
-    $alias_path = "$root/aliases.droprc.php";
+    $alias_path = "$root/aliases.brushrc.php";
     file_put_contents($alias_path, $contents);
 
     $name = "example";

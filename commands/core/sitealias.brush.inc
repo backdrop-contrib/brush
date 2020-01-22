@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Site alias commands. @see example.droprc.php for details.
+ *   Site alias commands. @see example.brushrc.php for details.
  */
 
 function sitealias_brush_help($section) {
