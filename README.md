@@ -1,13 +1,14 @@
 DESCRIPTION
 -----------
-Brush is a command line shell and Unix scripting interface for Backdrop CMS.
-If you are unfamiliar with shell scripting, reviewing the documentation
-for your shell (e.g. man bash) or reading an online tutorial (e.g. search
-for "bash tutorial") will help you get the most out of Brush.
+Brush is a command line shell and Unix scripting interface for Backdrop CMS. Brush core ships with lots of useful commands for interacting with code like modules/themes/profiles. Similarly, it runs update.php, executes sql queries and DB migrations, and misc utilities like run cron or clear cache.
 
-Brush core ships with lots of useful commands for interacting with code
-like modules/themes/profiles. Similarly, it runs update.php, executes sql
-queries and DB migrations, and misc utilities like run cron or clear cache.
+Brush is build on top of completely refactored pre-Symfony, pre-Composer Drupal era Drush, namely version 4.x. As alternatives to Brush, you may like to consider using:
+
+- Backdrop Console (https://backdropcms.org/project/b) has been built from the ground-up specifically for Backdrop;
+or
+- Drush Integration for Backdrop CMS (https://backdropcms.org/project/drush) has been gradually making Drush commands working for Backdrop, at the same time effectively blocking all the rest of commands.
+
+Read https://forum.backdropcms.org/forum/drop-command-line-shell-and-unix-scripting-interface-backdrop-cms for the detailed information on three projects.
 
 REQUIREMENTS
 ------------
@@ -181,11 +182,9 @@ Current Maintainers
 CREDITS
 -------
 
-- Originally developed by Arto Bendiken <http://bendiken.net/> for Drupal 4.7.
-- Redesigned by Franz Heinzmann <http://unbiskant.org/> in May 2007 for Drupal 5.
-- Drush is maintained by Moshe Weitzman <http://drupal.org/moshe> with much help from the folks listed at https://github.com/orgs/drush-ops/people.
+- Originally developed by Arto Bendiken <http://bendiken.net/> for Drupal 4.7, redesigned by Franz Heinzmann <http://unbiskant.org/> in May 2007 for Drupal 5, maintained by Moshe Weitzman <http://drupal.org/moshe> with help from the folks listed at https://github.com/orgs/drush-ops/people.
 
-- Ported to Backdrop CMS as Brush by Alan Mels <https://github.com/alanmels> in October 2019.
+- Ported to Backdrop CMS as Drop by Alan Mels <https://github.com/alanmels> in October 2019, renamed as Brush in January 2020.
 
 License
 -------
