@@ -39,11 +39,11 @@ $aliases['mysite.local'] = array (
 );
  
 $aliases['mysite.prod'] = array (
-  'uri' => 'my.altagrade.com',
-  'root' => '/home/altacom/domains/my.altagrade.com/public_html',
-  'remote-user' => 'altacom',
-  'remote-host' => '66.160.206.201',
-  'ssh-options'  => '-p 19753',  // To change the default port on remote server
+  'uri' => 'my.domain.com',
+  'root' => '/home/domain/public_html',
+  'remote-user' => 'username',
+  'remote-host' => 'REMOTE-IP-ADDRESS',
+  'ssh-options'  => '-p PORT',  // To change the default port on remote server
   'path-aliases' => array(
     '%dump-dir' => '/tmp',
   ),
