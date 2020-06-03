@@ -51,7 +51,7 @@ function xkcd_brush_command() {
       'brush xkcd random --image-viewer=firefox' => 'Retrieve and display a random cartoon in Firefox.',
     ),
     'aliases' => array('xkcd'),
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap at all.
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH, // No bootstrap at all.
   );
 
   return $items;

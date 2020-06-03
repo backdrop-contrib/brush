@@ -18,7 +18,7 @@ function sitealias_brush_command() {
   $items['site-alias'] = array(
     'callback' => 'brush_sitealias_print',
     'description' => 'Print site alias records for all known site aliases and local sites.',
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'arguments' => array(
       'site' => 'Site specification alias to print',
     ),

@@ -21,7 +21,7 @@ class contextCase extends Drop_TestCase {
       'home.brush' => $this->home . '/.brush',
       'system' => UNISH_SANDBOX . '/etc/brush',
       // We don't want to write a file into brush dir since it is not in the sandbox.
-      // 'brush' => dirname(realpath(UNISH_DROP)),
+      // 'brush' => dirname(realpath(UNISH_BRUSH)),
     );
     // Run each path through realpath() since the paths we'll compare against
     // will have already run through brush_load_config_file().

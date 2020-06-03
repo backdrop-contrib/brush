@@ -37,7 +37,7 @@ function docs_brush_command() {
     'description' => 'README.txt',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/README.txt'),
   );
@@ -45,7 +45,7 @@ function docs_brush_command() {
     'description' => 'Brush configuration overview with examples',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/examples/example.brushrc.php'),
   );
@@ -53,7 +53,7 @@ function docs_brush_command() {
     'description' => 'Site aliases overview with examples',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/examples/example.aliases.brushrc.php'),
   );
@@ -61,7 +61,7 @@ function docs_brush_command() {
     'description' => 'Configuring php.ini or brush.ini for use with brush.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/examples/example.brush.ini'),
   );
@@ -69,7 +69,7 @@ function docs_brush_command() {
     'description' => 'How to use a bastion server to remotely operate on Backdrop sites behind a firewall.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/docs/bastion.html'),
   );
@@ -77,7 +77,7 @@ function docs_brush_command() {
     'description' => 'Information about the brush bootstrap process.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/docs/bootstrap.html'),
   );
@@ -85,7 +85,7 @@ function docs_brush_command() {
     'description' => 'Overview on how to write brush shell scripts.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/docs/shellscripts.html'),
   );
@@ -93,7 +93,7 @@ function docs_brush_command() {
     'description' => 'Overview on how to write brush commands.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/docs/commands.html'),
   );
@@ -101,13 +101,13 @@ function docs_brush_command() {
     'description' => 'Summary of brush error codes.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
   );
   $items['docs-api'] = array(
     'description' => 'Brush API',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/docs/brush.api.php'),
   );
@@ -115,7 +115,7 @@ function docs_brush_command() {
     'description' => 'Brush contexts',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/docs/context.html'),
   );
@@ -123,7 +123,7 @@ function docs_brush_command() {
     'description' => 'Example brush script',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/examples/helloworld.script'),
   );
@@ -131,7 +131,7 @@ function docs_brush_command() {
     'description' => 'Example brush command file.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/examples/sandwich.brush.inc'),
   );
@@ -139,7 +139,7 @@ function docs_brush_command() {
     'description' => 'Example policy file.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/examples/policy.brush.inc'),
   );
@@ -147,7 +147,7 @@ function docs_brush_command() {
     'description' => 'Upgrading Backdrop using the brush site-upgrade command.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array($docs_dir . '/docs/upgrade.html'),
   );

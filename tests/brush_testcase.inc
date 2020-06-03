@@ -117,7 +117,7 @@ abstract class Drop_TestCase extends PHPUnit_Framework_TestCase {
     */
   function brush($command, array $args = array(), array $options = array(), $site_specification = NULL, $cd = NULL) {
     $cmd[] = $cd ? sprintf('cd %s;', self::escapeshellarg($cd)) : NULL;
-    $cmd[] = UNISH_DROP;
+    $cmd[] = UNISH_BRUSH;
     $cmd[] = empty($site_specification) ? NULL : self::escapeshellarg($site_specification);
     $cmd[] = $command;
     if (in_array('--verbose', $_SERVER['argv'])) $args[] = '--verbose';
@@ -292,15 +292,15 @@ function unish_init() {
   // We read from globals here because env can be empty and ini did not work in quick test.
   define('UNISH_DB_URL', getenv('UNISH_DB_URL') ? getenv('UNISH_DB_URL') : !empty($GLOBALS['UNISH_DB_URL']) ? $GLOBALS['UNISH_DB_URL'] : 'mysql://root:@127.0.0.1');
 
-  // UNISH_DROP value can come from phpunit.xml or `which brush`.
-  if (!defined('UNISH_DROP')) {
-    // Let the UNISH_DROP environment variable override if set.
-    $unish_brush = isset($_SERVER['UNISH_DROP']) ? $_SERVER['UNISH_DROP'] : NULL;
-    $unish_brush = isset($GLOBALS['UNISH_DROP']) ? $GLOBALS['UNISH_DROP'] : $unish_brush;
+  // UNISH_BRUSH value can come from phpunit.xml or `which brush`.
+  if (!defined('UNISH_BRUSH')) {
+    // Let the UNISH_BRUSH environment variable override if set.
+    $unish_brush = isset($_SERVER['UNISH_BRUSH']) ? $_SERVER['UNISH_BRUSH'] : NULL;
+    $unish_brush = isset($GLOBALS['UNISH_BRUSH']) ? $GLOBALS['UNISH_BRUSH'] : $unish_brush;
     if (empty($unish_brush)) {
       $unish_brush = Drop_TestCase::is_windows() ? exec('for %i in (brush) do @echo.   %~$PATH:i') : trim(`which brush`);
     }
-    define('UNISH_DROP', $unish_brush);
+    define('UNISH_BRUSH', $unish_brush);
   }
 
   define('UNISH_TMP', getenv('UNISH_TMP') ? getenv('UNISH_TMP') : (isset($GLOBALS['UNISH_TMP']) ? $GLOBALS['UNISH_TMP'] : sys_get_temp_dir()));

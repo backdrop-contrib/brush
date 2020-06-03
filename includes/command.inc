@@ -959,7 +959,7 @@ function _brush_find_commandfiles($phase, $phase_max = FALSE) {
 
   $searchpath = array();
   switch ($phase) {
-    case BRUSH_BOOTSTRAP_DROP:
+    case BRUSH_BOOTSTRAP_BRUSH:
       // Core commands shipping with brush
       $searchpath[] = realpath(dirname(__FILE__) . '/../commands/');
 

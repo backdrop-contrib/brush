@@ -40,7 +40,7 @@ define('BRUSH_BOOTSTRAP_MAX', -2);
  * Any code that operates on the Brush installation, and not specifically
  * any Backdrop directory, should bootstrap to this phase.
  */
-define('BRUSH_BOOTSTRAP_DROP', 0);
+define('BRUSH_BOOTSTRAP_BRUSH', 0);
 
 /**
  * Set up and test for a valid backdrop root, either through the -r/--root options,
@@ -135,7 +135,7 @@ define('BRUSH_TABLE_URL', 'http://svn.php.net/viewvc/pear/packages/Console_Table
  */
 function _brush_bootstrap_phases($function_names = FALSE, $init_phases_only = FALSE) {
   static $functions = array(
-    BRUSH_BOOTSTRAP_DROP                  => '_brush_bootstrap_brush',
+    BRUSH_BOOTSTRAP_BRUSH                  => '_brush_bootstrap_brush',
     BRUSH_BOOTSTRAP_BACKDROP_ROOT            => '_brush_bootstrap_backdrop_root',
     BRUSH_BOOTSTRAP_BACKDROP_SITE            => '_brush_bootstrap_backdrop_site',
     BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION   => '_brush_bootstrap_backdrop_configuration',
@@ -145,7 +145,7 @@ function _brush_bootstrap_phases($function_names = FALSE, $init_phases_only = FA
 
   $result = array();
   if ($init_phases_only) {
-    foreach (array(BRUSH_BOOTSTRAP_DROP, BRUSH_BOOTSTRAP_BACKDROP_FULL) as $phase) {
+    foreach (array(BRUSH_BOOTSTRAP_BRUSH, BRUSH_BOOTSTRAP_BACKDROP_FULL) as $phase) {
       $result[$phase] = $functions[$phase];
     }
   }
@@ -171,7 +171,7 @@ function _brush_bootstrap_phases($function_names = FALSE, $init_phases_only = FA
  * @param phase
  *   The bootstrap phase to bootstrap to.
  *   Any of the following constants :
- *     BRUSH_BOOTSTRAP_DROP                = Only Brush.
+ *     BRUSH_BOOTSTRAP_BRUSH                = Only Brush.
  *     BRUSH_BOOTSTRAP_BACKDROP_ROOT          = Find a valid Backdrop root.
  *     BRUSH_BOOTSTRAP_BACKDROP_SITE          = Find a valid Backdrop site.
  *     BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION = Load the site's settings.
@@ -241,7 +241,7 @@ function brush_has_boostrapped($phase) {
  * @param phase
  *   The bootstrap phase to validate to.
  *   Any of the following constants :
- *     BRUSH_BOOTSTRAP_DROP                = Only Brush.
+ *     BRUSH_BOOTSTRAP_BRUSH                = Only Brush.
  *     BRUSH_BOOTSTRAP_BACKDROP_ROOT          = Find a valid Backdrop root.
  *     BRUSH_BOOTSTRAP_BACKDROP_SITE          = Find a valid Backdrop site.
  *     BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION = Load the site's settings.
@@ -327,7 +327,7 @@ function brush_bootstrap_to_phase($max_phase_index) {
  */
 function brush_bootstrap_max($max_phase_index = FALSE) {
   $phases = _brush_bootstrap_phases();
-  $phase_index = BRUSH_BOOTSTRAP_DROP;
+  $phase_index = BRUSH_BOOTSTRAP_BRUSH;
   if (!$max_phase_index) {
     $max_phase_index = count($phases);
   }
@@ -907,7 +907,7 @@ function _brush_bootstrap_backdrop_configuration() {
   restore_error_handler();
 
   // Overriding the $conf array from backdrop CONFIGURATION bootstrap with the
-  // Overrides we collected on the loaded config files on BRUSH_BOOTSTRAP_DROP
+  // Overrides we collected on the loaded config files on BRUSH_BOOTSTRAP_BRUSH
   $conf = is_array($conf) && is_array($brush_conf_override) ? array_merge($conf, $brush_conf_override) : $conf;
 
   // Populate the BRUSH_DB_CREDENTIALS with the fields loaded from the configuration.

@@ -45,7 +45,7 @@ class EnDisUnListCase extends Drop_TestCase {
 
 
     // We expect an exit code of 1 so just call execute() directly.
-    $exec = sprintf('%s variable-get %s --pipe --root=%s --uri=%s', UNISH_DROP, 'devel_query_display', $options['root'], $options['uri']);
+    $exec = sprintf('%s variable-get %s --pipe --root=%s --uri=%s', UNISH_BRUSH, 'devel_query_display', $options['root'], $options['uri']);
     $this->execute($exec, self::EXIT_ERROR);
     $output = $this->getOutput();
     $this->assertEmpty($output, 'Devel variable was uninstalled.');

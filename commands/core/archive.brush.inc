@@ -51,7 +51,7 @@ function archive_brush_command() {
       'brush archive-restore ./example.tar.gz --destination=/var/www/example.com/docroot' => 'Restore archive to a custom location.',
       'brush archive-restore ./example.tar.gz --db-url=mysql://root:pass@127.0.0.1/dbname' => 'Restore archive to a new database (and customize settings.php to point there.).',
     ),
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'aliases' => array('arr'),
   );
   return $items;

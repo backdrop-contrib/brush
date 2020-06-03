@@ -21,7 +21,7 @@ class coreCase extends Drop_TestCase {
 $arg = brush_shift();
 brush_invoke("version", $arg);
 ';
-    $data = str_replace('[PATH-TO-BRUSH]', UNISH_DROP, $data);
+    $data = str_replace('[PATH-TO-BRUSH]', UNISH_BRUSH, $data);
     $script = UNISH_SANDBOX . '/' . $filename;
     file_put_contents($script, $data);
     chmod($script, 0755);

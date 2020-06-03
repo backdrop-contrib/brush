@@ -16,7 +16,7 @@
     <!-- <var name="UNISH_TMP" value="/tmp"/> -->
 
     <!--Uncomment the line below if your path to brush differs from `which brush`. Use absolute path.-->
-    <!--<var name="UNISH_DROP" value="/Users/mw/bin/brush"/>-->
+    <!--<var name="UNISH_BRUSH" value="/Users/mw/bin/brush"/>-->
 
     <includePath>.</includePath>
   </php>

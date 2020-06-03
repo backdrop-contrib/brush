@@ -47,7 +47,7 @@ function sandwich_brush_command() {
       'brush mmas turkey --spreads=ketchup,mustard' => 'Make a terrible-tasting sandwich that is lacking in pickles.',
     ),
     'aliases' => array('mmas'),
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap at all.
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH, // No bootstrap at all.
   );
   
   // Commandfiles may also add topics.  These will appear in
@@ -57,7 +57,7 @@ function sandwich_brush_command() {
     'description' => 'Ruminations on the true meaning and philosophy of sandwiches.',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'callback' => 'brush_print_file',
     'callback arguments' => array(dirname(__FILE__) . '/sandwich-topic.txt'),
   );

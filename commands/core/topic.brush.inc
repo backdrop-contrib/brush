@@ -22,7 +22,7 @@ function topic_brush_command() {
       'brush topic docs-context' => 'Show documentation for the brush context API',
       'brush docs-context' => 'Show documentation for the brush context API',
     ),
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
     'aliases' => array('topic'),
     'topics' => array('docs-readme'),
   );

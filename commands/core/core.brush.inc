@@ -23,7 +23,7 @@ function core_brush_command() {
 
   $items['help'] = array(
     'description' => 'Print this help message. See `brush help help` for more options.',
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap.
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH, // No bootstrap.
     'options' => array(
       'sort' => 'Sort commands in alphabetical order. brush waits for full bootstrap before printing any commands when this option is used.',
       'filter' => 'Restrict command list to those commands defined in the specified file.',
@@ -40,7 +40,7 @@ function core_brush_command() {
   );
   $items['version'] = array(
     'description' => 'Show brush version.',
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap.
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH, // No bootstrap.
     'options' => array(
       'pipe' => 'Print just the version number, and nothing else.',
       'self-update' => 'Check for pending updates to brush itself. Set to 0 to avoid check.',
@@ -48,7 +48,7 @@ function core_brush_command() {
   );
   $items['self-update'] = array(
     'description' => 'Update brush to the latest version, if available.',
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap.
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH, // No bootstrap.
     'options' => array(
       '--dev' => 'Allow updates to latest dev release.',
     ),
@@ -131,7 +131,7 @@ function core_brush_command() {
   );
   $items['core-rsync'] = array(
     'description' => 'Rsync the Backdrop tree to/from another server using ssh.',
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap.
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH, // No bootstrap.
     'arguments' => array(
       'source' => 'May be rsync path or site alias. See rsync documentation and example.aliases.brushrc.php.',
       'destination' => 'May be rsync path or site alias. See rsync documentation and example.aliases.brushrc.php.',
@@ -205,7 +205,7 @@ function core_brush_command() {
       'edit `brush dd devel`/devel.module' => "Open devel module in your editor (customize 'edit' for your editor)",
     ),
     'aliases' => array('bd'),
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
   );
 
   $items['core-cli'] = array(
@@ -255,7 +255,7 @@ function core_brush_command() {
     'description' => 'All global options',
     'hidden' => TRUE,
     'topic' => TRUE,
-    'bootstrap' => BRUSH_BOOTSTRAP_DROP,
+    'bootstrap' => BRUSH_BOOTSTRAP_BRUSH,
   );
   return $items;
 }

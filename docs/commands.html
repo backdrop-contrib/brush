@@ -152,7 +152,7 @@ are shown below.
 
      Backdrop bootstrap level.  Valid values are:
 <ul>
-      <li>BRUSH_BOOTSTRAP_DROP
+      <li>BRUSH_BOOTSTRAP_BRUSH
       <li>BRUSH_BOOTSTRAP_BACKDROP_ROOT
       <li>BRUSH_BOOTSTRAP_BACKDROP_SITE
       <li>BRUSH_BOOTSTRAP_BACKDROP_CONFIGURATION
@@ -204,7 +204,7 @@ The 'sandwich' brush_command hook looks like this:
               'brush mmas turkey --spreads=ketchup,mustard' => 'Make a terrible-tasting sandwich that is lacking in pickles.',
             ),
             'aliases' => array('mmas'),
-            'bootstrap' => BRUSH_BOOTSTRAP_DROP, // No bootstrap at all.
+            'bootstrap' => BRUSH_BOOTSTRAP_BRUSH, // No bootstrap at all.
           );
 
           return $items;
