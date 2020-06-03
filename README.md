@@ -12,57 +12,43 @@ While each alternative has a limited list of commands working, almost all Drush 
 
 Read https://forum.backdropcms.org/forum/drop-command-line-shell-and-unix-scripting-interface-backdrop-cms for the detailed information on three projects.
 
-REQUIREMENTS
-------------
-* To use brush from the command line, you'll need a CLI-mode capable PHP
-  binary. The minimum PHP version is 5.2.
-* Brush works with Backdrop 1.x.  However, occasionally recent changes to the
-  most recent version of Backdrop can introduce issues with brush.
-
 INSTALLATION
 ------------
 For Linux/Unix/Mac:
-  1. Unzip the zip-file into a folder outside of your web site (/path/to/brush)
-     (e.g. if brush is in your home directory, ~/brush can be used for /path/to/brush)
-  2. Make the 'brush' command executable:
-       $ chmod u+x /path/to/brush/brush
-  3. (Optional, but recommended:) To ease the use of brush,
+  1. Clone the Brush repository into a folder outside of your web site. For example:
+     ```
+     cd /usr/src
+     git clone https://github.com/backdrop-contrib/brush.git
+     ```
+  2. To ease the use of brush,
      - create a link to brush in a directory that is in your PATH, e.g.:
-       $ ln -s /path/to/brush/brush /usr/local/bin/brush
+       ```
+       ln -s /usr/src/brush/brush /usr/local/bin
+       ```
      OR
      - add the folder that contains brush to your PATH
-       PATH=$PATH:/path/to/brush
-
+       ```
+       PATH=$PATH:/usr/src/brush
+       ```
        This goes into .profile, .bash_aliases or .bashrc in your home folder.
        NOTE:  You must log out and then log back in again or re-load your bash
        configuration file to apply your changes to your current session:
-       $ source .bashrc
-
-     NOTE FOR ADVANCED USERS
-     - If you want to run brush with a specific version of php, rather than the
-       one found by the brush command, you can define an environment variable
-       BRUSH_PHP that points to the php to execute:
-       export BRUSH_PHP=/usr/bin/php5
-     OR
-     - If you want to exactly control how brush is called, you may define an alias
-       that executes the brush.php file directly and passes that path to brush:
-       $ alias brush='/path/to/php/php5 -d memory_limit=128M /path/to/brush/brush.php --php="/path/to/php/php5 -d memory_limit=128M"'
-       Note that it is necessary to pass the '--php' option to brush to define
-       how brush should call php if it needs to do so.
-       If you define an alias, to allow Brush to detect the number of available columns,
-       you need to add the line 'export COLUMNS' to the .profile file in your
-       home folder.
+       ```
+       source .bashrc
+       ```
 
      NOTE ON PHP.INI FILES
      - Usually, php is configured to use separate php.ini files for the web server
        and the command line.  To see which php.ini file brush is using, run:
-       $ brush status
+       ```
+       brush status
+       ```
      - Compare the php.ini that brush is using with the php.ini that the webserver is
        using.  Make sure that brush's php.ini is given as much memory to work with as
        the web server is; otherwise, Backdrop might run out of memory when brush
        bootstraps it.
      - Brush requires a fairly unrestricted php environment to run in.  In particular,
-       you should insure that safe_mode, open_basedir, disable_functions and
+       you should ensure that safe_mode, open_basedir, disable_functions and
        disable_classes are empty.
      - If brush is using the same php.ini file as the web server, you can create
        a php.ini file exclusively for brush by copying your web server's php.ini
@@ -73,10 +59,7 @@ For Linux/Unix/Mac:
        into $HOME/.brush or the folder /etc/brush and edit to suit.  See comments
        in example.brush.ini for more details.
 
-  4. Start using brush by running "brush" from your Backdrop root directory.
-
-     - If you did not follow step 3, by running `/path/to/brush/brush`or navigating to `/path/to/brush` and running `./brush`.
-     - If you have troubles, try using the `-l` and `-r` options when invoking brush. See below.
+  3. Start using brush by running `brush` from your Backdrop root directory.
 
 For Windows:
 
@@ -89,20 +72,28 @@ USAGE
 Once installed and setup, you can use brush as follows while in
 any Backdrop directory:
 
-  $ brush [options] <command> [argument1] [argument2]
+  ```
+  brush [options] <command> [argument1] [argument2]
+  ```
 
 Use the 'help' command to get a list of available options and commands:
 
-  $ brush help
+  ```
+  brush help
+  ```
 
 For even more documentation, use the 'topic' command:
 
-  $ brush topic
+  ```
+  brush topic
+  ```
 
 For multisite installations, you might need to use the -l or other command line
 options just to get brush to work:
 
-  $ brush -l http://example.com help
+  ```
+  brush -l http://example.com help
+  ```
 
 Related Options:
   -r <path>, --root=<path>      Backdrop root directory to use
