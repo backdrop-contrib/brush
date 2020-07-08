@@ -17,18 +17,18 @@ INSTALLATION
 For Linux/Unix/Mac:
   1. Clone the Brush repository into a folder outside of your web site. For example:
      ```
-     cd /usr/src
+     cd /usr/local/src
      git clone https://github.com/backdrop-contrib/brush.git
      ```
   2. To ease the use of brush,
      - create a link to brush in a directory that is in your PATH, e.g.:
        ```
-       ln -s /usr/src/brush/brush /usr/local/bin
+       ln -s /usr/local/src/brush/brush /usr/local/bin
        ```
      OR
      - add the folder that contains brush to your PATH
        ```
-       PATH=$PATH:/usr/src/brush
+       PATH=$PATH:/usr/local/src/brush
        ```
        This goes into .profile, .bash_aliases or .bashrc in your home folder.
        NOTE:  You must log out and then log back in again or re-load your bash
