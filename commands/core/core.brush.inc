@@ -802,7 +802,7 @@ function brush_core_find_project_path($target) {
   $theme_suffix = brush_backdrop_major_version() >= 6 ? '.info' : '/style.css';
   $masks = array(
     conf_path() . '/modules' => "/^$target\.module$/",
-    'profiles/default/modules' => "/^$target\.module$/", // Too early for variable_get('install_profile', 'default'); Just use default.
+    'profiles/default/modules' => "/^$target\.module$/", // Too early for state_get('install_profile', 'default'); Just use default.
     'sites/all/modules' => "/^$target\.module$/", // Add all module paths, even disabled modules.
     conf_path() . '/themes' => "/^$target" . "$theme_suffix/",
     'sites/all/themes' => "/^$target" . "$theme_suffix/",

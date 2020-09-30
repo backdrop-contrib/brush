@@ -495,12 +495,11 @@ function brush_upgrade_site_upgrade_prepare() {
   $uninstall_extensions = explode(',', brush_get_option('uninstall', ''));
 
   // Set theme back to garland per Upgrade.txt.
-  variable_set('theme_default', 'garland');
+  config_set('system.core', 'theme_default', 'seven');
 
-  // http://drupal.org/node/724102 recommends using "seven" as your admin theme.  Don't switch it to garland if it is already seven.
-  $admin_theme = variable_get('admin_theme', NULL);
+  $admin_theme = config_get('system.core', 'admin_theme');
   if ($admin_theme != "seven") {
-    variable_set('admin_theme', 'garland');
+    config_set('system.core', 'admin_theme', 'seven');
   }
   else {
     brush_log(dt("Admin theme is already set to 'seven'."), 'ok');

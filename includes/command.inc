@@ -993,7 +993,7 @@ function _brush_find_commandfiles($phase, $phase_max = FALSE) {
       // enabled modules.
       if ($phase_max < BRUSH_BOOTSTRAP_BACKDROP_FULL) {
         $searchpath[] = conf_path() . '/modules';
-        // Too early for variable_get('install_profile', 'default'); Just use default.
+        // Too early for config_get('system.core', 'install_profile', 'default'); Just use default.
         $searchpath[] = "profiles/default/modules";
         // Add all module paths, even disabled modules. Prefer speed over accuracy.
         $searchpath[] = 'sites/all/modules';
@@ -1006,7 +1006,7 @@ function _brush_find_commandfiles($phase, $phase_max = FALSE) {
       if ($phase_max < BRUSH_BOOTSTRAP_BACKDROP_FULL) {
         // You must define your install_profile in settings.php. The DB is not sufficient.
         // Backdrop core does not yet do that. See http://drupal.org/node/545452.
-        if ($profile = variable_get('install_profile', NULL)) {
+        if ($profile = config_get('system.core', 'install_profile')) {
           $searchpath[] = "profiles/$profile/modules";
         }
       }

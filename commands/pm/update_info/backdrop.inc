@@ -34,7 +34,7 @@ function pm_update_filter(&$project) {
 }
 
 function pm_update_last_check() {
-  return variable_get('update_last_check', 0);
+  return state_get('update_last_check', 0);
 }
 
 /**

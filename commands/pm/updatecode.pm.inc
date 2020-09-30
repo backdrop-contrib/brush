@@ -337,7 +337,7 @@ function _pm_update_move_files($src_dir, $dest_dir, $skip_list, $remove_conflict
 }
 
 /**
- * Update projects according to an array of releases for each project, 
+ * Update projects according to an array of releases for each project,
  * following interactive confirmation from the user.
  *
  * @param $update_info

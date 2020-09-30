@@ -237,7 +237,7 @@ function brush_backdrop_login($brush_user) {
     return brush_set_error('BACKDROP_USER_LOGIN_FAILED', $message);
   }
   else {
-    $name = $user->name ? $user->name : variable_get('anonymous', t('Anonymous'));
+    $name = $user->name ? $user->name : state_get('anonymous', t('Anonymous'));
     brush_log(dt('Successfully logged into Backdrop as !name', array('!name' => $name . " (uid=$user->uid)")), 'bootstrap');
   }
 

@@ -12,7 +12,7 @@ function brush_core_search_status() {
 function _brush_core_search_status() {
   $remaining = 0;
   $total = 0;
-  foreach (variable_get('search_active_modules', array('node', 'user')) as $module) {
+  foreach (config_get('search.settings', 'search_active_modules') as $module) {
     $status = module_invoke($module, 'search_status');
     $remaining += $status['remaining'];
     $total += $status['total'];
@@ -37,7 +37,7 @@ function _brush_core_search_index() {
     // Use brush_backend_invoke() to start subshell. Avoids out of memory issue.
     $eval = "register_shutdown_function('search_update_totals');";
 
-    foreach (variable_get('search_active_modules', array('node', 'user')) as $module) {
+    foreach (config_get('search.settings', 'search_active_modules') as $module) {
       $eval .= " module_invoke($module, 'update_index');";
     }
 
