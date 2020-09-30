@@ -3,4 +3,3 @@ name = Brush
 description = Brush is a command line shell and Unix scripting interface for Backdrop CMS.
 package = Development
 backdrop = 1.x
-brush_version=1.x-1.1

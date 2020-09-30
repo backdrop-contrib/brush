@@ -605,7 +605,15 @@ function _brush_bootstrap_brush() {
   define('BRUSH_COMMAND', brush_find_brush());
 
   $brush_info = brush_read_brush_info();
-  define('BRUSH_VERSION', $brush_info['brush_version']);
+  if (!empty($brush_info['version'])) {
+    $brush_version = $brush_info['version'];
+  }
+  else {
+    // There is no version indicated in the info file, so probably Brush was
+    // pulled with 'git clone'. Let's derive the version from git HEAD file.
+    $brush_version = exec('git rev-parse --abbrev-ref HEAD');
+  }
+  define('BRUSH_VERSION', $brush_version);
   $version_parts = explode('.', BRUSH_VERSION);
   define('BRUSH_MAJOR_VERSION', $version_parts[0]);
   define('BRUSH_MINOR_VERSION', $version_parts[1]);
