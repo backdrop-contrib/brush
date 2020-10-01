@@ -54,6 +54,9 @@ function package_handler_download_project(&$request, $release) {
   $olddir = getcwd();
   brush_op('chdir', $request['base_project_path']);
 
+  // If exist, remove previously downloaded files.
+  brush_shell_exec("rm $filename*");
+
   // Download the project.
   if (!brush_shell_exec("wget -P . %s", $release['download_link'])) {
     brush_shell_exec("curl -O %s", $release['download_link']);
@@ -84,8 +87,8 @@ function package_handler_download_project(&$request, $release) {
   $file_list = brush_tarball_extract($filename, $request['base_project_path'], TRUE);
   brush_print_r($file_list);
 
-  #brush_op('unlink', $filename);
-  #brush_op('chdir', $olddir);
+  brush_op('unlink', $filename);
+  brush_op('chdir', $olddir);
 
 /*
   // Move untarred directory to project_dir, if distinct.

@@ -457,7 +457,6 @@ function pm_update_project($project, $version_control) {
     $files = brush_find_empty_directories($project['full_project_path'], $version_control->reserved_files());
     array_map('brush_delete_dir', $files);
   }
-
   return TRUE;
 }
 
