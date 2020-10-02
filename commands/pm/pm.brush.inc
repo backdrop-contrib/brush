@@ -1561,6 +1561,7 @@ function pm_dl_destination($type) {
  *   A handle to the XML document.
  */
 function pm_parse_release($request, $xml) {
+
   if (!empty($request['version'])) {
     $releases = $xml->xpath("/project/releases/release[status='published'][version='" . $request['version'] . "']");
     if (empty($releases)) {
@@ -1595,6 +1596,7 @@ function pm_parse_release($request, $xml) {
     $releases = @$xml->xpath("/project/releases/release[status='published'][version_extra='dev']");
     $release_type = 'development';
   }
+
   if (brush_get_option('select', FALSE) || empty($releases)) {
     if (empty($releases)) {
       brush_print(dt('There is no !type release for project !project.', array('!type' => $release_type, '!project' => $request['name'])));
@@ -1935,20 +1937,15 @@ function brush_pm_download_validate() {
  */
 function _brush_pm_get_release_history_xml($request) {
   // Backdroped.
-  if (empty($request['project_version'])) {
     for ($i=1; $i < 10; $i++) {
       $request['project_version'] = $i.'.x';
       $url = brush_get_option('source', 'https://updates.backdropcms.org/release-history') . '/' . $request['name'] . '/' . $request['project_version'];
 
       if ($path = brush_download_file($url, brush_tempnam($request['name']), brush_get_option('cache-duration-releasexml', 24*3600))) {
         $xml = simplexml_load_file($path);
-        if (!$xml) {
-          // We are not getting here since Github always serves an XML response.
-          return brush_set_error('BRUSH_PM_DOWNLOAD_FAILED', dt('Could not download project status information from @url', array('@url' => $url)));
-        }
+
         if (!$xml->xpath('/error')) {
           // Found the right $xml;
-
           // Unpublished project?
           $project_status = $xml->xpath('/project/project_status');
           if ($project_status[0][0] == 'unpublished') {
@@ -1962,7 +1959,6 @@ function _brush_pm_get_release_history_xml($request) {
     }
     brush_set_error(dt('No release history found for @project_name', array('@project_name' => $request['name'])));
     brush_set_error(dt('Could not download requested project(s).'));
-  }
 }
 
 /**
@@ -2016,40 +2012,13 @@ function brush_pm_download() {
     elseif ($project_type == 'project_theme')  {
       $request['project_type'] = 'theme';
     }
-    else {
+    elseif ($project_type != 'core') {
       brush_print_r('Not supported project type: '.$project_type);
     }
 
-    // Determine the name of the directory that will contain the project.
-    // We face here all the asymetries to make it smooth for package handlers.
-    if ($request['project_type'] == 'core') {
-      // Avoid downloading core into existing core.
-      if (brush_get_context('BRUSH_BOOTSTRAP_PHASE') >= BRUSH_BOOTSTRAP_BACKDROP_ROOT) {
-        if (strpos(realpath(brush_get_option('destination')), BACKDROP_ROOT) !== FALSE) {
-          brush_log(dt('It\'s forbidden to download !project core into an existing core.', array('!project' => $request['name'])), 'error');
-          continue;
-        }
-      }
-
-      if ($rename = brush_get_option('backdrop-project-rename', FALSE)) {
-        if ($rename === TRUE) {
-          $request['project_dir'] = 'backdrop';
-        }
-        else {
-          $request['project_dir'] = $rename;
-        }
-      }
-      else {
-        // Set to backdrop-x.y, the expected name for .tar.gz contents.
-        // Explicitly needed for cvs package handler.
-        $request['project_dir'] = strtolower(strtr($release['name'], ' ', '-'));
-      }
-    }
     // For the other project types we want the project name. Including core
     // variant for profiles.  Note those come with backdrop-x.y in the .tar.gz.
-    else {
-      $request['project_dir'] = $request['name'];
-    }
+    $request['project_dir'] = $request['name'];
 
     // Download the project to a temporary location.
     $request['base_project_path'] = brush_tempdir();
