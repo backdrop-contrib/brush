@@ -571,6 +571,7 @@ function _brush_is_brush_shebang_script($script_filename) {
  *    error.  See http://php.net/manual/en/features.commandline.io-streams.php
  */
 function brush_print($message = '', $indent = 0, $handle = NULL) {
+  print "";
   $msg = str_repeat(' ', $indent) . (string)$message . "\n";
   if (($charset = brush_get_option('output_charset')) && function_exists('iconv')) {
     $msg = iconv('UTF-8', $charset, $msg);
@@ -581,6 +582,7 @@ function brush_print($message = '', $indent = 0, $handle = NULL) {
   else {
     print $msg;
   }
+  print "";
 }
 
 /**
@@ -604,7 +606,9 @@ function brush_print_pipe($message = '') {
  *   The array to print.
  */
 function brush_print_r($array, $handle = NULL) {
+  print "";
   brush_print(print_r($array, TRUE), 0, $handle);
+  print "";
 }
 
 /**
