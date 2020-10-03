@@ -1598,8 +1598,15 @@ function pm_parse_release($request, $xml) {
   $release_type = 'recommended';
 
   if (brush_get_option('dev', FALSE)) {
+    if ($request['name'] == 'backdrop') {
+      // Construct download URI for Backdrop core development version.
+      $base_remote_url = 'https://github.com/backdrop/';
+    } else {
+      // Construct download URI for Backdrop project development version.
+      $base_remote_url = 'https://github.com/backdrop-contrib/';
+    }
     $simple_object = $request;
-    $remote_url = 'https://github.com/backdrop-contrib/'.$request['name'].'.git';
+    $remote_url = $base_remote_url . $request['name'];
     $output = `wget -qO- $remote_url`;
     $dom = new DOMDocument;
     libxml_use_internal_errors(true);
@@ -1609,7 +1616,7 @@ function pm_parse_release($request, $xml) {
       foreach ($div->attributes as $attr) {
         $name = $attr->nodeName;
         $value = $attr->nodeValue;
-        if (strpos($value, '/backdrop-contrib/'.$request['name'].'/archive/') !== false) {
+        if (strpos($value, '/'.$request['name'].'/archive/') !== false) {
           $zip_file = substr($value, strrpos($value, '/') + 1);
           $version = substr($zip_file, 0, strrpos($zip_file, '.'));
           $simple_object['name'] = $simple_object['name'].' '.$version;
