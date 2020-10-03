@@ -1616,13 +1616,6 @@ function pm_parse_release($request, $xml) {
           $simple_object['version'] = $version;
           unset($simple_object['backdrop_version']);
           unset($simple_object['project_version']);
-          $simple_object['status'] = 'published';
-          $simple_object['date'] = '1580080704';
-          $simple_object['filesize'] = getSizeFile('https://github.com'.$value);
-          $simple_object['security_update'] = 'false';
-          $simple_object['version_major'] = '1';
-          $simple_object['version_minor'] = '0';
-          $simple_object['version_patch'] = '0';
           $simple_object['download_link'] = 'https://github.com'.$value;
 
         }
@@ -1654,29 +1647,6 @@ function pm_parse_release($request, $xml) {
   // First published release for the recommended major version is just the
   // first value in $releases.
   return (array)$releases[0];
-}
-
-function getSizeFile($remoteFile) {
-  $ch = curl_init($remoteFile);
-  curl_setopt($ch, CURLOPT_NOBODY, true);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_HEADER, true);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); //not necessary unless the file redirects
-  $data = curl_exec($ch);
-  curl_close($ch);
-  if ($data === false) {
-    echo 'cURL failed';
-    exit;
-  }
-  $contentLength = 'unknown';
-  $status = 'unknown';
-  if (preg_match('/^HTTP\/1\.[01] (\d\d\d)/', $data, $matches)) {
-    $status = (int)$matches[1];
-  }
-  if (preg_match('/Content-Length: (\d+)/', $data, $matches)) {
-    $contentLength = (int)$matches[1];
-  }
-  return $contentLength;
 }
 
 /**
