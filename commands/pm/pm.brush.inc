@@ -874,12 +874,15 @@ function brush_pm_info() {
  * Return a string with general info of a extension.
  */
 function _brush_pm_info_extension($info) {
-
   $data['Project'] = $info->name;
   $data['Type'] = $info->type;
   $data['Title'] = $info->info['name'];
   $data['Description'] = $info->info['description'];
-  $data['Version'] = $info->info['version'];
+  if (!empty($info->info['version'])) {
+    $data['Version'] = $info->info['version'];
+  } else {
+    $data['Version'] = $info->info['backdrop'].'-dev';
+  }
   $data['Package'] = $info->info['package'];
   $data['Backdrop'] = $info->info['backdrop'];
   $data['PHP'] = $info->info['php'];
@@ -895,6 +898,7 @@ function _brush_pm_info_extension($info) {
  * Return a string with info of a module.
  */
 function _brush_pm_info_module($info) {
+
   $major_version = brush_backdrop_major_version();
 
   $data = _brush_pm_info_extension($info);
@@ -1592,9 +1596,45 @@ function pm_parse_release($request, $xml) {
     $releases = $recommended_releases;
   }
   $release_type = 'recommended';
+
   if (brush_get_option('dev', FALSE)) {
-    $releases = @$xml->xpath("/project/releases/release[status='published'][version_extra='dev']");
-    $release_type = 'development';
+    $simple_object = $request;
+    $remote_url = 'https://github.com/backdrop-contrib/'.$request['name'].'.git';
+    $output = `wget -qO- $remote_url`;
+    $dom = new DOMDocument;
+    libxml_use_internal_errors(true);
+    $dom->loadHTML($output);
+    $divs = $dom->getElementsByTagName('a');
+    foreach ($divs as $div) {
+      foreach ($div->attributes as $attr) {
+        $name = $attr->nodeName;
+        $value = $attr->nodeValue;
+        if (strpos($value, '/backdrop-contrib/'.$request['name'].'/archive/') !== false) {
+          $zip_file = substr($value, strrpos($value, '/') + 1);
+          $version = substr($zip_file, 0, strrpos($zip_file, '.'));
+          $simple_object['name'] = $simple_object['name'].' '.$version;
+          $simple_object['version'] = $version;
+          unset($simple_object['backdrop_version']);
+          unset($simple_object['project_version']);
+          $simple_object['status'] = 'published';
+          $simple_object['date'] = '1580080704';
+          $simple_object['filesize'] = getSizeFile('https://github.com'.$value);
+          $simple_object['security_update'] = 'false';
+          $simple_object['version_major'] = '1';
+          $simple_object['version_minor'] = '0';
+          $simple_object['version_patch'] = '0';
+          $simple_object['download_link'] = 'https://github.com'.$value;
+
+        }
+      }
+    }
+    if ($simple_object) {
+      $new_xml = new SimpleXMLElement('<root/>');
+      $simple_object = array_flip($simple_object);
+      array_walk_recursive($simple_object, array($new_xml, 'addChild'));
+      $new_xml_array[0] = $new_xml;
+      $releases = $new_xml_array;
+    }
   }
 
   if (brush_get_option('select', FALSE) || empty($releases)) {
@@ -1614,6 +1654,29 @@ function pm_parse_release($request, $xml) {
   // First published release for the recommended major version is just the
   // first value in $releases.
   return (array)$releases[0];
+}
+
+function getSizeFile($remoteFile) {
+  $ch = curl_init($remoteFile);
+  curl_setopt($ch, CURLOPT_NOBODY, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); //not necessary unless the file redirects
+  $data = curl_exec($ch);
+  curl_close($ch);
+  if ($data === false) {
+    echo 'cURL failed';
+    exit;
+  }
+  $contentLength = 'unknown';
+  $status = 'unknown';
+  if (preg_match('/^HTTP\/1\.[01] (\d\d\d)/', $data, $matches)) {
+    $status = (int)$matches[1];
+  }
+  if (preg_match('/Content-Length: (\d+)/', $data, $matches)) {
+    $contentLength = (int)$matches[1];
+  }
+  return $contentLength;
 }
 
 /**
@@ -1995,7 +2058,6 @@ function brush_pm_download() {
 
     // Identify the most appropriate release.
     $release = pm_parse_release($request, $xml);
-
     if (!$release) {
       continue;
     }
@@ -2025,6 +2087,7 @@ function brush_pm_download() {
     $request['full_project_path'] = $request['base_project_path'] .'/'. $request['project_dir'];
 
     brush_log(dt('Downloading project !name to !dir ...', array('!name' => $request['name'], '!dir' => $request['base_project_path'])));
+
     if (!package_handler_download_project($request, $release)) {
       brush_log('Error downloading '.$request['name']);
       continue;
@@ -2082,6 +2145,12 @@ function brush_pm_download() {
         brush_log(dt("Skip installation of !project to !dest.", array('!project' => $request['name'], '!dest' => $request['project_install_location'])), 'warning');
         continue;
       }
+    }
+
+    // Change full project path for development version as its zip file extracts
+    // to directory project-name-version unlike releases (extract to 'project-name').
+    if (!is_dir($request['full_project_path'])) {
+      $request['full_project_path'] = $request['full_project_path'].'-'.$release['version'];
     }
 
     // Move the project to the install location.

@@ -69,38 +69,11 @@ function package_handler_download_project(&$request, $release) {
     return brush_set_error('BRUSH_PM_DOWNLOAD_FAILED', 'Unable to download ' . $filename . ' to ' . $request['base_project_path'] . ' from '. $release['download_link']);
   }
 
-
-  /*
-  Missing $release['mdhash'] for Backdrop, so commenting out for now.
-  // Check Md5 hash.
-  if (brush_op('md5_file', $filename) != $release['mdhash'] && !brush_get_context('BRUSH_SIMULATE')) {
-    brush_set_error('BRUSH_PM_FILE_CORRUPT', "File $filename is corrupt (wrong md5 checksum).");
-    brush_op('unlink', $filename);
-    return FALSE;
-  }
-  else {
-    brush_log("Md5 checksum of $filename verified.");
-  }
-  */
-
   // Extract the tarball. $request['base_project_path']
-  $file_list = brush_tarball_extract($filename, $request['base_project_path'], TRUE);
-  brush_print_r($file_list);
+  brush_tarball_extract($filename, $request['base_project_path'], TRUE);
 
   brush_op('unlink', $filename);
   brush_op('chdir', $olddir);
-
-/*
-  // Move untarred directory to project_dir, if distinct.
-  if (($request['project_type'] == 'core') || (($request['project_type'] == 'profile') && (brush_get_option('variant', 'core') == 'core'))) {
-    // Obtain the dodgy project_dir for backdrop core.
-    $project_dir = rtrim($file_list[0], DIRECTORY_SEPARATOR);
-    if ($request['project_dir'] != $project_dir) {
-      $path = $request['base_project_path'];
-      brush_move_dir($path . '/'. $project_dir, $path . '/' . $request['project_dir']);
-    }
-  }
-  */
 
   // Cleanup. Set previous working directory.
   brush_op('chdir', $olddir);

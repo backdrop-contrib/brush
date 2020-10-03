@@ -1252,7 +1252,6 @@ function brush_op_system($exec) {
  */
 function brush_shell_cd_and_exec($effective_wd, $cmd) {
   $args = func_get_args();
-
   $effective_wd = array_shift($args);
   $cwd = getcwd();
   brush_op('chdir', $effective_wd);
@@ -1553,6 +1552,7 @@ function brush_tarball_extract($path, $destination = FALSE, $listing = FALSE) {
   if (!file_exists($path)) {
     return brush_set_error(dt('Zip file @path could not be found.', array('@path' => $path)));
   }
+
   if (!brush_shell_cd_and_exec(dirname($path), "unzip %s", basename($path))) {
     return brush_set_error(dt('Zip file @path could not be extracted.', array('@path' => $path)));
   }
