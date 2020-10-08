@@ -42,7 +42,7 @@ function brush_pm_updatecode() {
           'title' => $extension->info['name'],
           'existing_version' => 'Unknown',
           'status' => BRUSH_PM_REQUESTED_PROJECT_NOT_PACKAGED,
-          'status_msg' => dt('Project was not packaged by drupal.org but obtained from !vcs. You need to enable !vcs_deploy module', array('!vcs' => $extension->vcs))
+          'status_msg' => dt('Project was not packaged by backdrop.org but obtained from !vcs. You need to enable !vcs_deploy module', array('!vcs' => $extension->vcs))
         );
         // The user may have requested to update a project matching this
         // extension. If it was by coincidence or error we don't mind as we've
@@ -227,17 +227,20 @@ function brush_pm_updatecode() {
  * Update backdrop core, following interactive confirmation from the user.
  *
  * @param $project
- *   The backdrop project information from the drupal.org update service,
+ *   The backdrop project information from the backdrop.org update service,
  *   copied from $update_info['backdrop'].  @see brush_pm_updatecode.
  */
 function _pm_update_core(&$project, $tmpfile) {
   brush_include_engine('package_handler', brush_get_option('package-handler', 'wget'));
   $backdrop_root = brush_get_context('BRUSH_BACKDROP_ROOT');
 
-  brush_print(dt('Code updates will be made to backdrop core.'));
-  brush_print(dt("WARNING:  Updating core will discard any modifications made to Backdrop core files, most noteworthy among these are .htaccess and robots.txt.  If you have made any modifications to these files, please back them up before updating so that you can re-create your modifications in the updated version of the file."));
+  brush_print(dt('Code updates will be made to Backdrop core.'));
   brush_print(dt("Note: Updating core can potentially break your site. It is NOT recommended to update production sites without prior testing."));
   brush_print();
+  if (brush_get_option('notes', FALSE)) {
+    brush_print('Obtaining release notes for above projects...');
+    _brush_pm_releasenotes(array('backdrop'), TRUE, $tmpfile);
+  }
   if(!brush_confirm(dt('Do you really want to continue?'))) {
     brush_print(dt('Rolling back all changes. Run again with --no-core to update modules only.'));
     return brush_user_abort();
@@ -248,75 +251,26 @@ function _pm_update_core(&$project, $tmpfile) {
     return brush_set_error('BRUSH_PATH_NO_WRITABLE', dt('Backdrop root path is not writable.'));
   }
 
-  // Create a directory 'core' if it does not already exist.
-  $project['path'] = 'backdrop-' . $project['candidate_version'];
-  $project['full_project_path'] = $backdrop_root . '/' . $project['path'];
-  if (!is_dir($project['full_project_path'])) {
-    brush_mkdir($project['full_project_path']);
-  }
-
-  // Create a list of directories to exclude from the update process.
-  $skip_list = array('sites', $project['path']);
-  // Add non-writable directories: we can't move them around.
-  // We will also use $items_to_test later for $version_control check.
-  $items_to_test = brush_scan_directory($backdrop_root, '/.*/', array_merge(array('.', '..'), $skip_list), 0, FALSE, 'basename', 0, TRUE);
-  foreach (array_keys($items_to_test) as $item) {
-    if (is_dir($item) && !is_writable($item)) {
-      $skip_list[] = $item;
-      unset($items_to_test[$item]);
-    }
-    elseif (is_link($item)) {
-      $skip_list[] = $item;
-      unset($items_to_test[$item]);
-    }
-  }
-  $project['skip_list'] = $skip_list;
-
-  // Move all files and folders in $backdrop_root to the new 'core' directory
-  // except for the items in the skip list
-  _pm_update_move_files($backdrop_root, $project['full_project_path'], $project['skip_list']);
-
-  // Set a context variable to indicate that rollback should reverse
-  // the _pm_update_move_files above.
-  brush_set_context('BRUSH_PM_BACKDROP_CORE', $project);
-
-  if (!$version_control = brush_pm_include_version_control($project['full_project_path'])) {
-    return FALSE;
-  }
-
-  $project['base_project_path'] = dirname($project['full_project_path']);
-  // Check we have a version control system, and it clears its pre-flight.
-  if (!$version_control->pre_update($project, $items_to_test)) {
-    return FALSE;
-  }
-
-  // Package handlers want the project directory in project_dir.
-  $project['project_dir'] = $project['path'];
-
   // Update core.
-  if (pm_update_project($project, $version_control) === FALSE) {
-    return FALSE;
+  if (is_dir($backdrop_root.'/core')) {
+    brush_delete_dir($backdrop_root.'/core');
+    // Chdir to the download location.
+    $olddir = getcwd();
+    $tmp = brush_tempdir();
+    brush_op('chdir', $tmp);
+    // Download the project.
+    if (!brush_shell_exec("wget -P . %s", $project['releases'][$project['recommended']]['download_link'])) {
+      brush_shell_exec("curl -O %s", $project['releases'][$project['recommended']]['download_link']);
+    }
+    brush_tarball_extract('backdrop.zip', $tmp, TRUE);
+    // Move the core directory
+    brush_move_dir($tmp.'/backdrop/core', $backdrop_root.'/core');
+    // Set previous working directory.
+    brush_op('chdir', $olddir);
   }
-
-  // Take the updated files in the 'core' directory that have been updated,
-  // and move all except for the items in the skip list back to
-  // the backdrop root
-  _pm_update_move_files($project['full_project_path'], $backdrop_root, $project['skip_list']);
-  brush_delete_dir($project['full_project_path']);
-
-  // Version control engines expect full_project_path to exist and be accurate.
-  $project['full_project_path'] = $project['base_project_path'];
-
-  // If there is a backup target, then find items
-  // in the backup target that do not exist at the
-  // backdrop root.  These are to be moved back.
-  if (array_key_exists('backup_target', $project)) {
-    _pm_update_move_files($project['backup_target'], $backdrop_root, $project['skip_list'], FALSE);
-    _pm_update_move_files($project['backup_target'] . '/profiles', $backdrop_root . '/profiles', array('default'), FALSE);
-  }
-
-  pm_update_complete($project, $version_control);
-
+  brush_print('Backdrop successfully updated to '.$project['recommended']);
+  brush_print();
+  brush_core_updatedb();
   return TRUE;
 }
 
@@ -337,11 +291,11 @@ function _pm_update_move_files($src_dir, $dest_dir, $skip_list, $remove_conflict
 }
 
 /**
- * Update projects according to an array of releases for each project,
- * following interactive confirmation from the user.
+ * Update projects according to an array of releases and print the release notes
+ * for each project, following interactive confirmation from the user.
  *
  * @param $update_info
- *   An array of projects from the drupal.org update service, with an additional
+ *   An array of projects from the backdrop.org update service, with an additional
  *   array key candidate_version that specifies the version to be installed.
  */
 function pm_update_packages($update_info, $tmpfile) {
@@ -369,6 +323,12 @@ function pm_update_packages($update_info, $tmpfile) {
   $print = "$title " . (substr($print, 0, strlen($print)-2));
   brush_print($print);
   file_put_contents($tmpfile, "\n\n$print\n\n", FILE_APPEND);
+
+  // Print the release notes for projects to be updated.
+  if (brush_get_option('notes', FALSE)) {
+    brush_print('Obtaining release notes for above projects...');
+    _brush_pm_releasenotes(array_keys($update_info), TRUE, $tmpfile);
+  }
 
   // We print some warnings before the user confirms the update.
   brush_print();
@@ -457,6 +417,7 @@ function pm_update_project($project, $version_control) {
     $files = brush_find_empty_directories($project['full_project_path'], $version_control->reserved_files());
     array_map('brush_delete_dir', $files);
   }
+
   return TRUE;
 }
 
