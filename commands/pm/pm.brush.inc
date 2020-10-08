@@ -335,7 +335,7 @@ function brush_get_projects(&$extensions = NULL) {
   $projects = array('backdrop' => array('version' => VERSION));
   foreach ($extensions as $extension) {
     // The project name is not available in this cases:
-    // 1. the extension is part of backdrop core.
+    // 1. the extension is part of Backdrop core.
     // 2. the project was checked out from CVS/git and cvs_deploy/git_deploy
     // is not installed.
     // 3. it is not a project hosted in Github.
@@ -567,9 +567,20 @@ function brush_pm_enable_validate() {
     $extensions = array_merge($modules, $themes);
     $unknown = array_diff($args, $extensions);
 
-    // Discard and set an error for each unknown extension.
-    foreach ($unknown as $name) {
-      brush_log(dt('!extension was not found and will not be enabled.', array('!extension' => $name)), 'warning');
+    // Download missing projects if exist.
+    foreach ($unknown as $key => $name) {
+      brush_print('The following project does not exist in your Backdrop installation: '.$name);
+      if(!brush_confirm(dt('Do you want to download the project?'))) {
+        return brush_user_abort();
+      }
+      brush_pm_download($name);
+      $extension_info = brush_get_extensions();
+      brush_pm_classify_extensions($args, $modules, $themes, $extension_info);
+      if ($extension_info[$name]) {
+        unset($unknown[$key]);
+        $modules[$name] = $name;
+        $extensions[$name] = $name;
+      }
     }
 
     // Discard already enabled and incompatible extensions.
