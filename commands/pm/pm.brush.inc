@@ -1591,21 +1591,6 @@ function pm_parse_release($request, $xml) {
       $releases = @$xml->xpath($xpath_releases);
     }
   }
-  // If there are recommended releases (no 'version_extra' elements), then use
-  // only recommended releases.  Otherwise, use all; in this case, the
-  // recommended release defaults to the latest published release with the
-  // right recommended major version number.
-  $recommended_releases = array();
-  if (!empty($releases)) {
-    foreach ($releases as $one_release) {
-      if (!array_key_exists('version_extra', $one_release)) {
-        $recommended_releases[] = $one_release;
-      }
-    }
-  }
-  if (!empty($recommended_releases)) {
-    $releases = $recommended_releases;
-  }
   $release_type = 'recommended';
 
   if (brush_get_option('dev', FALSE)) {
@@ -1647,6 +1632,10 @@ function pm_parse_release($request, $xml) {
       $releases = $new_xml_array;
     }
   }
+  // There are no releases on backdropcms.org, but there is a github branch.
+  if (empty($releases)) {
+    $releases = @$xml->xpath('releases/release');
+  }
 
   if (brush_get_option('select', FALSE) || empty($releases)) {
     if (empty($releases)) {
@@ -1674,7 +1663,7 @@ function pm_parse_release($request, $xml) {
  */
 function pm_parse_project_version($requests) {
   $requestdata = array();
-  $backdrop_version_default = brush_get_context('BRUSH_BACKDROP_MAJOR_VERSION', brush_get_option('default-major',7)) . '.x';
+  $backdrop_version_default = brush_get_context('BRUSH_BACKDROP_MAJOR_VERSION', brush_get_option('default-major',1)) . '.x';
   $backdrop_bootstrap = brush_get_context('BRUSH_BOOTSTRAP_PHASE') > 0;
   foreach($requests as $request) {
     $backdrop_version = $backdrop_version_default;
@@ -1714,9 +1703,9 @@ function pm_parse_project_version($requests) {
       }
     }
     // special checking for 'backdrop-VERSION', == backdrop latest stable release
-    elseif ((substr($request,0,7) == 'backdrop-') && (is_numeric(substr($request,7)))) {
+    elseif ((substr($request,0,1) == 'backdrop-') && (is_numeric(substr($request,1)))) {
       $project = 'backdrop';
-      $backdrop_version = substr($request,7) . '.x';
+      $backdrop_version = substr($request,1) . '.x';
       $project_version = $version;
     }
     if ($project_version) {
@@ -1987,14 +1976,18 @@ function brush_pm_download_validate() {
  * Download the release history xml for the specified request.
  */
 function _brush_pm_get_release_history_xml($request) {
-  // Backdroped.
-    for ($i=1; $i < 10; $i++) {
+  // Check if project exists on Github in the very beginning.
+  if (strpos(@get_headers('https://github.com/backdrop-contrib/'.$request['name'])[0],'200') === FALSE) {
+    brush_set_error(dt('No release history found for @project_name', array('@project_name' => $request['name'])));
+    brush_set_error(dt('Could not download requested project.'));
+  }
+  else {
+    for ($i=1; $i < 5; $i++) {
       $request['project_version'] = $i.'.x';
       $url = brush_get_option('source', 'https://updates.backdropcms.org/release-history') . '/' . $request['name'] . '/' . $request['project_version'];
 
       if ($path = brush_download_file($url, brush_tempnam($request['name']), brush_get_option('cache-duration-releasexml', 24*3600))) {
         $xml = simplexml_load_file($path);
-
         if (!$xml->xpath('/error')) {
           // Found the right $xml;
           // Unpublished project?
@@ -2006,12 +1999,89 @@ function _brush_pm_get_release_history_xml($request) {
           return $xml;
           break;
         }
+        else {
+        // No release history found for the requested project, so check github
+        // for development branch and download it if exists.
+        $url = 'https://github.com/backdrop-contrib/'.$request['name'].'/archive/'.$request['backdrop_version'].'-'.$request['project_version'].'.zip';
+        if (fileExists($url) == TRUE) {
+
+          $rootXML = new SimpleXMLElement('<root></root>');
+          $rootXML->addChild('title', $request['name']);
+          $rootXML->addChild('short_name', $request['name']);
+          $rootXML->addChild('type', 'project_module');
+          $rootXML->addChild('api_version', $request['backdrop_version']);
+          $rootXML->addChild('project_status', 'published');
+          $rootXML->addChild('recommended_major', 1);
+          $rootXML->addChild('supported_majors', 1);
+          $rootXML->addChild('default_major', 1);
+
+          $rootXML->addChild('link', 'https://github.com/backdrop-contrib/'.$request['name']);
+
+            $releases = new SimpleXMLElement('<releases></releases>');
+
+            $rootXML_dom = dom_import_simplexml($rootXML);
+            $releases_dom = dom_import_simplexml($releases);
+
+              $release = new SimpleXMLElement('<release></release>');
+
+              $release->addChild('name', $request['name'].' '.$request['backdrop_version'].'-'.$request['project_version']);
+              $release->addChild('version', $request['backdrop_version'].'-'.$request['project_version']);
+              $release->addChild('status', 'published');
+              $release->addChild('date', time());
+              $release->addChild('release_link', $url);
+              $release->addChild('download_link', $url);
+
+
+              $release_dom = dom_import_simplexml($release);
+              $dom_copy = $releases_dom->ownerDocument->importNode($release_dom, true);
+              $releases_dom->appendChild($dom_copy);
+
+          $dom_copy = $rootXML_dom->ownerDocument->importNode($releases_dom, true);
+          $rootXML_dom->appendChild($dom_copy);
+
+          $xml = simplexml_import_dom($rootXML_dom);
+
+          return $xml;
+          break;
+        }
+        }
       }
     }
-    brush_set_error(dt('No release history found for @project_name', array('@project_name' => $request['name'])));
-    brush_set_error(dt('Could not download requested project(s).'));
+  }
 }
 
+// Define a function that converts array to xml.
+function arrayToXml($array, $rootElement = null, $xml = null) {
+    $_xml = $xml;
+
+    // If there is no Root Element then insert root
+    if ($_xml === null) {
+        $_xml = new SimpleXMLElement($rootElement !== null ? $rootElement : '<root/>');
+    }
+
+    // Visit all key value pair
+    foreach ($array as $k => $v) {
+
+        // If there is nested array then
+        if (is_array($v)) {
+
+            // Call function for nested array
+            arrayToXml($v, $k, $_xml->addChild($k));
+            }
+
+        else {
+
+            // Simply add child element.
+            $_xml->addChild($k, $v);
+        }
+    }
+
+    return $_xml->asXML();
+}
+
+function fileExists($path){
+    return (@fopen($path,"r")==true);
+}
 /**
  * Command callback. Download Backdrop core or any project.
  */
@@ -2346,13 +2416,13 @@ function brush_pm_extensions_in_project($project) {
   // Mask for brush_scan_directory, to  avoid tests directories.
   $nomask = array('.', '..', 'CVS', 'tests');
 
-  // Backdrop core and profiles can contain modules, themes and profiles.
+  // Drupal core and profiles can contain modules, themes and profiles.
   if (in_array($project['project_type'], array('core', 'profile'))) {
     $found = array('profile' => array(), 'theme' => array(), 'module' => array());
     // Find all of the .info files
     foreach (brush_scan_directory($project['project_install_location'], "/.*\.info$/", $nomask) as $filename => $info) {
       // Find the project type corresponding the .info file.
-     // (Only backdrop >=7.x has .info for .profile)
+     // (Only drupal >=7.x has .info for .profile)
       $base = dirname($filename) . '/' . $info->name;
       if (is_file($base . '.module')) {
         $found['module'][] = $info->name;
@@ -2362,12 +2432,6 @@ function brush_pm_extensions_in_project($project) {
       }
       else {
         $found['theme'][] = $info->name;
-      }
-    }
-    // Special case: find profiles for backdrop < 7.x (no .info)
-    if ($project['backdrop_version'][0] < 7) {
-      foreach (brush_scan_directory($project['project_install_location'], "/.*\.profile$/", $nomask) as $filename => $info) {
-        $found['profile'][] = $info->name;
       }
     }
     // Log results.

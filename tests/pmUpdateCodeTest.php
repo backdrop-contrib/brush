@@ -13,14 +13,14 @@ class pmUpdateCode extends Drop_TestCase {
    * Download old core and older contrib releases which will always need updating.
    */
   public function setUp() {
-    $this->setUpBackdrop('dev', TRUE, '7.0-rc3');
+    $this->setUpBackdrop('dev', TRUE, '1.x');
     $options = array(
       'root' => $this->sites['dev']['root'],
       'uri' => 'dev',
       'yes' => NULL,
       'quiet' => NULL,
     );
-    $this->brush('pm-download', array('devel-7.x-1.0-rc1,webform-7.x-3.4-beta1'), $options);
+    $this->brush('pm-download', array('devel-1.x-1.0,webform-1.x-1.x'), $options);
     $this->brush('pm-enable', array('menu', 'devel', 'webform'), $options);
   }
 

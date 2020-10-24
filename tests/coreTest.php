@@ -39,7 +39,7 @@ brush_invoke("version", $arg);
       'verbose' => NULL,
       'yes' => NULL,
     );
-    $this->brush('pm-download', array('devel-7.x-1.0'), $options);
+    $this->brush('pm-download', array('devel-1.x-1.0'), $options);
     $this->brush('pm-enable', array('menu', 'devel'), $options);
 
     $this->brush('backdrop-directory', array('devel'), $options);

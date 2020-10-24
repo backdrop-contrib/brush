@@ -549,7 +549,7 @@ function brush_upgrade_site_upgrade_modules() {
 
   // Finally, enable the modules that site-upgrade previously disabled.
   // We will set the option --resolve-dependencies to pick up new modules
-  // that may now be required; for example, views-7.x picked up a dependency
+  // that may now be required; for example, views-1.x picked up a dependency
   // on ctools that views-6.x did not have.  We also set BRUSH_AFFIRMATIVE,
   // so everything from here on out will be processed with --yes.
   brush_set_option('resolve-dependencies', TRUE);

@@ -15,7 +15,7 @@ class EnDisUnListCase extends Drop_TestCase {
       'root' => $this->sites['dev']['root'],
       'uri' => 'dev',
     );
-    $this->brush('pm-download', array('devel-7.x-1.0'), $options);
+    $this->brush('pm-download', array('devel-1.x-1.0'), $options);
     $this->brush('pm-list', array(), $options + array('no-core' => NULL, 'status' => 'not installed'));
     $list = $this->getOutputAsList();
     $this->assertTrue(in_array('devel', $list));
