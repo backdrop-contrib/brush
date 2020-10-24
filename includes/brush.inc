@@ -1693,7 +1693,7 @@ function brush_move_dir($src, $dest, $overwrite = FALSE) {
   }
   // $src readable?
   if (!brush_op('is_readable', $src)) {
-    return brush_set_error('BRUSH_SOURCE_NOT_EXISTS', dt('SSource directory !src is not readable or does not exist.', array('!src' => $src)));
+    return brush_set_error('BRUSH_SOURCE_NOT_EXISTS', dt('Source directory !src is not readable or does not exist.', array('!src' => $src)));
   }
   // $dest writable?
   if (!brush_op('is_writable', dirname($dest))) {
