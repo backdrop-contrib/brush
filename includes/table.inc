@@ -199,10 +199,10 @@ class Console_Table
         $this->setBorder($border);
         $this->_padding      = $padding;
 
-        // Include Color2.php only if PEAR & console_color2 are installed. 
+        // Include Color2.php only if PEAR & console_color2 are installed.
         require_once 'System.php';
         if (class_exists('System')) {
-          include 'PEAR/Registry.php';
+          include_once 'PEAR/Registry.php';
           $reg = new PEAR_Registry;
           if ($reg->getPackage('console_color2')) {
             if ($color) {
@@ -213,7 +213,6 @@ class Console_Table
             }
           }
         }
-
 
         if (!empty($charset)) {
             $this->setCharset($charset);

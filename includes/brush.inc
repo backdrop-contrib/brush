@@ -686,6 +686,20 @@ function brush_html_to_text($html, $allowed_tags = NULL) {
  */
 function brush_print_table($rows, $header = FALSE, $widths = array(), $handle = NULL) {
   $tbl = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT, CONSOLE_TABLE_BORDER_ASCII, $padding = 1, $charset = 'utf-8', $color = TRUE);
+ 
+  // Colorify the table contents.
+  if (class_exists('Console_Color2')) {
+    $clr = new Console_Color2();
+
+    foreach ($rows as $rowkey => $row) {
+      $row[0] = $clr->convert("%g$row[0]%n");
+      $row[1] = $clr->convert("%c$row[1]%n");
+      $row[2] = $clr->convert("%y$row[2]%n");
+      $clr_rows[] = $row;
+    }
+    $rows = [];
+    $rows = $clr_rows;
+  }
 
   $auto_widths = brush_table_column_autowidth($rows, $widths);
 
@@ -701,6 +715,14 @@ function brush_print_table($rows, $header = FALSE, $widths = array(), $handle = 
   }
   if ($header) {
     $headers = array_shift($newrows);
+    if (class_exists('Console_Color2')) {
+        $clr = new Console_Color2();
+        foreach ($headers as $key => $header) {
+          $header = $clr->convert("%_$header%n");
+          $clr_headers[] = $header;
+        }
+        $headers = $clr_headers;
+    }
     $tbl->setHeaders($headers);
   }
 
@@ -718,7 +740,6 @@ function brush_print_table($rows, $header = FALSE, $widths = array(), $handle = 
   else {
     brush_print($output, 0, $handle);
   }
-
   return $tbl;
 }
 

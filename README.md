@@ -2,7 +2,7 @@ DESCRIPTION
 -----------
 Brush is a command line shell and Unix scripting interface for Backdrop CMS. Brush core ships with lots of useful commands for interacting with code like modules/themes/profiles. Similarly, it runs update.php, executes sql queries and DB migrations, and misc utilities like run cron or clear cache.
 
-Brush is build on top of completely refactored pre-Symfony, pre-Composer Drupal era Drush, namely version 4.6.0 (https://github.com/drush-ops/drush/releases/tag/4.6.0). As alternatives to Brush, you may like to consider using:
+Brush is build on top of completely refactored pre-Symfony, pre-Composer Drupal era Drush, namely version [4.6.0](https://github.com/drush-ops/drush/releases/tag/4.6.0). As alternatives to Brush, you may like to consider using:
 
 - Backdrop Console (https://backdropcms.org/project/b) has been built from the ground-up specifically for Backdrop;
 or
@@ -67,6 +67,17 @@ For Windows:
   - Otherwise, try to install brush in similar ways which are recommended for drush on
     http://drupal.org/node/594744.
 
+RECOMMENDED
+-----------
+To see colorized command line outputs, it's recommended to install [Console_Color2](https://pear.php.net/package/Console_Color2/) by running either:
+
+```
+pear install Console_Color2  
+```
+or
+```
+php pyrus.phar install pear/Console_Color2
+```
 USAGE
 -----
 Once installed and setup, you can use brush as follows while in
