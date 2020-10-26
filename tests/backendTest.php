@@ -13,7 +13,7 @@
 *    - No network calls and thus faster.
 */
 
-class backendCase extends Drop_TestCase {
+class backendCase extends Brush_TestCase {
   const BRUSH_BACKEND_OUTPUT_DELIMITER = 'BRUSH_BACKEND_OUTPUT_START>>>%s<<<BRUSH_BACKEND_OUTPUT_END';
 
   /*

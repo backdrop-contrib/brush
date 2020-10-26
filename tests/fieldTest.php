@@ -4,7 +4,7 @@
  * @file
  *   Tests for field.brush.inc
  */
-class fieldCase extends Drop_TestCase {
+class fieldCase extends Brush_TestCase {
 
   public function testField() {
     $this->setUpBackdrop('dev', TRUE);

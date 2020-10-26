@@ -4,7 +4,7 @@
  * @file
  *   Tests watchdog-show and watchdog-delete commands
  */
-class WatchdogCase extends Drop_TestCase {
+class WatchdogCase extends Brush_TestCase {
 
   function testWatchdog() {
     $env = 'dev';
