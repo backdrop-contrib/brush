@@ -528,12 +528,7 @@ function brush_environment_check_os() {
 }
 
 function brush_environment_table_inc() {
-  if (file_exists(PHP_LIBDIR.'/Console/Table.php')) {
-    $tablefile = PHP_LIBDIR.'/Console/Table.php';
-  }
-  else {
-    $tablefile = BRUSH_BASE_PATH . '/includes/table.inc';
-  }
+  $tablefile = BRUSH_BASE_PATH . '/includes/table.inc';
   require $tablefile;
 }
 

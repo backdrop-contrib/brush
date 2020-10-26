@@ -175,7 +175,7 @@ class Console_Table
      *
      * @var Console_Color2
      */
-    var $_ansiColor = true;
+    var $_ansiColor = false;
 
     /**
      * Constructor.
@@ -193,18 +193,23 @@ class Console_Table
      */
     function __construct($align = CONSOLE_TABLE_ALIGN_LEFT,
                          $border = CONSOLE_TABLE_BORDER_ASCII, $padding = 1,
-                         $charset = null, $color = true)
+                         $charset = null, $color = false)
     {
         $this->_defaultAlign = $align;
         $this->setBorder($border);
         $this->_padding      = $padding;
-        if ($color) {
-            if (!class_exists('Console_Color2')) {
-                include_once 'Console/Color2.php';
-            }
-            $this->_ansiColor = new Console_Color2();
-        }
 
+        include 'PEAR/Registry.php';
+        $reg = new PEAR_Registry;
+        if ($reg->getPackage('console_color2')) {
+          if ($color) {
+              if (!class_exists('Console_Color2')) {
+                  include_once 'Console/Color2.php';
+              }
+              $this->_ansiColor = new Console_Color2();
+          }
+        }
+                
         if (!empty($charset)) {
             $this->setCharset($charset);
         }
