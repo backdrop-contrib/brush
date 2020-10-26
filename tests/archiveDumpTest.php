@@ -4,7 +4,7 @@
  * @file
  *   Tests for archive.brush.inc
  */
-class archiveDumpCase extends TestCase {
+class archiveDumpCase extends Drop_TestCase {
 
   /*
    * Test dump and extraction.

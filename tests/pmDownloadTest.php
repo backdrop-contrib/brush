@@ -3,7 +3,7 @@
 /**
   * pm-download testing
   */
-class pmDownloadCase extends TestCase {
+class pmDownloadCase extends Drop_TestCase {
   public function testPmDownload() {
     $this->brush('pm-download', array('devel'), array('cache' => NULL, 'skip' => NULL)); // No FirePHP
     $this->assertFileExists(UNISH_SANDBOX . '/devel/README.txt');

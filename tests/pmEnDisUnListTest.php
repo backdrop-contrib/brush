@@ -5,7 +5,7 @@
  *   Tests for enable, disable, uninstall, pm-list commands.
  */
 
-class EnDisUnListCase extends TestCase {
+class EnDisUnListCase extends Drop_TestCase {
 
   public function testEnDisUnList() {
     $this->setUpBackdrop('dev', TRUE);

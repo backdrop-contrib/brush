@@ -8,7 +8,7 @@
 *  overwriting one site with another.
 */
 
-class sqlSyncTest extends TestCase {
+class sqlSyncTest extends Drop_TestCase {
 
   /*
    * Covers the following responsibilities.

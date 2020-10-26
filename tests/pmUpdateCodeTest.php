@@ -7,7 +7,7 @@
   *   @todo test security-only once one of these modules or core gets a security release.
   */
 
-class pmUpdateCode extends TestCase {
+class pmUpdateCode extends Drop_TestCase {
 
   /*
    * Download old core and older contrib releases which will always need updating.

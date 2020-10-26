@@ -341,7 +341,7 @@ function brush_get_arguments() {
 /**
  * Set the command being executed.
  *
- * dispatch will set the correct command based on it's
+ * Drop_dispatch will set the correct command based on it's
  * matching of the script arguments retrieved from brush_get_arguments
  * to the implemented commands specified by brush_get_commands.
  *
