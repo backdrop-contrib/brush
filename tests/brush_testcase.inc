@@ -5,7 +5,7 @@
  *   Initialize a sandboxed environment. Starts with call unish_init() at bottom.
  */
 
-abstract class Drop_TestCase extends PHPUnit_Framework_TestCase {
+abstract class TestCase extends PHPUnit_Framework_TestCase {
 
   // Unix exit codes.
   const EXIT_SUCCESS  = 0;
@@ -298,7 +298,7 @@ function unish_init() {
     $unish_brush = isset($_SERVER['UNISH_BRUSH']) ? $_SERVER['UNISH_BRUSH'] : NULL;
     $unish_brush = isset($GLOBALS['UNISH_BRUSH']) ? $GLOBALS['UNISH_BRUSH'] : $unish_brush;
     if (empty($unish_brush)) {
-      $unish_brush = Drop_TestCase::is_windows() ? exec('for %i in (brush) do @echo.   %~$PATH:i') : trim(`which brush`);
+      $unish_brush = TestCase::is_windows() ? exec('for %i in (brush) do @echo.   %~$PATH:i') : trim(`which brush`);
     }
     define('UNISH_BRUSH', $unish_brush);
   }
@@ -349,5 +349,5 @@ function unish_init() {
  }
 
  // This code is in global scope.
- // TODO: I would rather this code at top of file, but I get Fatal error: Class 'Drop_TestCase' not found
+ // TODO: I would rather this code at top of file, but I get Fatal error: Class 'TestCase' not found
  unish_init();

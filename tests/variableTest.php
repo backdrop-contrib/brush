@@ -4,7 +4,7 @@
  * @file
  *   Tests for enable, disable, uninstall, pm-list commands.
  */
-class VariableCase extends Drop_TestCase {
+class VariableCase extends TestCase {
 
   function testVariable() {
     $env = 'dev';

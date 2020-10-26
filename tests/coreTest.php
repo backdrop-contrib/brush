@@ -4,7 +4,7 @@
  * @file
  *   Tests for core commands.
  */
-class coreCase extends Drop_TestCase {
+class coreCase extends TestCase {
 
   /*
    * Test standalone php-script scripts. Assure that script args and options work.

@@ -8,7 +8,7 @@
 *  @see brush/includes/context.inc.
 */
 
-class contextCase extends Drop_TestCase {
+class contextCase extends Brush_TestCase {
   function setUpPaths() {
     $this->root = $this->sites[$this->env]['root'];
     $this->site = $this->root . '/sites/' . $this->env;

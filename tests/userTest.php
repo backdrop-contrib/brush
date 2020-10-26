@@ -4,7 +4,7 @@
  * @file
  *   Tests for user.brush.inc
  */
-class userCase extends Drop_TestCase {
+class userCase extends TestCase {
 
   /*
    * Create, edit, block, and cancel users.

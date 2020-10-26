@@ -1,6 +1,6 @@
 <?php
 
-class commandCase extends Drop_TestCase {
+class commandCase extends Brush_TestCase {
   public function testInvoke() {
     $expected = array(
       'unit_brush_init',

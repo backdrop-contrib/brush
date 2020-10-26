@@ -4,7 +4,7 @@
  * @file
  *   Tests for sitealias.inc
  */
-class saCase extends Drop_TestCase {
+class saCase extends TestCase {
 
   /*
    * Assure that site lists work as expected.
