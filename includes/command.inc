@@ -1094,7 +1094,7 @@ function _brush_add_commandfiles($searchpath, $phase = NULL) {
  * Substrings to ignore during commandfile searching.
  */
 function brush_filename_blacklist() {
-  return array_diff(array('.', '..', 'examples', 'tests', 'disabled', 'gitcache', 'drop4', 'drop5', 'drop6', 'drop7'), array('brush' . BRUSH_MAJOR_VERSION));
+  return array_diff(array('.', '..', 'examples', 'tests', 'disabled', 'gitcache'), array('brush' . BRUSH_MAJOR_VERSION));
 }
 
 /**

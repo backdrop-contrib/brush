@@ -487,7 +487,6 @@ function _brush_core_config_php_ini_files() {
   if (function_exists('php_ini_loaded_file') && !empty(php_ini_loaded_file())) {
     $ini_files[] = php_ini_loaded_file();
   } else {
-    // Backdroped
     // Sometimes (eg. Docksal) php_ini_loaded_file() returns empty:
     if (file_exists($_SERVER['PHP_INI_DIR'] . "/php.ini")) {
       $ini_files[] = $_SERVER['PHP_INI_DIR'] . "/php.ini";

@@ -923,7 +923,7 @@ function _brush_pm_info_module($info) {
     $schema_version = "module has no schema";
   }
   $data['Schema version'] = $schema_version;
-  if ($major_version == 7) {
+  if ($major_version == 1) {
     $data['Files'] = implode(', ', $info->info['files']);
   }
   if (count($info->info['dependencies']) > 0) {
@@ -933,16 +933,6 @@ function _brush_pm_info_module($info) {
     $requires = "none";
   }
   $data['Requires'] = $requires;
-
-  if ($major_version == 6) {
-    if (count($info->info['dependents']) > 0) {
-      $requiredby = implode(', ', $info->info['dependents']);
-    }
-    else {
-      $requiredby = "none";
-    }
-    $data['Required by'] = $requiredby;
-  }
 
   return $data;
 }
