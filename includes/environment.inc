@@ -121,12 +121,14 @@ define('BRUSH_BOOTSTRAP_BACKDROP_LOGIN', 6);
 /**
  * Supported version of Console Table. This is displayed in the manual install help.
  */
-define('BRUSH_TABLE_VERSION', '1.1.3');
+define('BRUSH_TABLE_VERSION', '1.3.1');
 
 /**
  * URL for automatic file download for supported version of Console Table.
+ * Also can get from http://download.pear.php.net/package/Console_Table-1.3.1.tgz
  */
-define('BRUSH_TABLE_URL', 'http://svn.php.net/viewvc/pear/packages/Console_Table/trunk/Table.php?revision=267580&view=co');
+define('BRUSH_TABLE_URL', 'https://raw.githubusercontent.com/pear/Console_Table/master/Table.php');
+
 
 /**
  * Helper function listing phases.
@@ -519,45 +521,20 @@ function _brush_bootstrap_brush_validate() {
  * in brushrc.php. See examples/example.brushrc.php.
  */
 function brush_environment_check_os() {
-  if (substr(PHP_OS, 0, 3) == 'WIN' && (brush_get_option('check_os', TRUE) !== 'i-want-4.x')) {
-    $msg = 'Brush 4.x has significant limitations on Windows; it is not advisable to use on that platform. Substantial progress has been made towards supporing Windows on the 5.x branch; please upgrade. See http://drupal.org/project/brush for more information.';
+  if (substr(PHP_OS, 0, 3) == 'WIN') {
+    $msg = 'Brush has significant limitations on Windows; it is not advisable to use on that platform.';
     brush_log(dt($msg), 'warning');
   }
 }
 
 function brush_environment_table_inc() {
-  // try using the PEAR installed version of Console_Table
-  $tablefile = 'Console/Table.php';
-  if (@file_get_contents($tablefile, FILE_USE_INCLUDE_PATH) === FALSE) {
-    $tablefile = BRUSH_BASE_PATH . '/includes/table.inc';
-
-    // Attempt to download Console Table, via various methods.
-    if (!brush_file_not_empty($tablefile)) {
-      $targetpath = dirname($tablefile);
-      // not point continuing if we can't write to the target path
-      if (!is_writable($targetpath)) {
-        return brush_bootstrap_error('BRUSH_TABLES_INC', dt("Brush needs a copy of the PEAR Console_Table library in order to function, and the attempt to download this file automatically failed because you do not have permission to write files in !path. To continue you will need to download the !version package from http://pear.php.net/package/Console_Table, extract it, and copy the Table.php file into Brush's directory as !tablefile.", array('!path' => $targetpath, '!version' => BRUSH_TABLE_VERSION ,'!tablefile' => $tablefile)));
-      }
-
-      if ($file = @file_get_contents(BRUSH_TABLE_URL)) {
-        @file_put_contents($tablefile, $file);
-      }
-      if (!file_exists($tablefile)) {
-        brush_shell_exec("wget -q --timeout=30 -O $tablefile " . BRUSH_TABLE_URL);
-        // wget creates an empty file on timeout. We remove it here.
-        if (file_exists($tablefile) && !brush_file_not_empty($tablefile)) {
-          unlink($tablefile);
-        }
-        if (!file_exists($tablefile)) {
-          brush_shell_exec("curl -s  --connect-timeout 30 -o $tablefile " . BRUSH_TABLE_URL);
-          if (!file_exists($tablefile)) {
-            return brush_bootstrap_error('BRUSH_TABLES_INC', dt("Brush needs a copy of the PEAR Console_Table library in order to function, and the attempt to download this file automatically failed. To continue you will need to download the !version package from http://pear.php.net/package/Console_Table, extract it, and copy the Table.php file into Brush's directory as !tablefile.", array('!version' => BRUSH_TABLE_VERSION ,'!tablefile' => $tablefile)));
-          }
-        }
-      }
-    }
+  if (file_exists(PHP_LIBDIR.'/Console/Table.php')) {
+    $tablefile = PHP_LIBDIR.'/Console/Table.php';
   }
-  require_once $tablefile;
+  else {
+    $tablefile = BRUSH_BASE_PATH . '/includes/table.inc';
+  }
+  require $tablefile;
 }
 
 /**

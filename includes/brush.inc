@@ -685,7 +685,7 @@ function brush_html_to_text($html, $allowed_tags = NULL) {
  *   Use $tbl->getTable() to get the output from the return value.
  */
 function brush_print_table($rows, $header = FALSE, $widths = array(), $handle = NULL) {
-  $tbl = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT , '');
+  $tbl = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT, CONSOLE_TABLE_BORDER_ASCII, $padding = 1, $charset = 'utf-8', $color = TRUE);
 
   $auto_widths = brush_table_column_autowidth($rows, $widths);
 
@@ -718,6 +718,7 @@ function brush_print_table($rows, $header = FALSE, $widths = array(), $handle = 
   else {
     brush_print($output, 0, $handle);
   }
+
   return $tbl;
 }
 

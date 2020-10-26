@@ -3,18 +3,25 @@
 /**
  * Implementation of hook_brush_command().
  *
- * In this hook, you specify which commands your
- * brush module makes available, what it does and
- * description.
- *
- * Notice how this structure closely resembles how
- * you define menu hooks.
- *
  * @return
  *   An associative array describing your command(s).
  */
-function variable_brush_command() {
-  $items['variable-get'] = array(
+function config_brush_command() {
+  $items['config-list'] = array(
+    'description' => 'Display a list all configuration files.',
+    'arguments' => array(
+      'name' => 'A string to filter the configuration files by.',
+    ),
+    'examples' => array(
+      'brush clist' => 'List all configuration files.',
+      'brush clist user' => 'List all configuration files beginning with the string "user".',
+    ),
+    'options' => array(
+      'pipe' => 'Use var_export() to emit executable PHP. Useful for pasting into code.',
+    ),
+    'aliases' => array('clist', 'vlist'),
+  );
+  $items['config-get'] = array(
     'description' => 'Get a list of some or all site variables and values.',
     'arguments' => array(
       'name' => 'A string to filter the variables by.  Only variables beginning with the string will be listed.',
@@ -26,10 +33,10 @@ function variable_brush_command() {
     'options' => array(
       'pipe' => 'Use var_export() to emit executable PHP. Useful for pasting into code.',
     ),
-    'aliases' => array('vget'),
+    'aliases' => array('cget','vget'),
   );
-  $items['variable-set'] = array(
-    'description' => "Set a variable.",
+  $items['config-set'] = array(
+    'description' => "Set a configuration variable.",
     'arguments' => array(
       'name' => 'The name of a variable or the first few letters of its name.',
       'value' => 'The value to assign to the variable.',
@@ -43,9 +50,9 @@ function variable_brush_command() {
       'brush vset --always-set site_offline 1' => 'Take the site offline; Skips confirmation even if site_offline variable does not exist.',
       'brush vset pr 1' => 'Choose from a list of variables beginning with "pr" to set to true.',
     ),
-    'aliases' => array('vset'),
+    'aliases' => array('cset','vset'),
   );
-  $items['variable-delete'] = array(
+  $items['config-delete'] = array(
     'description' => "Delete a variable.",
     'arguments' => array(
       'name' => 'The name of a variable or the first few letters of its name.',
@@ -57,7 +64,7 @@ function variable_brush_command() {
       'brush vdel user_pictures' => 'Delete the user_pictures variable.',
       'brush vdel u' => 'Choose from a list of variables beginning with "u" to delete.',
     ),
-    'aliases' => array('vdel'),
+    'aliases' => array('cdel','vdel'),
   );
 
   return $items;
@@ -65,12 +72,54 @@ function variable_brush_command() {
 
 /**
  * Command callback.
+ * List Backdrop site's variables.
+ */
+function brush_config_list() {
+  $config_dir = config_get_config_directory();
+  $config_storage = new ConfigFileStorage($config_dir);
+  $config_files = array();
+  $rows = array();
+
+  $rows[] = array('File name', 'Label', 'Group');
+
+  foreach ($config_storage->listAll() as $config_name) {
+    $info = config_get_info($config_name);
+    $label = '';
+    $group = '';
+
+    if (isset($info['label'])) {
+      $label = $info['label'];
+    }
+    if (isset($info['label_key'])) {
+      $label = config_get($config_name, $info['label_key']);
+    }
+    if (isset($info['label_callback'])) {
+      $config = $config_storage->read($config_name);
+      $label = $info['label_callback']($config, $config_name);
+    }
+    if (isset($info['group'])) {
+      $group = $info['group'];
+    }
+
+    $rows[] = array(
+      $config_name,
+      $label,
+      $group,
+    );
+  }
+
+  brush_print_table($rows, TRUE);
+}
+/**
+ * Command callback.
  * List your site's variables.
  */
-function brush_variable_get() {
+function brush_config_get() {
+  $config_dir = config_get_config_directory();
+
   global $conf;
   $found = FALSE;
-  
+
   $keys = array_keys($conf);
   if ($args = func_get_args()) {
     $keys = preg_grep("/{$args[0]}/", $keys);
@@ -95,7 +144,7 @@ function brush_variable_get() {
     brush_print($name . ': ' . $value);
     $found = TRUE;
   }
-  
+
   if (!$found) {
     return brush_set_error('No matching variable found.');
   }
@@ -108,17 +157,17 @@ function brush_variable_get() {
  * Command callback.
  * Set a variable.
  */
-function brush_variable_set() {
+function brush_config_set() {
   $args = func_get_args();
   if (!isset($args[0])) {
-    return brush_set_error('BRUSH_VARIABLE_ERROR', dt('No variable specified.'));
+    return brush_set_error('BRUSH_config_ERROR', dt('No variable specified.'));
   }
   $value = $args[1];
   if (!isset($value)) {
-    return brush_set_error('BRUSH_VARIABLE_ERROR', dt('No value specified.'));
+    return brush_set_error('BRUSH_config_ERROR', dt('No value specified.'));
   }
 
-  $result = brush_variable_like($args[0]);
+  $result = brush_config_like($args[0]);
 
   $options[] = "$args[0] ". dt('(new variable)');
   $match = FALSE;
@@ -152,13 +201,13 @@ function brush_variable_set() {
  * Command callback.
  * Delete a variable.
  */
-function brush_variable_delete() {
+function brush_config_delete() {
   $args = func_get_args();
   if (!isset($args[0])) {
-    brush_set_error('BRUSH_VARIABLE_ERROR', dt('No variable specified'));
+    brush_set_error('BRUSH_config_ERROR', dt('No variable specified'));
   }
   // Look for similar variable names.
-  $result = brush_variable_like($args[0]);
+  $result = brush_config_like($args[0]);
 
   $options = array();
   while ($name = brush_db_result($result)) {
@@ -186,6 +235,6 @@ function brush_variable_delete() {
 }
 
 // Query for similar variable names.
-function brush_variable_like($arg) {
+function brush_config_like($arg) {
   return brush_db_select('variable', 'name', 'name LIKE :keyword', array(':keyword' => $arg . '%'), NULL, NULL, 'name');
 }
