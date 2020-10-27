@@ -162,6 +162,7 @@ function brush_config_get() {
       'Configuration variable',
       'Value',
     );
+    $key_found == FALSE;
     foreach ($config_storage->listAll() as $config_name) {
       $config = $config_storage->read($config_name);
       if ($args['0'] == $config_name) {
@@ -191,6 +192,7 @@ function brush_config_get() {
       }
       // $args['0'] found in $config_name, probably it's a configuration value.
       if (array_key_exists($args['0'], $config)) {
+        $key_found = TRUE;
         $title = config_get_info($config_name)['label'].' ('.$config_name.'.json)';
         foreach ($config as $variable => $value) {
           if ($variable == $args['0']) {
@@ -203,18 +205,21 @@ function brush_config_get() {
             );
           }
         }
-        break;
+        brush_print();
+        brush_print($title);
+        brush_print_table($rows, TRUE);
       }
-
     }
-    if ($title) {
-      brush_print();
-      brush_print($title);
-      brush_print_table($rows, TRUE);
-    }
-    else {
-      brush_set_error('Config '.$args['0'].' does not exist.');
-    }
+    if ($key_found == FALSE) {
+      if ($title) {
+        brush_print();
+        brush_print($title);
+        brush_print_table($rows, TRUE);
+      }
+      else {
+        brush_set_error('No configuration found for '.$args['0']);
+      }
+    }  
   }
 }
 
