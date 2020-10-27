@@ -686,15 +686,23 @@ function brush_html_to_text($html, $allowed_tags = NULL) {
  */
 function brush_print_table($rows, $header = FALSE, $widths = array(), $handle = NULL) {
   $tbl = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT, CONSOLE_TABLE_BORDER_ASCII, $padding = 1, $charset = 'utf-8', $color = TRUE);
- 
-  // Colorify the table contents.
+
+  // Colorize the table contents.
   if (class_exists('Console_Color2')) {
     $clr = new Console_Color2();
 
     foreach ($rows as $rowkey => $row) {
       $row[0] = $clr->convert("%g$row[0]%n");
       $row[1] = $clr->convert("%c$row[1]%n");
-      $row[2] = $clr->convert("%y$row[2]%n");
+      if ($row[2]) {
+        $row[2] = $clr->convert("%y$row[2]%n");
+      }
+      if ($row[3]) {
+        $row[3] = $clr->convert("%w$row[3]%n");
+      }
+      if ($row[4]) {
+        $row[4] = $clr->convert("%w$row[4]%n");
+      }
       $clr_rows[] = $row;
     }
     $rows = [];
@@ -752,17 +760,17 @@ function brush_print_table($rows, $header = FALSE, $widths = array(), $handle = 
  * @return
  *    An array of arrays, where the keys from the input
  *    array are stored in the first column, and the values
- *    are stored in the third.  A second colum is created
- *    specifically to hold the ':' separator.
+ *    are stored in the second.
  */
 function brush_key_value_to_array_table($keyvalue_table) {
+
   $table = array();
   foreach ($keyvalue_table as $key => $value) {
     if (isset($value)) {
-      $table[] = array($key, ' :', $value);
+      $table[] = array($key, $value);
     }
     else {
-      $table[] = array($key . ':', '', '');
+      $table[] = array($key, '', '');
     }
   }
   return $table;
@@ -847,6 +855,7 @@ function brush_table_column_autowidth($rows, $widths) {
     // around we use the data for the row to the left.
     unset($col_dist[$column][$width]);
   }
+  $auto_widths[0] = $auto_widths[0] + 20;
   return $auto_widths;
 }
 
@@ -2665,6 +2674,7 @@ define('BRUSH_APPLICATION_ERROR', 255);
  *   such as <code>return brush_set_error('BRUSH_FRAMEWORK_ERROR')</code>
  */
 function brush_set_error($error, $message = null) {
+
   $error_code =& brush_get_context('BRUSH_ERROR_CODE', BRUSH_SUCCESS);
   $error_code = BRUSH_FRAMEWORK_ERROR;
 
