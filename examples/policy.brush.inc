@@ -22,7 +22,7 @@
  */
 function brush_policy_sql_sync_validate($source = NULL, $destination = NULL) {
   if ($destination == '@prod') {
-    return brush_set_error(dt('Per examples/policy.brush.inc, you may never overwrite the production database.'));
+    return brush_set_error(bt('Per examples/policy.brush.inc, you may never overwrite the production database.'));
   }
 }
 
@@ -37,7 +37,7 @@ function brush_policy_sql_sync_validate($source = NULL, $destination = NULL) {
 function brush_policy_updatedb_validate() {
   // Check for a token in the request. In this case, we require --token=secret.
   if (!brush_get_option('token') == 'secret') {
-    brush_log(dt('Per site policy, you must add a secret --token complete this command. See examples/policy.brush.inc.  If you are running a version of brush prior to 4.3 and are not sure why you are seeing this message, please see http://drupal.org/node/1024824.'), 'warning');
+    brush_log(bt('Per site policy, you must add a secret --token complete this command. See examples/policy.brush.inc.  If you are running a version of brush prior to 4.3 and are not sure why you are seeing this message, please see http://drupal.org/node/1024824.'), 'warning');
     brush_set_context('BRUSH_AFFIRMATIVE', FALSE);
     brush_set_context('BRUSH_NEGATIVE', TRUE);
   }
@@ -51,7 +51,7 @@ function brush_policy_updatedb_validate() {
 function brush_policy_make_me_a_sandwich_validate() {
   $name = posix_getpwuid(posix_geteuid());
   if ($name['name'] !== 'root') {
-    return brush_set_error('MAKE_IT_YOUSELF', dt('What? Make your own sandwich.'));
+    return brush_set_error('MAKE_IT_YOUSELF', bt('What? Make your own sandwich.'));
   }
 }
 

@@ -68,7 +68,7 @@ like this:
         function sandwich_brush_help($section) {
           switch ($section) {
             case 'brush:make-me-a-sandwich':
-              return dt("... brief help summary goes here ...");
+              return bt("... brief help summary goes here ...");
           }
         }
 </pre><p>
@@ -247,7 +247,7 @@ hook for the 'make-me-a-sandwich' command:
         function brush_sandwich_make_me_a_sandwich_validate() {
           $name = posix_getpwuid(posix_geteuid());
           if ($name['name'] !== 'root') {
-            return brush_set_error('MAKE_IT_YOUSELF', dt('What? Make your own sandwich.'));
+            return brush_set_error('MAKE_IT_YOUSELF', bt('What? Make your own sandwich.'));
           }
         }
 </pre><p>

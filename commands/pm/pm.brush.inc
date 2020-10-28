@@ -49,27 +49,27 @@ define('BRUSH_PM_REQUESTED_PROJECT_NOT_UPDATEABLE', 106);
 function pm_brush_help($section) {
   switch ($section) {
     case 'meta:pm:title':
-      return dt('Project manager commands');
+      return bt('Project manager commands');
     case 'meta:pm:summary':
-      return dt('Download, enable, examine and update your modules and themes.');
+      return bt('Download, enable, examine and update your modules and themes.');
     case 'brush:pm-enable':
-      return dt('Enable one or more extensions (modules or themes). Enable dependant extensions as well.');
+      return bt('Enable one or more extensions (modules or themes). Enable dependant extensions as well.');
     case 'brush:pm-disable':
-      return dt('Disable one or more extensions (modules or themes). Disable dependant extensions as well.');
+      return bt('Disable one or more extensions (modules or themes). Disable dependant extensions as well.');
     case 'brush:pm-updatecode':
     case 'brush:pm-update':
-      $message = dt("Display available update information for Backdrop core and all enabled projects and allow updating to latest recommended releases.");
+      $message = bt("Display available update information for Backdrop core and all enabled projects and allow updating to latest recommended releases.");
       if ($section == 'brush:pm-update') {
-        $message .= ' '.dt("Also apply any database updates required (same as pm-updatecode + updatedb).");
+        $message .= ' '.bt("Also apply any database updates required (same as pm-updatecode + updatedb).");
       }
-      $message .= ' '.dt("Note: The user is asked to confirm before the actual update. Backups are performed unless directory is already under version control. Updated projects can potentially break your site. It is NOT recommended to update production sites without prior testing.");
+      $message .= ' '.bt("Note: The user is asked to confirm before the actual update. Backups are performed unless directory is already under version control. Updated projects can potentially break your site. It is NOT recommended to update production sites without prior testing.");
       return $message;
     case 'brush:pm-updatecode-postupdate':
-      return dt("This is a helper command needed by updatecode. It is used to check for db updates in a backend process after code updated have been performed. We need to run this task in a separate process to not conflict with old code already in memory.");
+      return bt("This is a helper command needed by updatecode. It is used to check for db updates in a backend process after code updated have been performed. We need to run this task in a separate process to not conflict with old code already in memory.");
       case 'brush:pm-releases':
-      return dt("View all releases for a given Backdrop project. Useful for deciding which version to install/update.");
+      return bt("View all releases for a given Backdrop project. Useful for deciding which version to install/update.");
     case 'brush:pm-download':
-      return dt("Download Backdrop core or projects from Github (Backdrop core, modules, themes or profiles) and other sources. It will automatically figure out which project version you want based on its recommended release, or you may specify a particular version.
+      return bt("Download Backdrop core or projects from Github (Backdrop core, modules, themes or profiles) and other sources. It will automatically figure out which project version you want based on its recommended release, or you may specify a particular version.
 
 If no --destination is provided, then destination depends on the project type:
   - Profiles will be downloaded to profiles/ in your Backdrop root.
@@ -285,7 +285,7 @@ function brush_pm_get_extensions() {
   $extensions = brush_get_extensions();
   foreach ($extensions as $key => $extension) {
     if (empty($extension->info['package'])) {
-      $extensions[$key]->info['package'] = dt('Other');
+      $extensions[$key]->info['package'] = bt('Other');
     }
   }
   return $extensions;
@@ -346,11 +346,11 @@ function brush_get_projects(&$extensions = NULL) {
       else {
         if (is_dir(dirname($extension->filename) . '/CVS') && (!module_exists('cvs_deploy'))) {
           $extension->vcs = 'cvs';
-          brush_log(dt('Extension !extension is fetched from cvs. Ignoring.', array('!extension' => $extension->name)), 'debug');
+          brush_log(bt('Extension !extension is fetched from cvs. Ignoring.', array('!extension' => $extension->name)), 'debug');
         }
         elseif (is_dir(dirname($extension->filename) . '/.git') && (!module_exists('git_deploy'))) {
           $extension->vcs = 'git';
-          brush_log(dt('Extension !extension is fetched from git. Ignoring.', array('!extension' => $extension->name)), 'debug');
+          brush_log(bt('Extension !extension is fetched from git. Ignoring.', array('!extension' => $extension->name)), 'debug');
         }
         continue;
       }
@@ -409,10 +409,10 @@ function brush_pm_list() {
     $package_filter = explode(',', $package);
   }
   if (empty($package_filter) || count($package_filter) > 1) {
-    $header[] = dt('Package');
+    $header[] = bt('Package');
   }
 
-  $header[] = dt('Name');
+  $header[] = bt('Name');
 
   //--type
   $all_types = array('module', 'theme');
@@ -425,11 +425,11 @@ function brush_pm_list() {
   }
 
   if (count($type_filter) > 1) {
-    $header[] = dt('Type');
+    $header[] = bt('Type');
   }
   foreach ($type_filter as $type) {
     if (!in_array($type, $all_types)) { //TODO: this kind of chck can be implemented brush-wide
-      return brush_set_error('BRUSH_PM_INVALID_PROJECT_TYPE', dt('!type is not a valid project type.', array('!type' => $type)));
+      return brush_set_error('BRUSH_PM_INVALID_PROJECT_TYPE', bt('!type is not a valid project type.', array('!type' => $type)));
     }
   }
 
@@ -443,16 +443,16 @@ function brush_pm_list() {
     $status_filter = $all_status;
   }
   if (count($status_filter) > 1) {
-    $header[] = dt('Status');
+    $header[] = bt('Status');
   }
 
   foreach ($status_filter as $status) {
     if (!in_array($status, $status_filter)) { //TODO: this kind of chck can be implemented brush-wide
-      return brush_set_error('BRUSH_PM_INVALID_PROJECT_TYPE', dt('!status is not a valid project status.', array('!status' => $status)));
+      return brush_set_error('BRUSH_PM_INVALID_PROJECT_TYPE', bt('!status is not a valid project status.', array('!status' => $status)));
   }
   }
 
-  $header[] = dt('Version');
+  $header[] = bt('Version');
   $rows[] = $header;
 
   $extension_info = brush_pm_get_extensions();
@@ -570,7 +570,7 @@ function brush_pm_enable_validate() {
     // Download missing projects if exist.
     foreach ($unknown as $key => $name) {
       brush_print('The following project does not exist in your Backdrop installation: '.$name);
-      if(!brush_confirm(dt('Do you want to download the project?'))) {
+      if(!brush_confirm(bt('Do you want to download the project?'))) {
         return brush_user_abort();
       }
       brush_pm_download($name);
@@ -586,11 +586,11 @@ function brush_pm_enable_validate() {
     // Discard already enabled and incompatible extensions.
     foreach ($extensions as $name) {
       if ($extension_info[$name]->status) {
-        brush_log(dt('!extension is already enabled.', array('!extension' => $name)), 'ok');
+        brush_log(bt('!extension is already enabled.', array('!extension' => $name)), 'ok');
       }
       // Check if the extension is compatible with Backdrop core and php version.
       if (brush_extension_check_incompatibility($extension_info[$name])) {
-        brush_set_error('BRUSH_PM_ENABLE_MODULE_INCOMPATIBLE', dt('!name is incompatible with the Backdrop version.', array('!name' => $name)));
+        brush_set_error('BRUSH_PM_ENABLE_MODULE_INCOMPATIBLE', bt('!name is incompatible with the Backdrop version.', array('!name' => $name)));
         if ($extension_info[$name]->type == 'module') {
           unset($modules[$name]);
         }
@@ -619,12 +619,12 @@ function brush_pm_enable_validate() {
         $unmet_project_list = array();
         foreach ($unmet_dependencies as $module => $unmet_projects) {
           $unmet_project_list = array_merge($unmet_project_list, $unmet_projects);
-          $msgs[] = dt("!module requires !unmet-projects", array('!unmet-projects' => implode(', ', $unmet_projects), '!module' => $module));
+          $msgs[] = bt("!module requires !unmet-projects", array('!unmet-projects' => implode(', ', $unmet_projects), '!module' => $module));
         }
-        if (brush_get_option('resolve-dependencies') || brush_confirm(dt("The following projects have unmet dependencies:\n!list\nWould you like to download them?", array('!list' => implode("\n", $msgs))))) {
+        if (brush_get_option('resolve-dependencies') || brush_confirm(bt("The following projects have unmet dependencies:\n!list\nWould you like to download them?", array('!list' => implode("\n", $msgs))))) {
           // If we did not already print a log message via brush_confirm, then print one now.
           if (brush_get_option('resolve-dependencies')) {
-            brush_log(dt("The following projects have unmet dependencies:\n@list\nThey are being downloaded.", array('@list' => implode("\n", $msgs))));
+            brush_log(bt("The following projects have unmet dependencies:\n@list\nThey are being downloaded.", array('@list' => implode("\n", $msgs))));
           }
           // Disable BRUSH_AFFIRMATIVE context temporarily.
           $brush_affirmative = brush_get_context('BRUSH_AFFIRMATIVE');
@@ -666,7 +666,7 @@ function brush_pm_enable_validate() {
       // See @system_modules_submit
       if (!backdrop_check_module($module)) {
         unset($modules[$key]);
-        brush_set_error('BRUSH_PM_ENABLE_MODULE_UNMEET_REQUIREMENTS', dt('Module !module doesn\'t meet the requirements to be enabled.', array('!module' => $module)));
+        brush_set_error('BRUSH_PM_ENABLE_MODULE_UNMEET_REQUIREMENTS', bt('Module !module doesn\'t meet the requirements to be enabled.', array('!module' => $module)));
         _brush_log_backdrop_messages();
         return FALSE;
       }
@@ -706,11 +706,11 @@ function brush_pm_enable() {
   // Inform the user which extensions will finally be enabled.
   $extensions = array_merge($modules, $themes);
   if (empty($extensions)) {
-    return brush_log(dt('There were no extensions that could be enabled.'), 'ok');
+    return brush_log(bt('There were no extensions that could be enabled.'), 'ok');
   }
   else {
-    brush_print(dt('The following extensions will be enabled: !extensions', array('!extensions' => implode(', ', $extensions))));
-    if(!brush_confirm(dt('Do you really want to continue?'))) {
+    brush_print(bt('The following extensions will be enabled: !extensions', array('!extensions' => implode(', ', $extensions))));
+    if(!brush_confirm(bt('Do you really want to continue?'))) {
       return brush_user_abort();
     }
   }
@@ -731,14 +731,14 @@ function brush_pm_enable() {
   $problem_extensions = array();
   while ($extension = brush_db_fetch_object($rsc)) {
     if ($extension->status) {
-      brush_log(dt('!extension was enabled successfully.', array('!extension' => $extension->name)), 'ok');
+      brush_log(bt('!extension was enabled successfully.', array('!extension' => $extension->name)), 'ok');
     }
     else {
       $problem_extensions[] = $extension->name;
     }
   }
   if (!empty($problem_extensions)) {
-    return brush_set_error('BRUSH_PM_ENABLE_EXTENSION_ISSUE', dt('There was a problem enabling !extension.', array('!extension' => implode(',', $problem_extensions))));
+    return brush_set_error('BRUSH_PM_ENABLE_EXTENSION_ISSUE', bt('There was a problem enabling !extension.', array('!extension' => implode(',', $problem_extensions))));
   }
   // Return the list of extensions enabled
   return $extensions;
@@ -761,7 +761,7 @@ function brush_pm_disable() {
 
   // Discard and set an error for each unknown extension.
   foreach ($unknown as $name) {
-    brush_log('BRUSH_PM_ENABLE_EXTENSION_NOT_FOUND', dt('!extension was not found and will not be disabled.', array('!extension' => $name)), 'warning');
+    brush_log('BRUSH_PM_ENABLE_EXTENSION_NOT_FOUND', bt('!extension was not found and will not be disabled.', array('!extension' => $name)), 'warning');
   }
 
   // Discard already disabled extensions.
@@ -773,7 +773,7 @@ function brush_pm_disable() {
       else {
         unset($themes[$name]);
       }
-      brush_log(dt('!extension is already disabled.', array('!extension' => $name)), 'ok');
+      brush_log(bt('!extension is already disabled.', array('!extension' => $name)), 'ok');
     }
   }
 
@@ -782,7 +782,7 @@ function brush_pm_disable() {
     $default_theme = brush_theme_get_default();
     if (in_array($default_theme, $themes)) {
       unset($themes[$default_theme]);
-      brush_log(dt('!theme is the default theme and can\'t be disabled.', array('!theme' => $default_theme)), 'ok');
+      brush_log(bt('!theme is the default theme and can\'t be disabled.', array('!theme' => $default_theme)), 'ok');
     }
   }
 
@@ -799,7 +799,7 @@ function brush_pm_disable() {
         unset($modules[$module]);
         // No message for hidden modules.
         if (!isset($extension_info[$module]->info['hidden'])) {
-          brush_log(dt('!module is a required module and can\'t be disabled.', array('!module' => $module)), 'ok');
+          brush_log(bt('!module is a required module and can\'t be disabled.', array('!module' => $module)), 'ok');
         }
       }
     }
@@ -808,11 +808,11 @@ function brush_pm_disable() {
   // Inform the user which extensions will finally be disabled.
   $extensions = array_merge($modules, $themes);
   if (empty($extensions)) {
-    return brush_log(dt('There were no extensions that could be disabled.'), 'ok');
+    return brush_log(bt('There were no extensions that could be disabled.'), 'ok');
   }
   else {
-    brush_print(dt('The following extensions will be disabled: !extensions', array('!extensions' => implode(', ', $extensions))));
-    if(!brush_confirm(dt('Do you really want to continue?'))) {
+    brush_print(bt('The following extensions will be disabled: !extensions', array('!extensions' => implode(', ', $extensions))));
+    if(!brush_confirm(bt('Do you really want to continue?'))) {
       return brush_user_abort();
     }
   }
@@ -833,14 +833,14 @@ function brush_pm_disable() {
   $problem_extensions = array();
   while ($extension = brush_db_fetch_object($rsc)) {
     if (!$extension->status) {
-      brush_log(dt('!extension was disabled successfully.', array('!extension' => $extension->name)), 'ok');
+      brush_log(bt('!extension was disabled successfully.', array('!extension' => $extension->name)), 'ok');
     }
     else {
       $problem_extensions[] = $extension->name;
     }
   }
   if (!empty($problem_extensions)) {
-    return brush_set_error('BRUSH_PM_DISABLE_EXTENSION_ISSUE', dt('There was a problem disabling !extension.', array('!extension' => implode(',', $problem_extensions))));
+    return brush_set_error('BRUSH_PM_DISABLE_EXTENSION_ISSUE', bt('There was a problem disabling !extension.', array('!extension' => implode(',', $problem_extensions))));
   }
 }
 
@@ -867,7 +867,7 @@ function brush_pm_info() {
       $info = $extension_info[$project];
     }
     else {
-      brush_log(dt('!project was not found.', array('!project' => $project)), 'warning');
+      brush_log(bt('!project was not found.', array('!project' => $project)), 'warning');
       continue;
     }
     if ($info->type == 'module') {
@@ -1006,17 +1006,17 @@ function brush_pm_uninstall() {
     if (!isset($module_info[$module])) {
       // The module does not exist in the system.
       unset($modules[$key]);
-      brush_log(dt('Module !module was not found and will not be uninstalled.', array('!module' => $module)), 'warning');
+      brush_log(bt('Module !module was not found and will not be uninstalled.', array('!module' => $module)), 'warning');
     }
     else if ($module_info[$module]->status) {
       // The module is enabled.
       unset($modules[$key]);
-      brush_log(dt('!module is not disabled. Use `pm-disable` command before `pm-uninstall`.', array('!module' => $module)), 'warning');
+      brush_log(bt('!module is not disabled. Use `pm-disable` command before `pm-uninstall`.', array('!module' => $module)), 'warning');
     }
     else if ($module_info[$module]->schema_version == -1) { // SCHEMA_UNINSTALLED
       // The module is uninstalled.
       unset($modules[$key]);
-      brush_log(dt('!module is already uninstalled.', array('!module' => $module)), 'ok');
+      brush_log(bt('!module is already uninstalled.', array('!module' => $module)), 'ok');
     }
     else {
       $dependents = array();
@@ -1026,7 +1026,7 @@ function brush_pm_uninstall() {
         }
       }
       if (count($dependents)) {
-        brush_log(dt('To uninstall !module, the following modules must be uninstalled first: !required', array('!module' => $module, '!required' => implode(', ', $dependents))), 'error');
+        brush_log(bt('To uninstall !module, the following modules must be uninstalled first: !required', array('!module' => $module, '!required' => implode(', ', $dependents))), 'error');
         unset($modules[$key]);
       }
     }
@@ -1034,11 +1034,11 @@ function brush_pm_uninstall() {
 
   // Inform the user which modules will finally be uninstalled.
   if (empty($modules)) {
-    return brush_log(dt('There were no modules that could be uninstalled.'), 'ok');
+    return brush_log(bt('There were no modules that could be uninstalled.'), 'ok');
   }
   else {
-    brush_print(dt('The following modules will be uninstalled: !modules', array('!modules' => implode(', ', $modules))));
-    if(!brush_confirm(dt('Do you really want to continue?'))) {
+    brush_print(bt('The following modules will be uninstalled: !modules', array('!modules' => implode(', ', $modules))));
+    if(!brush_confirm(bt('Do you really want to continue?'))) {
       return brush_user_abort();
     }
   }
@@ -1048,7 +1048,7 @@ function brush_pm_uninstall() {
 
   // Inform the user of final status.
   foreach ($modules as $module) {
-    brush_log(dt('!module was successfully uninstalled.', array('!module' => $module)), 'ok');
+    brush_log(bt('!module was successfully uninstalled.', array('!module' => $module)), 'ok');
   }
 }
 
@@ -1067,7 +1067,7 @@ function _pm_get_project_path($data, $lookup) {
     $path = _pm_find_common_path($release['project_type'], $extensions);
     $reserved = array('modules', 'sites', 'themes');
     if ((in_array(basename($path), $reserved)) && (!in_array($name, $reserved))) {
-      brush_log(dt('Error while trying to find the common path for enabled extensions of project !project. Extensions are: !extensions.', array('!project' => $name, '!extensions' => implode(', ', $extensions))), 'error');
+      brush_log(bt('Error while trying to find the common path for enabled extensions of project !project. Extensions are: !extensions.', array('!project' => $name, '!extensions' => implode(', ', $extensions))), 'error');
       unset($data[$name]);
     }
     else {
@@ -1134,13 +1134,13 @@ function brush_pm_releases() {
 
   $info = _brush_pm_get_releases($requests);
   if (!$info) {
-    return brush_log(dt('No valid projects given.'), 'ok');
+    return brush_log(bt('No valid projects given.'), 'ok');
   }
 
   foreach ($info as $name => $project) {
-    $header = dt('------- RELEASES FOR \'!name\' PROJECT -------', array('!name' => strtoupper($name)));
+    $header = bt('------- RELEASES FOR \'!name\' PROJECT -------', array('!name' => strtoupper($name)));
     $rows = array();
-    $rows[] = array(dt('Release'), dt('Date'), dt('Status'));
+    $rows[] = array(bt('Release'), bt('Date'), bt('Status'));
     $releases = _brush_pm_filter_releases($project['releases'], brush_get_option('all', FALSE), brush_get_option('dev', FALSE));
     foreach ($releases as $release) {
       $rows[] = array(
@@ -1224,7 +1224,7 @@ function _brush_pm_get_releases_from_xml($xml, $project) {
     // Add to status whether the project is installed.
     if (isset($installed_projects[$project])) {
       if ($installed_projects[$project]['version'] == $release_info['version']) {
-         $statuses[] = dt('Installed');
+         $statuses[] = bt('Installed');
          $project_info['installed'] = $release_info['version'];
        }
     }
@@ -1412,7 +1412,7 @@ function brush_pm_post_pm_update() {
 function brush_pm_updatecode_validate() {
   $path = brush_get_context('BRUSH_BACKDROP_ROOT') . '/backup';
   if (is_dir($path) && (realpath(brush_get_option('backup-dir', FALSE)) != $path)) {
-    return brush_set_error('', dt('Backup directory !path found. It\'s a security risk to store backups inside the Backdrop tree. Brush now uses by default ~/brush-backups. You need to move !path out of the Backdrop tree to proceed. Note: if you know what you\'re doing you can explicitly set --backup-dir to !path and continue.', array('!path' => $path)));
+    return brush_set_error('', bt('Backup directory !path found. It\'s a security risk to store backups inside the Backdrop tree. Brush now uses by default ~/brush-backups. You need to move !path out of the Backdrop tree to proceed. Note: if you know what you\'re doing you can explicitly set --backup-dir to !path and continue.', array('!path' => $path)));
   }
 
   // Validate package-handler.
@@ -1458,7 +1458,7 @@ function brush_pm_updatecode_postupdate() {
     if ($updates !== FALSE) {
       $default = backdrop_get_installed_schema_version($module);
       if (max($updates) > $default) {
-        brush_log(dt("You have pending database updates. Run `brush updatedb` or visit update.php in your browser."), 'warning');
+        brush_log(bt("You have pending database updates. Run `brush updatedb` or visit update.php in your browser."), 'warning');
         break;
       }
     }
@@ -1490,14 +1490,14 @@ function pm_dl_destination_lookup($type, $backdrop_root, $sitepath, $create = FA
       break;
   }
   if ($create) {
-    brush_log(dt('Attempting to create destination directory at !dir', array('!dir' => $destination)));
+    brush_log(bt('Attempting to create destination directory at !dir', array('!dir' => $destination)));
     brush_mkdir($destination);
   }
   if (is_dir($destination)) {
-    brush_log(dt('Using destination directory !dir', array('!dir' => $destination)));
+    brush_log(bt('Using destination directory !dir', array('!dir' => $destination)));
     return $destination;
   }
-  brush_log(dt('Could not find destination directory at !dir', array('!dir' => $destination)));
+  brush_log(bt('Could not find destination directory at !dir', array('!dir' => $destination)));
   return FALSE;
 }
 
@@ -1570,7 +1570,7 @@ function pm_parse_release($request, $xml) {
   if (!empty($request['version'])) {
     $releases = $xml->xpath("/project/releases/release[status='published'][version='" . $request['version'] . "']");
     if (empty($releases)) {
-      brush_log(dt("Could not locate specified project version, downloading latest stable version"), 'warning');
+      brush_log(bt("Could not locate specified project version, downloading latest stable version"), 'warning');
     }
   }
   // If that did not work, we will get the first published release for the
@@ -1629,10 +1629,10 @@ function pm_parse_release($request, $xml) {
 
   if (brush_get_option('select', FALSE) || empty($releases)) {
     if (empty($releases)) {
-      brush_print(dt('There is no !type release for project !project.', array('!type' => $release_type, '!project' => $request['name'])));
+      brush_print(bt('There is no !type release for project !project.', array('!type' => $release_type, '!project' => $request['name'])));
     }
     $options = _brush_pm_download_releases_choice($xml, $request['name'], brush_get_option('all', FALSE), brush_get_option('dev', FALSE));
-    $choice = brush_choice($options, dt('Choose one of the available releases for project !project:', array('!project' => $request['name'])));
+    $choice = brush_choice($options, bt('Choose one of the available releases for project !project:', array('!project' => $request['name'])));
     if ($choice) {
       $releases = $xml->xpath("/project/releases/release[status='published'][version='" . $choice . "']");
     }
@@ -1874,7 +1874,7 @@ function brush_pm_include_version_control($directory = '.') {
     $version_control = array_shift($version_controls);
     if (isset($version_control_engines[$version_control])) {
       if (!empty($version_control_engines[$version_control]['signature'])) {
-        brush_log(dt('Verifying signature for !vcs version control engine.', array('!vcs' => $version_control)), 'debug');
+        brush_log(bt('Verifying signature for !vcs version control engine.', array('!vcs' => $version_control)), 'debug');
         if (brush_shell_exec($version_control_engines[$version_control]['signature'], $directory)) {
           $engine = $version_control;
         }
@@ -1885,7 +1885,7 @@ function brush_pm_include_version_control($directory = '.') {
     }
   }
   if (!$engine) {
-    return brush_set_error('BRUSH_PM_NO_VERSION_CONTROL', dt('No valid version control or backup engine found (the --version-control option was set to "!version-control").', array('!version-control' => $version_control)));
+    return brush_set_error('BRUSH_PM_NO_VERSION_CONTROL', bt('No valid version control or backup engine found (the --version-control option was set to "!version-control").', array('!version-control' => $version_control)));
   }
 
   brush_include_engine('version_control', $version_control);
@@ -1904,18 +1904,18 @@ function brush_pm_download_validate() {
   if (!empty($destination)) {
     $destination = rtrim($destination, DIRECTORY_SEPARATOR);
     if (!is_dir($destination)) {
-      brush_print(dt("The directory !destination does not exist.", array('!destination' => $destination)));
+      brush_print(bt("The directory !destination does not exist.", array('!destination' => $destination)));
       if (!brush_get_context('BRUSH_SIMULATE')) {
-        if (brush_confirm(dt('Would you like to create it?'))) {
+        if (brush_confirm(bt('Would you like to create it?'))) {
           brush_mkdir($destination);
         }
         if (!is_dir($destination)) {
-          return brush_set_error('BRUSH_PM_NO_DESTINATION', dt('Unable to create destination directory !destination.', array('!destination' => $destination)));
+          return brush_set_error('BRUSH_PM_NO_DESTINATION', bt('Unable to create destination directory !destination.', array('!destination' => $destination)));
         }
       }
     }
     if (!is_writable($destination)) {
-      return brush_set_error('BRUSH_PM_NO_DESTINATION', dt('Destination directory !destination is not writable.', array('!destination' => $destination)));
+      return brush_set_error('BRUSH_PM_NO_DESTINATION', bt('Destination directory !destination is not writable.', array('!destination' => $destination)));
     }
     // Ignore --use-site-dir, if given.
     if (brush_get_option('use-site-dir', FALSE)) {
@@ -1927,7 +1927,7 @@ function brush_pm_download_validate() {
   $variant = brush_get_option('variant', FALSE);
   if ($variant) {
     if (!in_array($variant, array('full', 'projects', 'profile-only'))) {
-      brush_log(dt('Unknown variant !variant. Valid values: !variations', array('!variant' => $variant, '!variations' => implode(', ', $variations))), 'error');
+      brush_log(bt('Unknown variant !variant. Valid values: !variations', array('!variant' => $variant, '!variations' => implode(', ', $variations))), 'error');
     }
   }
   // 'full' and 'projects' variants are only valid for wget package handler.
@@ -1935,7 +1935,7 @@ function brush_pm_download_validate() {
   if (($package_handler != 'wget') && ($variant != 'profile-only')) {
     $new_variant = 'profile-only';
     if ($variant) {
-      brush_log(dt('Variant !variant is incompatible with !ph package-handler.', array('!variant' => $variant, '!ph' => $package_handler)), 'warning');
+      brush_log(bt('Variant !variant is incompatible with !ph package-handler.', array('!variant' => $variant, '!ph' => $package_handler)), 'warning');
     }
   }
   // If we are working on a backdrop root, full variant is not an option.
@@ -1944,14 +1944,14 @@ function brush_pm_download_validate() {
       $new_variant = 'projects';
     }
     if ($variant == 'full') {
-      brush_log(dt('Variant full is not a valid option within a Backdrop root.'), 'warning');
+      brush_log(bt('Variant full is not a valid option within a Backdrop root.'), 'warning');
     }
   }
 
   if (isset($new_variant)) {
     brush_set_option('variant', $new_variant);
     if ($variant) {
-      brush_log(dt('Switching to --variant=!variant.', array('!variant' => $new_variant)), 'ok');
+      brush_log(bt('Switching to --variant=!variant.', array('!variant' => $new_variant)), 'ok');
     }
   }
 
@@ -1968,8 +1968,8 @@ function brush_pm_download_validate() {
 function _brush_pm_get_release_history_xml($request) {
   // Check if project exists on Github in the very beginning.
   if (strpos(@get_headers('https://github.com/backdrop-contrib/'.$request['name'])[0],'200') === FALSE) {
-    brush_set_error(dt('No release history found for @project_name', array('@project_name' => $request['name'])));
-    brush_set_error(dt('Could not download requested project.'));
+    brush_set_error(bt('No release history found for @project_name', array('@project_name' => $request['name'])));
+    brush_set_error(bt('Could not download requested project.'));
   }
   else {
     for ($i=1; $i < 5; $i++) {
@@ -1983,7 +1983,7 @@ function _brush_pm_get_release_history_xml($request) {
           // Unpublished project?
           $project_status = $xml->xpath('/project/project_status');
           if ($project_status[0][0] == 'unpublished') {
-            return brush_set_error('BRUSH_PM_PROJECT_UNPUBLISHED', dt("Project @project is unpublished and has no releases available.", array('@project' => $request['name'])), 'warning');
+            return brush_set_error('BRUSH_PM_PROJECT_UNPUBLISHED', bt("Project @project is unpublished and has no releases available.", array('@project' => $request['name'])), 'warning');
           }
           brush_log('Downloading release history from ' . $url);
           return $xml;
@@ -2094,7 +2094,7 @@ function brush_pm_download() {
     // Prevent brush from downloading Backdrop.
     if ($request['name'] == 'backdrop') {
       if (brush_get_context('BRUSH_BOOTSTRAP_PHASE') > '0') {
-        brush_set_error(dt('Opps, downloading Backdrop inside of another Backdrop is not a good idea!'));
+        brush_set_error(bt('Opps, downloading Backdrop inside of another Backdrop is not a good idea!'));
         return;
       }
     }
@@ -2134,7 +2134,7 @@ function brush_pm_download() {
     $request['base_project_path'] = brush_tempdir();
     $request['full_project_path'] = $request['base_project_path'] .'/'. $request['project_dir'];
 
-    brush_log(dt('Downloading project !name to !dir ...', array('!name' => $request['name'], '!dir' => $request['base_project_path'])));
+    brush_log(bt('Downloading project !name to !dir ...', array('!name' => $request['name'], '!dir' => $request['base_project_path'])));
 
     if (!package_handler_download_project($request, $release)) {
       brush_log('Error downloading '.$request['name']);
@@ -2176,10 +2176,10 @@ function brush_pm_download() {
       // Move the running brush out of the way
       $brush_backup = $backup_dir . "/brush";
       if (brush_move_dir(BRUSH_BASE_PATH, $brush_backup, TRUE) == FALSE) {
-        return brush_set_error('BRUSH_PM_BACKUP_FAILED', dt('Failed to move brush directory !brush to !backup_target', array('!brush' => BRUSH_BASE_PATH, '!backup_target' => $brush_backup)));
+        return brush_set_error('BRUSH_PM_BACKUP_FAILED', bt('Failed to move brush directory !brush to !backup_target', array('!brush' => BRUSH_BASE_PATH, '!backup_target' => $brush_backup)));
       }
       else {
-        brush_log(dt("brush backed up to !targetdir", array('!targetdir' => $brush_backup)), "ok");
+        brush_log(bt("brush backed up to !targetdir", array('!targetdir' => $brush_backup)), "ok");
       }
     }
     else {
@@ -2189,8 +2189,8 @@ function brush_pm_download() {
 
     // Check if install location already exists.
     if (is_dir($request['project_install_location'])) {
-      if (!brush_confirm(dt('Install location !location already exists. Do you want to overwrite it?', array('!location' => $request['project_install_location'])))) {
-        brush_log(dt("Skip installation of !project to !dest.", array('!project' => $request['name'], '!dest' => $request['project_install_location'])), 'warning');
+      if (!brush_confirm(bt('Install location !location already exists. Do you want to overwrite it?', array('!location' => $request['project_install_location'])))) {
+        brush_log(bt("Skip installation of !project to !dest.", array('!project' => $request['name'], '!dest' => $request['project_install_location'])), 'warning');
         continue;
       }
     }
@@ -2203,15 +2203,15 @@ function brush_pm_download() {
 
     // Move the project to the install location.
     if (brush_move_dir($request['full_project_path'], $request['project_install_location'], TRUE)) {
-      brush_log(dt("Project !project (!version) downloaded to !dest.", array('!project' => $request['name'], '!version' => $release['version'], '!dest' => $request['project_install_location'])), 'success');
+      brush_log(bt("Project !project (!version) downloaded to !dest.", array('!project' => $request['name'], '!version' => $release['version'], '!dest' => $request['project_install_location'])), 'success');
       $request['base_project_path'] = basename($request['project_install_location']);
       $request['full_project_path'] = $request['project_install_location'];
       if ($request['project_install_location'] == BRUSH_BASE_PATH) {
-        brush_log(dt("Brush successfully updated to version !version.", array('!version' => $release['version'])), 'success');
+        brush_log(bt("Brush successfully updated to version !version.", array('!version' => $release['version'])), 'success');
       }
     }
     else {
-      brush_log(dt("Project !project (!version) could not be downloaded to !dest.", array('!project' => $request['name'], '!version' => $release['version'], '!dest' => $request['project_install_location'])), 'error');
+      brush_log(bt("Project !project (!version) could not be downloaded to !dest.", array('!project' => $request['name'], '!version' => $release['version'], '!dest' => $request['project_install_location'])), 'error');
       continue;
     }
 
@@ -2244,7 +2244,7 @@ function pm_brush_pm_download_destination_alter(&$project, $release) {
         $brush_release_version = $release['version_major'] . "." . $release['version_patch'] . (empty($release['version_extra']) ? '' : ('-' . $release['version_extra']));
         if(($project['project_install_location'] != BRUSH_BASE_PATH) && ($release['version_major'] >= '4')) {
           $backup_dir = brush_preflight_backup_dir();
-          if (brush_confirm(dt('Would you like to back up your current brush version !currentversion to !backup and replace it with brush !version?', array('!version' => $brush_release_version, '!backup' => $backup_dir, '!currentversion' => BRUSH_VERSION)))) {
+          if (brush_confirm(bt('Would you like to back up your current brush version !currentversion to !backup and replace it with brush !version?', array('!version' => $brush_release_version, '!backup' => $backup_dir, '!currentversion' => BRUSH_VERSION)))) {
             $project['project_install_location'] = BRUSH_BASE_PATH;
           }
           else {
@@ -2301,19 +2301,19 @@ function brush_pm_update_lock(&$projects, $projects_to_lock, $projects_to_unlock
   // Warn about ambiguous lock / unlock values
   if ($projects_to_lock == array('1')) {
     $projects_to_lock = array();
-    brush_log(dt('Ignoring --lock with no value.'), 'warning');
+    brush_log(bt('Ignoring --lock with no value.'), 'warning');
   }
   if ($projects_to_unlock == array('1')) {
     $projects_to_unlock = array();
-    brush_log(dt('Ignoring --unlock with no value.'), 'warning');
+    brush_log(bt('Ignoring --unlock with no value.'), 'warning');
   }
 
   // Log if we are going to lock or unlock anything
   if (!empty($projects_to_unlock)) {
-    brush_log(dt('Unlocking !projects', array('!projects' => implode(',', $projects_to_unlock))), 'ok');
+    brush_log(bt('Unlocking !projects', array('!projects' => implode(',', $projects_to_unlock))), 'ok');
   }
   if (!empty($projects_to_lock)) {
-    brush_log(dt('Locking !projects', array('!projects' => implode(',', $projects_to_lock))), 'ok');
+    brush_log(bt('Locking !projects', array('!projects' => implode(',', $projects_to_lock))), 'ok');
   }
 
   $backdrop_root = brush_get_context('BRUSH_BACKDROP_ROOT');
@@ -2436,7 +2436,7 @@ function brush_pm_extensions_in_project($project) {
         }
       }
     }
-    brush_log(dt($msg, $args), 'success');
+    brush_log(bt($msg, $args), 'success');
     brush_print_pipe(call_user_func_array('array_merge', array_values($found)));
   }
   // Modules and themes can only contain other extensions of the same type.
@@ -2459,7 +2459,7 @@ function brush_pm_extensions_in_project($project) {
       $msg = "Project !project contains !count !types: !found.";
     }
     if (isset($msg)) {
-      brush_print(dt($msg, array('!project' => $project['name'], '!count' => count($found), '!type' => $project['project_type'], '!found' => implode(', ', $found))));
+      brush_print(bt($msg, array('!project' => $project['name'], '!count' => count($found), '!type' => $project['project_type'], '!found' => implode(', ', $found))));
     }
     brush_print_pipe($found);
     // Cache results.

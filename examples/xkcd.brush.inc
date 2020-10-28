@@ -76,7 +76,7 @@ function xkcd_brush_command() {
 function xkcd_brush_help($section) {
   switch ($section) {
     case 'brush:xkcd-fetch':
-      return dt("A command line tool (1) for a web site tool (2), that emulates
+      return bt("A command line tool (1) for a web site tool (2), that emulates
 (badly) a web based tool (3) that emulates (badly) a command line tool (4) to
 access a web site (5) with awesome geek humor.\n
 (1) Brush
@@ -139,7 +139,7 @@ function brush_xkcd_fetch($search = '') {
       }
     }
     else {
-      brush_set_error('BRUSH_XKCD_SEARCH_FAIL', dt('The search failed or produced no results.'));
+      brush_set_error('BRUSH_XKCD_SEARCH_FAIL', bt('The search failed or produced no results.'));
     }
   }
 }
@@ -163,6 +163,6 @@ function brush_xkcd_display($url) {
     brush_shell_exec(brush_get_option('image-viewer', 'display') . ' ' . $img);
   }
   else {
-    brush_set_error('BRUSH_XKCD_METADATA_FAIL', dt('Unable to retrieve cartoon metadata.'));
+    brush_set_error('BRUSH_XKCD_METADATA_FAIL', bt('Unable to retrieve cartoon metadata.'));
   }
 }

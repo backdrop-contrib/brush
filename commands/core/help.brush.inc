@@ -87,7 +87,7 @@ function brush_core_help() {
 	  $other_categories[] = $one_category;
 	}
 	else {
-	  $info['title'] = dt("All commands in !category", array('!category' => $key));
+	  $info['title'] = bt("All commands in !category", array('!category' => $key));
           $misc_categories[$one_category] = $info;
 	}
       }
@@ -97,7 +97,7 @@ function brush_core_help() {
     }
     $other_category = array();
     if (!empty($other_categories)) {
-      $other_category[implode(',', $other_categories)] = array('title' => dt("Other commands"), 'commands' => $other_commands);
+      $other_category[implode(',', $other_categories)] = array('title' => bt("Other commands"), 'commands' => $other_commands);
     }
     asort($processed_categories);
     asort($misc_categories);
@@ -134,7 +134,7 @@ function brush_core_help() {
     // Filter out categories that the user does not want to see
     if ($filter_category = brush_get_option('filter')) {
       if (!array_key_exists($filter_category, $command_categories)) {
-        return brush_set_error('BRUSH_NO_CATEGORY', dt("The specified command category !filter does not exist.", array('!filter' => $filter_category)));
+        return brush_set_error('BRUSH_NO_CATEGORY', bt("The specified command category !filter does not exist.", array('!filter' => $filter_category)));
       }
       $command_categories = array($filter_category => $command_categories[$filter_category]);
     }
@@ -146,7 +146,7 @@ function brush_core_help() {
       foreach ($command_categories as $key => $info) {
         $combined_commands = array_merge($combined_commands, $info['commands']);
       }
-      $command_categories = array('all' => array('commands' => $combined_commands, 'title' => dt("Commands:")));
+      $command_categories = array('all' => array('commands' => $combined_commands, 'title' => bt("Commands:")));
     }
     
     // Next, print out the table of commands by category.
@@ -203,7 +203,7 @@ function brush_core_help() {
     return $result;
   }
 
-  return brush_set_error('BRUSH_COMMAND_NOT_FOUND', dt('Invalid command !command.', array('!command' => implode(" ", $commands))));
+  return brush_set_error('BRUSH_COMMAND_NOT_FOUND', bt('Invalid command !command.', array('!command' => implode(" ", $commands))));
 }
 
 

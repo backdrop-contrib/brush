@@ -11,9 +11,9 @@
 function field_brush_help($section) {
   switch ($section) {
     case 'meta:field:title':
-      return dt('Field commands');
+      return bt('Field commands');
     case 'meta:field:summary':
-      return dt('Manipulate Backdrop fields.');
+      return bt('Manipulate Backdrop fields.');
   }
 }
 
@@ -162,12 +162,12 @@ function brush_field_delete($field_name) {
       }
     }
     if (count($bundles) > 1) {
-      $options = array_merge(array('all' => dt('All bundles')), backdrop_map_assoc($bundles));
-      $bundle = brush_choice($options, dt("Choose a particular bundle or 'All bundles'"));
+      $options = array_merge(array('all' => bt('All bundles')), backdrop_map_assoc($bundles));
+      $bundle = brush_choice($options, bt("Choose a particular bundle or 'All bundles'"));
       $confirm = FALSE;
     }
     else {
-      if (!brush_confirm(dt('Do you want to delete the %field_name field?', array('%field_name' => $field_name)))) {
+      if (!brush_confirm(bt('Do you want to delete the %field_name field?', array('%field_name' => $field_name)))) {
         return brush_user_abort();
       }
     }
@@ -196,7 +196,7 @@ function brush_field_delete($field_name) {
 
 function brush_field_clone($source_field_name, $target_field_name) {
    if (!$info = field_info_field($source_field_name)) {
-     return brush_set_error(dt('%source not found in field list.', array('%source' => $source_field_name)));
+     return brush_set_error(bt('%source not found in field list.', array('%source' => $source_field_name)));
    }
 
    unset($info['id']);
@@ -219,15 +219,15 @@ function brush_field_clone($source_field_name, $target_field_name) {
 
 function brush_field_info($type = NULL) {
   if (is_null($type)) {
-    $type = brush_choice(backdrop_map_assoc(array('types', 'fields')), dt('Which information do you wish to see?'));
+    $type = brush_choice(backdrop_map_assoc(array('types', 'fields')), bt('Which information do you wish to see?'));
   }
 
   switch ($type) {
     case 'fields':
       $rows[] = array(
-        dt('Field name'),
-        dt('Field type'),
-        dt('Bundles'),
+        bt('Field name'),
+        bt('Field type'),
+        bt('Bundles'),
       );
       $info = field_info_fields();
       foreach ($info as $field_name => $field) {
@@ -246,9 +246,9 @@ function brush_field_info($type = NULL) {
       break;
     case 'types':
       $rows[] = array(
-        dt('Field type'),
-        dt('Default widget'),
-        dt('Widgets'),
+        bt('Field type'),
+        bt('Default widget'),
+        bt('Widgets'),
       );
       $info = field_info_field_types();
       module_load_include('inc', 'field_ui', 'field_ui.admin');
@@ -278,13 +278,13 @@ function brush_field_info($type = NULL) {
  *   An array of brief field specifications.
  */
 function brush_field_create_wizard() {
-  $specs[] = brush_prompt(dt('Field name'));
+  $specs[] = brush_prompt(bt('Field name'));
   module_load_include('inc', 'field_ui', 'field_ui.admin');
   $types = field_ui_field_type_options();
-  $field_type = brush_choice($types, dt('Choose a field type'));
+  $field_type = brush_choice($types, bt('Choose a field type'));
   $specs[] = $field_type;
   $widgets = field_ui_widget_type_options($field_type);
-  $specs[] = brush_choice($widgets, dt('Choose a widget'));
+  $specs[] = brush_choice($widgets, bt('Choose a widget'));
   return implode(',', $specs);
 }
 

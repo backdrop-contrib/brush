@@ -67,7 +67,7 @@ function brush_archive_dump($sites_subdirs = '@self') {
       $full[$key] = $alias += $db_record;
     }
     else {
-      brush_log(dt('DB connections not found for !alias', array('!alias' => $alias)), 'error');
+      brush_log(bt('DB connections not found for !alias', array('!alias' => $alias)), 'error');
       return;
     }
   }
@@ -132,21 +132,21 @@ function brush_archive_dump($sites_subdirs = '@self') {
   $dest_dir = dirname($final_destination);
   $dt_args = array('!file' => $final_destination, '!dir' => $dest_dir);
   if (is_dir($final_destination)) {
-    brush_set_error('BRUSH_ARCHIVE_DEST_IS_DIR', dt('destination !file must be a file, not a directory.', $dt_args));
+    brush_set_error('BRUSH_ARCHIVE_DEST_IS_DIR', bt('destination !file must be a file, not a directory.', $dt_args));
     return;
   }
   else if (file_exists($final_destination)) {
     if (!$overwrite) {
-      brush_set_error('BRUSH_ARCHIVE_DEST_EXISTS', dt('destination !file exists; specify --overwrite to overwrite.', $dt_args));
+      brush_set_error('BRUSH_ARCHIVE_DEST_EXISTS', bt('destination !file exists; specify --overwrite to overwrite.', $dt_args));
       return;
     }
     else if (!is_writable($final_destination)) {
-      brush_set_error('BRUSH_ARCHIVE_DEST_FILE_NOT_WRITEABLE', dt('destination !file is not writable.', $dt_args));
+      brush_set_error('BRUSH_ARCHIVE_DEST_FILE_NOT_WRITEABLE', bt('destination !file is not writable.', $dt_args));
       return;
     }
   }
   else if (!is_writable(dirname($final_destination))) {
-    brush_set_error('BRUSH_ARCHIVE_DEST_DIR_NOT_WRITEABLE', dt('destination directory !dir is not writable.', $dt_args));
+    brush_set_error('BRUSH_ARCHIVE_DEST_DIR_NOT_WRITEABLE', bt('destination directory !dir is not writable.', $dt_args));
     return;
   }
 
@@ -230,7 +230,7 @@ function brush_archive_dump($sites_subdirs = '@self') {
     brush_move_dir("{$destination}.gz", $final_destination, $overwrite);
   }
 
-  brush_log(dt('Archive saved to !dest', array('!dest' => $final_destination)), 'ok');
+  brush_log(bt('Archive saved to !dest', array('!dest' => $final_destination)), 'ok');
   brush_print_pipe($final_destination);
   return $final_destination;
 }
@@ -242,13 +242,13 @@ function brush_archive_restore($file, $site_id = NULL) {
   $tmp = brush_tempdir();
 
   if (!$files = brush_tarball_extract($file, $tmp)) {
-    return brush_set_error('BRUSH_ARCHIVE_UNABLE_TO_EXTRACT', dt('Unable to extract site archive tarball to !tmp.', array('!tmp' => $tmp)));
+    return brush_set_error('BRUSH_ARCHIVE_UNABLE_TO_EXTRACT', bt('Unable to extract site archive tarball to !tmp.', array('!tmp' => $tmp)));
   }
 
   $manifest = $tmp . '/MANIFEST.ini';
   if (file_exists($manifest)) {
     if (!$ini = parse_ini_file($manifest, TRUE)) {
-      return brush_set_error('BRUSH_ARCHIVE_UNABLE_TO_PARSE_MANIFEST', dt('Unable to parse MANIFEST.ini in the archive.'));
+      return brush_set_error('BRUSH_ARCHIVE_UNABLE_TO_PARSE_MANIFEST', bt('Unable to parse MANIFEST.ini in the archive.'));
     }
   }
   else {
@@ -272,7 +272,7 @@ function brush_archive_restore($file, $site_id = NULL) {
   $docroot = basename($first['docroot']);
   $destination = brush_get_option('destination', realpath('.') . "/$docroot");
   if (!brush_move_dir("$tmp/$docroot", $destination, brush_get_option('overwrite'))) {
-    return brush_set_error('BRUSH_ARCHIVE_UNABLE _RESTORE_FILES', dt('Unable to restore files to !dest', array('!dest' => $destination)));
+    return brush_set_error('BRUSH_ARCHIVE_UNABLE _RESTORE_FILES', bt('Unable to restore files to !dest', array('!dest' => $destination)));
   }
 
   // Loop over sites and restore databases and append to settings.php.
@@ -284,7 +284,7 @@ function brush_archive_restore($file, $site_id = NULL) {
       if ($db_url = brush_get_option('db-url')) {
         if (empty($site_id) && count($ini) >= 3) {
           // TODO: Use brushrc to provide multiple db-urls for multi-restore?
-          return brush_set_error('BRUSH_ARCHIVE_UNABLE_MULTI_RESTORE', dt('You must specify a site to restore when the archive contains multiple sites and a db-url is provided.'));
+          return brush_set_error('BRUSH_ARCHIVE_UNABLE_MULTI_RESTORE', bt('You must specify a site to restore when the archive contains multiple sites and a db-url is provided.'));
         }
         $db_spec = brush_convert_db_from_db_url($db_url);
       }
@@ -295,7 +295,7 @@ function brush_archive_restore($file, $site_id = NULL) {
           $db_spec = $databases['default']['default'];
         }
         else {
-          return brush_set_error('BRUSH_ARCHIVE_UNABLE_DISCOVER_DB', dt('Unable to get database details from db-url option or settings.php', array('!key' => $key)));
+          return brush_set_error('BRUSH_ARCHIVE_UNABLE_DISCOVER_DB', bt('Unable to get database details from db-url option or settings.php', array('!key' => $key)));
         }
       }
       brush_sql_empty_db($db_spec);
@@ -307,10 +307,10 @@ function brush_archive_restore($file, $site_id = NULL) {
         chmod($settingsfile, 0755); // Need to do something here or else we can't write.
         file_put_contents($settingsfile, "\n// Appended by brush archive-restore command.\n", FILE_APPEND);
         file_put_contents($settingsfile, "\n" . '$databases = ' . var_export(brush_sitealias_convert_db_from_db_url($db_url), TRUE) . ";\n", FILE_APPEND);
-        brush_log(dt('Brush appended the new database configuration at settings.php. Optionally remove the old configuration manually.'), 'ok');
+        brush_log(bt('Brush appended the new database configuration at settings.php. Optionally remove the old configuration manually.'), 'ok');
       }
     }
   }
-  brush_log(dt('Archive restored to !dest', array('!dest' => $destination)), 'ok');
+  brush_log(bt('Archive restored to !dest', array('!dest' => $destination)), 'ok');
   return $destination;
 }

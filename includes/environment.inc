@@ -193,7 +193,7 @@ function brush_bootstrap($phase, $phase_max = FALSE) {
     if (brush_bootstrap_validate($phase_index)) {
       $current_phase = $phases[$phase_index];
       if (function_exists($current_phase) && !brush_get_error()) {
-        brush_log(dt("Brush bootstrap phase : !function()", array('!function' => $current_phase)), 'bootstrap');
+        brush_log(bt("Brush bootstrap phase : !function()", array('!function' => $current_phase)), 'bootstrap');
         $current_phase();
 
         // Find any command files that are available during this bootstrap phase.
@@ -297,7 +297,7 @@ function brush_bootstrap_to_phase($max_phase_index) {
     return TRUE;
   }
 
-  brush_log(dt("Bootstrap to phase !phase.", array('!phase' => $max_phase_index)), 'bootstrap');
+  brush_log(bt("Bootstrap to phase !phase.", array('!phase' => $max_phase_index)), 'bootstrap');
   $phases = _brush_bootstrap_phases();
   $result = TRUE;
 
@@ -445,10 +445,10 @@ function brush_bootstrap_value($context, $value = null) {
  */
 function _brush_php_ini_loaded_file_message() {
   if (function_exists('php_ini_loaded_file')) {
-    return dt('Please check your configuration settings in !phpini or in your brush.ini file; see examples/example.brush.ini for details.', array('!phpini' => php_ini_loaded_file()));
+    return bt('Please check your configuration settings in !phpini or in your brush.ini file; see examples/example.brush.ini for details.', array('!phpini' => php_ini_loaded_file()));
   }
   else {
-    return dt('Please check your configuration settings in your php.ini file or in your brush.ini file; see examples/example.brush.ini for details.');
+    return bt('Please check your configuration settings in your php.ini file or in your brush.ini file; see examples/example.brush.ini for details.');
   }
 }
 
@@ -461,7 +461,7 @@ function _brush_postmortem() {
   // Make sure that the memory limit has been bumped up from the minimum default value of 32M.
   $php_memory_limit = brush_memory_limit();
   if (($php_memory_limit > 0) && ($php_memory_limit <= 32*BRUSH_BACKDROP_KILOBYTE*BRUSH_BACKDROP_KILOBYTE)) {
-    brush_set_error('BRUSH_MEMORY_LIMIT', dt('Your memory limit is set to !memory_limit; brush needs as much memory to run as Backdrop.  !php_ini_msg', array('!memory_limit' => $php_memory_limit / (BRUSH_BACKDROP_KILOBYTE*BRUSH_BACKDROP_KILOBYTE) . 'M', '!php_ini_msg' => _brush_php_ini_loaded_file_message())));
+    brush_set_error('BRUSH_MEMORY_LIMIT', bt('Your memory limit is set to !memory_limit; brush needs as much memory to run as Backdrop.  !php_ini_msg', array('!memory_limit' => $php_memory_limit / (BRUSH_BACKDROP_KILOBYTE*BRUSH_BACKDROP_KILOBYTE) . 'M', '!php_ini_msg' => _brush_php_ini_loaded_file_message())));
   }
 }
 
@@ -493,7 +493,7 @@ function _brush_environment_check_php_ini() {
     }
   }
   if (!empty($prohibited_list)) {
-    brush_log(dt('The following restricted PHP modes have non-empty values: !prohibited_list. This configuration is incompatible with brush.  !php_ini_msg', array('!prohibited_list' => implode(' and ', $prohibited_list), '!php_ini_msg' => _brush_php_ini_loaded_file_message())), 'error');
+    brush_log(bt('The following restricted PHP modes have non-empty values: !prohibited_list. This configuration is incompatible with brush.  !php_ini_msg', array('!prohibited_list' => implode(' and ', $prohibited_list), '!php_ini_msg' => _brush_php_ini_loaded_file_message())), 'error');
   }
 
   return TRUE;
@@ -523,7 +523,7 @@ function _brush_bootstrap_brush_validate() {
 function brush_environment_check_os() {
   if (substr(PHP_OS, 0, 3) == 'WIN') {
     $msg = 'Brush has significant limitations on Windows; it is not advisable to use on that platform.';
-    brush_log(dt($msg), 'warning');
+    brush_log(bt($msg), 'warning');
   }
 }
 
@@ -690,10 +690,10 @@ function _brush_bootstrap_backdrop_root_validate() {
   $backdrop_root = brush_get_option(array('r', 'root'), brush_locate_root());
 
   if (empty($backdrop_root)) {
-    return brush_bootstrap_error('BRUSH_NO_BACKDROP_ROOT', dt("A Backdrop installation directory could not be found"));
+    return brush_bootstrap_error('BRUSH_NO_BACKDROP_ROOT', bt("A Backdrop installation directory could not be found"));
   }
   if (!brush_valid_backdrop_root($backdrop_root)) {
-    return brush_bootstrap_error('BRUSH_INVALID_BACKDROP_ROOT', dt("The directory !backdrop_root does not contain a valid Backdrop installation", array('!backdrop_root' => $backdrop_root)));
+    return brush_bootstrap_error('BRUSH_INVALID_BACKDROP_ROOT', bt("The directory !backdrop_root does not contain a valid Backdrop installation", array('!backdrop_root' => $backdrop_root)));
   }
 
   brush_bootstrap_value('backdrop_root', $backdrop_root);
@@ -726,7 +726,7 @@ function _brush_bootstrap_backdrop_root() {
 
   _brush_bootstrap_global_options();
 
-  brush_log(dt("Initialized Backdrop !version root directory at !backdrop_root", array("!version" => $version, '!backdrop_root' => $backdrop_root)));
+  brush_log(bt("Initialized Backdrop !version root directory at !backdrop_root", array("!version" => $version, '!backdrop_root' => $backdrop_root)));
 }
 
 /**
@@ -796,7 +796,7 @@ function _brush_bootstrap_backdrop_site_validate() {
   $conf_path = brush_bootstrap_value('conf_path', conf_path(TRUE, TRUE));
   $conf_file = "./$conf_path/settings.php";
   if (!file_exists($conf_file)) {
-    return brush_bootstrap_error('BACKDROP_SITE_SETTINGS_NOT_FOUND', dt("Could not find a Backdrop settings.php file at !file.",
+    return brush_bootstrap_error('BACKDROP_SITE_SETTINGS_NOT_FOUND', bt("Could not find a Backdrop settings.php file at !file.",
        array('!file' => $conf_file)));
   }
 
@@ -815,7 +815,7 @@ function _brush_bootstrap_do_backdrop_site() {
   // Create an alias '@self'
   _brush_sitealias_cache_alias('self', array('root' => brush_get_context('BRUSH_BACKDROP_ROOT'), 'uri' => $brush_uri));
 
-  brush_log(dt("Initialized Backdrop site !site at !site_root", array('!site' => $site, '!site_root' => $conf_path)));
+  brush_log(bt("Initialized Backdrop site !site at !site_root", array('!site' => $site, '!site_root' => $conf_path)));
   brush_load_config('site');
 
   _brush_bootstrap_global_options();
@@ -860,7 +860,7 @@ function _brush_bootstrap_redo_backdrop_site() {
         // backdrop site once again.  It is possible to re-bootstrap
         // the site at this point because settings.php has not
         // been included yet.
-        brush_log(dt("Re-bootstrap backdrop site."));
+        brush_log(bt("Re-bootstrap backdrop site."));
         _brush_bootstrap_backdrop_site_validate();
         _brush_bootstrap_do_backdrop_site();
       }
@@ -951,7 +951,7 @@ function _brush_bootstrap_backdrop_database_validate() {
  * Boostrap the Backdrop database.
  */
 function _brush_bootstrap_backdrop_database() {
-  brush_log(dt("Successfully connected to the Backdrop database."), 'bootstrap');
+  brush_log(bt("Successfully connected to the Backdrop database."), 'bootstrap');
   backdrop_bootstrap(BACKDROP_BOOTSTRAP_DATABASE);
 }
 
@@ -1171,12 +1171,12 @@ function brush_valid_db_credentials() {
         require_once './includes/install.'. $type .'.inc';
         $function = $type .'_is_available';
         if (!$function()) {
-          brush_log(dt('!type extension for PHP is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
+          brush_log(bt('!type extension for PHP is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
           return FALSE;
         }
       }
       else {
-        brush_log(dt('!type database type is unsupported.', array('!type' => $type)), 'bootstrap');
+        brush_log(bt('!type database type is unsupported.', array('!type' => $type)), 'bootstrap');
         return FALSE;
       }
       // Verify connection settings.
@@ -1226,12 +1226,12 @@ function brush_valid_db_credentials() {
       // Backdrop >=7 requires PDO and brush requires php 5.2, that ships with PDO
       // but it may be compiled with --disable-pdo.
       if (!class_exists('PDO')) {
-        brush_log(dt('PDO support is required.'), 'bootstrap');
+        brush_log(bt('PDO support is required.'), 'bootstrap');
         return FALSE;
       }
       // Check the database specific driver is available.
       if (!in_array($type, PDO::getAvailableDrivers())) {
-        brush_log(dt('!type extension for PHP PDO is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
+        brush_log(bt('!type extension for PHP PDO is not installed. Check your php.ini to see how you can enable it.', array('!type' => $type)), 'bootstrap');
         return FALSE;
       }
       // Build the connection string.

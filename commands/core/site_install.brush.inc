@@ -7,7 +7,7 @@ function brush_core_site_install_validate() {
   if ($sites_subdir = brush_get_option('sites-subdir')) {
     $lower = strtolower($sites_subdir);
     if ($sites_subdir != $lower) {
-      brush_log(dt('Only lowercase sites-subdir are valid. Switching to !lower.', array('!lower' => $lower)), 'warning');
+      brush_log(bt('Only lowercase sites-subdir are valid. Switching to !lower.', array('!lower' => $lower)), 'warning');
       brush_set_option('sites-subdir', $lower);
     }
   }
@@ -18,7 +18,7 @@ function brush_core_site_install_validate() {
  */
 function brush_core_pre_site_install() {
   if (!$db_spec = _brush_sql_get_db_spec()) {
-    brush_set_error(dt('Could not determine database connection parameters. Pass --db-url option.'));
+    brush_set_error(bt('Could not determine database connection parameters. Pass --db-url option.'));
     return;
   }
   if ($sites_subdir = brush_get_option('sites-subdir')) {
@@ -33,30 +33,30 @@ function brush_core_pre_site_install() {
   $files = "$conf_path/files";
   $settingsfile = "$conf_path/settings.php";
   if (!file_exists($files)) {
-    $msg[] = dt('create a @files directory', array('@files' => $files));
+    $msg[] = bt('create a @files directory', array('@files' => $files));
   }
   if (!file_exists($settingsfile)) {
-    $msg[] = dt('create a @settingsfile file', array('@settingsfile' => $settingsfile));
+    $msg[] = bt('create a @settingsfile file', array('@settingsfile' => $settingsfile));
   }
-  $msg[] = dt("drop your '@db' database and then create a new one.", array('@db' => $db_spec['database']));
+  $msg[] = bt("drop your '@db' database and then create a new one.", array('@db' => $db_spec['database']));
 
-  if (!brush_confirm(dt('You are about to ') . implode(dt(' and '), $msg) . ' Do you want to continue?')) {
+  if (!brush_confirm(bt('You are about to ') . implode(bt(' and '), $msg) . ' Do you want to continue?')) {
     return brush_user_abort();
   }
 
   // Can't install without sites directory and settings.php.
   if (!file_exists($conf_path)) {
     if (!brush_op('mkdir', $conf_path) && !brush_get_context('BRUSH_SIMULATE')) {
-      brush_set_error(dt('Failed to create directory @conf_path', array('@conf_path' => $conf_path)));
+      brush_set_error(bt('Failed to create directory @conf_path', array('@conf_path' => $conf_path)));
       return;
     }
   }
   else {
-    brush_log(dt('Sites directory @subdir already exists - proceeding.', array('@subdir' => $conf_path)));
+    brush_log(bt('Sites directory @subdir already exists - proceeding.', array('@subdir' => $conf_path)));
   }
   if (!file_exists($settingsfile)) {
     if (!brush_op('copy', 'sites/default/default.settings.php', $settingsfile) && !brush_get_context('BRUSH_SIMULATE')) {
-      brush_set_error(dt('Failed to copy sites/default/default.settings.php to  @settingsfile', array('@settingsfile' => $settingsfile)));
+      brush_set_error(bt('Failed to copy sites/default/default.settings.php to  @settingsfile', array('@settingsfile' => $settingsfile)));
       return;
     }
   }
@@ -64,7 +64,7 @@ function brush_core_pre_site_install() {
   // Add a files dir if needed
   if (!file_exists($files)) {
     if (!brush_op('mkdir', $files) && !brush_get_context('BRUSH_SIMULATE')) {
-      brush_set_error(dt('Failed to create directory @name', array('@name' => $files)));
+      brush_set_error(bt('Failed to create directory @name', array('@name' => $files)));
       return;
     }
   }
@@ -83,7 +83,7 @@ function brush_core_pre_site_install() {
     // when SQLite attempts to open a database file which doesn't exist.
     if (file_exists($db_spec['database']) && !$simulate) {
       if (!unlink($db_spec['database'])) {
-        brush_set_error(dt('Could not brush database: @name', array('@name' => $db_name)));
+        brush_set_error(bt('Could not brush database: @name', array('@name' => $db_name)));
       }
     }
   }

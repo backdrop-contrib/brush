@@ -32,7 +32,7 @@ class brush_pm_version_control_backup implements brush_pm_version_control {
       elseif (brush_copy_dir($project['full_project_path'], $backup_target)) {
         return TRUE;
       }
-      return brush_set_error('BRUSH_PM_BACKUP_FAILED', dt('Failed to backup project directory !project to !backup_target', array('!project' => $project['full_project_path'], '!backup_target' => $backup_target)));
+      return brush_set_error('BRUSH_PM_BACKUP_FAILED', bt('Failed to backup project directory !project to !backup_target', array('!project' => $project['full_project_path'], '!backup_target' => $backup_target)));
     }
   }
 
@@ -44,9 +44,9 @@ class brush_pm_version_control_backup implements brush_pm_version_control {
       return;
     }
     if (brush_move_dir($project['backup_target'], $project['full_project_path'], TRUE)) {
-      return brush_log(dt("Backups were restored successfully."), 'ok');
+      return brush_log(bt("Backups were restored successfully."), 'ok');
     }
-    return brush_set_error('BRUSH_PM_BACKUP_ROLLBACK_FAILED', dt('Could not restore backup and rollback from failed upgrade. You will need to resolve manually.'));
+    return brush_set_error('BRUSH_PM_BACKUP_ROLLBACK_FAILED', bt('Could not restore backup and rollback from failed upgrade. You will need to resolve manually.'));
   }
 
   /**
@@ -57,7 +57,7 @@ class brush_pm_version_control_backup implements brush_pm_version_control {
       return;
     }
     if ($project['backup_target']) {
-      brush_log(dt("Backups were saved into the directory !backup_target.", array('!backup_target' => $project['backup_target'])), 'ok');
+      brush_log(bt("Backups were saved into the directory !backup_target.", array('!backup_target' => $project['backup_target'])), 'ok');
     }
   }
 

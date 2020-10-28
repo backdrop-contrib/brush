@@ -37,7 +37,7 @@ function brush_image_flush($style_name = NULL) {
   elseif (empty($style_name)) {
     $choices = backdrop_map_assoc(array_keys(image_styles()));
     $choices = array_merge(array('all' => 'all'), $choices);
-    $style_name = brush_choice($choices, dt("Choose a style to flush."));
+    $style_name = brush_choice($choices, bt("Choose a style to flush."));
     if ($style_name == 'all') {
       brush_image_flush_all();
     }
@@ -49,10 +49,10 @@ function brush_image_flush($style_name = NULL) {
   else {
     if ($style = image_style_load($style_name)) {
       image_style_flush($style);
-      brush_log(dt('Image style !style_name flushed', array('!style_name' => $style_name)), 'success');
+      brush_log(bt('Image style !style_name flushed', array('!style_name' => $style_name)), 'success');
     }
     else {
-      return brush_set_error(dt('Image style !style not recognized.', array('!style' => $style_name)));
+      return brush_set_error(bt('Image style !style not recognized.', array('!style' => $style_name)));
     }
   }
 }
@@ -61,5 +61,5 @@ function brush_image_flush_all() {
   foreach (image_styles() as $style) {
     image_style_flush($style);
   }
-  brush_log(dt('All image styles flushed'), 'success');
+  brush_log(bt('All image styles flushed'), 'success');
 }

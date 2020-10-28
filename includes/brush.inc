@@ -36,13 +36,13 @@ function brush_include($path, $name, $version = NULL, $extension = 'inc') {
   $version = ($version) ? $version : brush_backdrop_major_version();
   $file = sprintf("%s/%s_%s.%s", $path, $name, $version, $extension);
   if (file_exists($file)) {
-    // brush_log(dt('Including version specific file : @file', array('@file' => $file)));
+    // brush_log(bt('Including version specific file : @file', array('@file' => $file)));
     include_once($file);
     return TRUE;
   }
   $file = sprintf("%s/%s.%s", $path, $name, $extension);
   if (file_exists($file)) {
-    // brush_log(dt('Including non-version specific file : @file', array('@file' => $file)));
+    // brush_log(bt('Including non-version specific file : @file', array('@file' => $file)));
     include_once($file);
     return TRUE;
   }
@@ -130,12 +130,12 @@ function brush_include_engine($type, $engine, $version = NULL, $path = NULL) {
     $path = $engines[$engine]['path'];
   }
   if (!$path) {
-    return brush_set_error('BRUSH_ENGINE INCLUDE_NO_PATH', dt('No path was set for including the !type engine !engine.', array('!type' => $type, '!engine' => $engine)));
+    return brush_set_error('BRUSH_ENGINE INCLUDE_NO_PATH', bt('No path was set for including the !type engine !engine.', array('!type' => $type, '!engine' => $engine)));
   }
   if (brush_include($path, $engine, $version)) {
     return TRUE;
   }
-  return brush_set_error('BRUSH_ENGINE INCLUDE_FAILED', dt('Unable to include the !type engine !engine from !path.' , array('!path' => $path, '!type' => $type, '!engine' => $engine)));
+  return brush_set_error('BRUSH_ENGINE INCLUDE_FAILED', bt('Unable to include the !type engine !engine from !path.' , array('!path' => $path, '!type' => $type, '!engine' => $engine)));
 }
 
 /**
@@ -169,7 +169,7 @@ function brush_check_self_update() {
   // Don't check unless we have a datestamp in brush.info
   $brush_info = brush_read_brush_info();
   if (($brush_info === FALSE) || (!array_key_exists('datestamp', $brush_info))) {
-    brush_log(dt('Cannot determine release date for brush'), 'notice');
+    brush_log(bt('Cannot determine release date for brush'), 'notice');
     return FALSE;
   }
 
@@ -199,11 +199,11 @@ function brush_check_self_update() {
   }
 
   if ($newer_version) {
-    brush_print(dt('A newer version of brush, !version, is available.  You are currently running brush version !currentversion; to update, run `brush self-update`.  To disable this check, put "$options[\'self-update\'] = FALSE;" in your brushrc.php configuration file.' . "\n", array('!version' => $newer_version, '!currentversion' => BRUSH_VERSION)));
+    brush_print(bt('A newer version of brush, !version, is available.  You are currently running brush version !currentversion; to update, run `brush self-update`.  To disable this check, put "$options[\'self-update\'] = FALSE;" in your brushrc.php configuration file.' . "\n", array('!version' => $newer_version, '!currentversion' => BRUSH_VERSION)));
     return TRUE;
   }
   else {
-    brush_log(dt("brush self-update check: brush !version is up-to-date.", array('!version' => BRUSH_VERSION)), 'notice');
+    brush_log(bt("brush self-update check: brush !version is up-to-date.", array('!version' => BRUSH_VERSION)), 'notice');
   }
 
   return NULL;
@@ -325,30 +325,30 @@ function _convert_csv_to_array($args) {
  *   for each of the available options.
  */
 function brush_get_global_options($brief = FALSE) {
-  $options['root']               = array('short-form' => 'r', 'description' => dt("Backdrop root directory to use (default: current directory)"), 'example-value' => '<path>');
-  $options['uri']                = array('short-form' => 'l', 'description' => dt('URI of the backdrop site to use (only needed in multisite environments or when running on an alternate port)'), 'example-value' => 'http://example.com:8888');
-  $options['verbose']            = array('short-form' => 'v', 'description' => dt('Display extra information about the command.'));
-  $options['debug']              = array('short-form' => 'd', 'description' => dt('Display even more information, including internal messages.'));
-  $options['yes']                = array('short-form' => 'y', 'description' => dt("Assume 'yes' as answer to all prompts"));
-  $options['no']                 = array('short-form' => 'n', 'description' => dt("Assume 'no' as answer to all prompts"));
-  $options['simulate']           = array('short-form' => 's', 'description' => dt("Simulate all relevant actions (don't actually change the system)"));
-  $options['pipe']               = array('short-form' => 'p', 'description' => dt("Emit a compact representation of the command for scripting."));
-  $options['help']               = array('short-form' => 'h', 'description' => dt("This help system."));
-  $options['version']            = dt("Show brush version.");
-  $options['php']                = dt("The absolute path to your PHP intepreter, if not 'php' in the path.");
+  $options['root']               = array('short-form' => 'r', 'description' => bt("Backdrop root directory to use (default: current directory)"), 'example-value' => '<path>');
+  $options['uri']                = array('short-form' => 'l', 'description' => bt('URI of the backdrop site to use (only needed in multisite environments or when running on an alternate port)'), 'example-value' => 'http://example.com:8888');
+  $options['verbose']            = array('short-form' => 'v', 'description' => bt('Display extra information about the command.'));
+  $options['debug']              = array('short-form' => 'd', 'description' => bt('Display even more information, including internal messages.'));
+  $options['yes']                = array('short-form' => 'y', 'description' => bt("Assume 'yes' as answer to all prompts"));
+  $options['no']                 = array('short-form' => 'n', 'description' => bt("Assume 'no' as answer to all prompts"));
+  $options['simulate']           = array('short-form' => 's', 'description' => bt("Simulate all relevant actions (don't actually change the system)"));
+  $options['pipe']               = array('short-form' => 'p', 'description' => bt("Emit a compact representation of the command for scripting."));
+  $options['help']               = array('short-form' => 'h', 'description' => bt("This help system."));
+  $options['version']            = bt("Show brush version.");
+  $options['php']                = bt("The absolute path to your PHP intepreter, if not 'php' in the path.");
 
   if (!$brief) {
-    $options['quiet']            = array('short-form' => 'q', 'description' => dt('Hide all output'));
-    $options['include']          = array('short-form' => 'i', 'description' => dt("A list of paths to search for brush commands"));
-    $options['config']           = array('short-form' => 'c', 'description' => dt("Specify a config file to use. See example.brushrc.php"));
-    $options['user']             = array('short-form' => 'u', 'description' => dt("Specify a user to login with. May be a name or a number."));
-    $options['backend']          = array('short-form' => 'b', 'description' => dt("Hide all output and return structured data (internal use only)."));
-    $options['choice']           = dt("Provide an answer to a multiple-choice prompt.");
-    $options['no-label']         = dt("Remove the site label that brush includes in multi-site command output(e.g. `brush @site1,@site2 status`).");
-    $options['nocolor']          = dt("Suppress color highlighting on log messages.");
-    $options['show-passwords']   = dt("Show database passwords in commands that display connection information.");
-    $options['show-invoke']      = dt("Show all function names which could have been called for the current command. See brush_invoke().");
-    $options['watchdog']         = dt("Control logging of Backdrop's watchdog() to brush log. Recognized values are 'log', 'print', 'disabled'. Defaults to log. 'print' shows calls to admin but does not add them to the log.");
+    $options['quiet']            = array('short-form' => 'q', 'description' => bt('Hide all output'));
+    $options['include']          = array('short-form' => 'i', 'description' => bt("A list of paths to search for brush commands"));
+    $options['config']           = array('short-form' => 'c', 'description' => bt("Specify a config file to use. See example.brushrc.php"));
+    $options['user']             = array('short-form' => 'u', 'description' => bt("Specify a user to login with. May be a name or a number."));
+    $options['backend']          = array('short-form' => 'b', 'description' => bt("Hide all output and return structured data (internal use only)."));
+    $options['choice']           = bt("Provide an answer to a multiple-choice prompt.");
+    $options['no-label']         = bt("Remove the site label that brush includes in multi-site command output(e.g. `brush @site1,@site2 status`).");
+    $options['nocolor']          = bt("Suppress color highlighting on log messages.");
+    $options['show-passwords']   = bt("Show database passwords in commands that display connection information.");
+    $options['show-invoke']      = bt("Show all function names which could have been called for the current command. See brush_invoke().");
+    $options['watchdog']         = bt("Control logging of Backdrop's watchdog() to brush log. Recognized values are 'log', 'print', 'disabled'. Defaults to log. 'print' shows calls to admin but does not add them to the log.");
     $options['confirm-rollback']    = array('description' => 'Wait for confirmation before doing a rollback when something goes wrong.');
   }
   return $options;
@@ -372,7 +372,7 @@ function brush_show_help($commandstring) {
     brush_print_help($command);
     return TRUE;
   }
-  return brush_set_error('BRUSH_COMMAND_NOT_FOUND', dt('Invalid command !command.', array('!command' => $commandstring)));
+  return brush_set_error('BRUSH_COMMAND_NOT_FOUND', bt('Invalid command !command.', array('!command' => $commandstring)));
 }
 
 /**
@@ -403,7 +403,7 @@ function brush_print_help($command) {
 
   foreach ($command['sections'] as $key => $value) {
     if (!empty($command[$key])) {
-      brush_print(dt($value) . ':');
+      brush_print(bt($value) . ':');
       $rows = brush_format_help_section($command, $key);
       brush_print_table($rows, FALSE, array(40));
       unset($rows);
@@ -413,7 +413,7 @@ function brush_print_help($command) {
 
   // Append aliases if any.
   if ($command['aliases']) {
-    brush_print(dt("Aliases: ") . implode(', ', $command['aliases']));
+    brush_print(bt("Aliases: ") . implode(', ', $command['aliases']));
   }
 }
 
@@ -488,7 +488,7 @@ function _brush_format_help_subsection($command, $section, $subsection, $formatt
  */
 function brush_help_section_formatter_options($command, &$help_attributes) {
   if ($help_attributes['label'][0] == '-') {
-    brush_log(dt("Option '%option' of command %command should instead be declared as '%fixed'", array('%option' => $help_attributes['label'], '%command' => $command['command'], '%fixed' => preg_replace('/^--*/', '', $help_attributes['label']))), 'debug');
+    brush_log(bt("Option '%option' of command %command should instead be declared as '%fixed'", array('%option' => $help_attributes['label'], '%command' => $command['command'], '%fixed' => preg_replace('/^--*/', '', $help_attributes['label']))), 'debug');
   }
   else {
     $help_attributes['label'] = '--' . $help_attributes['label'];
@@ -624,7 +624,7 @@ function brush_print_r($array, $handle = NULL) {
  *
  * @see t()
  */
-function dt($string, $args = array()) {
+function bt($string, $args = array()) {
   if (function_exists('t')) {
     return t($string, $args);
   }
@@ -989,7 +989,7 @@ function brush_confirm($msg, $indent = 0) {
  *   user name, use '!value (uid=!key)'.
  */
 function brush_choice($options, $prompt = 'Enter a number.', $label = '!value') {
-  print dt($prompt) . "\n";
+  print bt($prompt) . "\n";
 
   // Preflight so that all rows will be padded out to the same number of columns
   $array_pad = 0;
@@ -1012,7 +1012,7 @@ function brush_choice($options, $prompt = 'Enter a number.', $label = '!value') 
         $row = array_merge($row, $option);
       }
       else {
-        $row[] = dt($label, array('!number' => $selection_number, '!key' => $key, '!value' => $option));
+        $row[] = bt($label, array('!number' => $selection_number, '!key' => $key, '!value' => $option));
       }
       $rows[] = $row;
       $selection_list[$selection_number] = $key;
@@ -1052,7 +1052,7 @@ function brush_choice($options, $prompt = 'Enter a number.', $label = '!value') 
   if (brush_get_context('BRUSH_AFFIRMATIVE')  && (count($options) == 1)) {
     return $selection_list[1];
   }
-  brush_print(dt('Cancelled'));
+  brush_print(bt('Cancelled'));
   return FALSE;
 }
 
@@ -1105,14 +1105,14 @@ function brush_choice_multiple($options, $defaults = FALSE, $prompt = 'Select so
   $complete = FALSE;
   $final_builtin = array();
   if (empty($final_options)) {
-    $final_builtin['done'] = dt('Done');
+    $final_builtin['done'] = bt('Done');
   }
   $final_options_keys = array_keys($final_options);
   while (TRUE) {
     $current_options = $options;
     // Mark selections.
     foreach ($selections as $selection) {
-      $current_options[$selection] = dt($mark, array('!key' => $selection, '!value' => $options[$selection]));
+      $current_options[$selection] = bt($mark, array('!key' => $selection, '!value' => $options[$selection]));
     }
     // Add final options, if the minimum number of selections has been reached.
     if (count($selections) >= $min) {
@@ -1223,7 +1223,7 @@ function brush_op($function) {
 
   // Special checking for brush_op('system')
   if ($function == 'system') {
-    brush_log(dt("Do not call brush_op('system'); use brush_op_system instead"), 'debug');
+    brush_log(bt("Do not call brush_op('system'); use brush_op_system instead"), 'debug');
   }
 
   if (brush_get_context('BRUSH_SIMULATE')) {
@@ -1501,7 +1501,7 @@ function brush_download_file($url, $destination = FALSE, $cache_duration = 0) {
     $cache_file = $cache_dir . "/" . $cache_name;
     // Check for cached, unexpired file.
     if (file_exists($cache_file) && filectime($cache_file) > ($_SERVER['REQUEST_TIME']-$cache_duration)) {
-      brush_log(dt('!name retrieved from cache.', array('!name' => $cache_name)));
+      brush_log(bt('!name retrieved from cache.', array('!name' => $cache_name)));
       return $cache_file;
     }
     else {
@@ -1510,7 +1510,7 @@ function brush_download_file($url, $destination = FALSE, $cache_duration = 0) {
         return $cache_file;
       }
       elseif (file_exists($cache_file)) {
-        brush_log(dt('!name retrieved from an expired cache since refresh failed.', array('!name' => $cache_name)), 'warning');
+        brush_log(bt('!name retrieved from an expired cache since refresh failed.', array('!name' => $cache_name)), 'warning');
         return $cache_file;
       }
     }
@@ -1581,11 +1581,11 @@ function _brush_download_file($url, $destination = FALSE, $overwrite = TRUE) {
 
 function brush_tarball_extract($path, $destination = FALSE, $listing = FALSE) {
   if (!file_exists($path)) {
-    return brush_set_error(dt('Zip file @path could not be found.', array('@path' => $path)));
+    return brush_set_error(bt('Zip file @path could not be found.', array('@path' => $path)));
   }
 
   if (!brush_shell_cd_and_exec(dirname($path), "unzip %s", basename($path))) {
-    return brush_set_error(dt('Zip file @path could not be extracted.', array('@path' => $path)));
+    return brush_set_error(bt('Zip file @path could not be extracted.', array('@path' => $path)));
   }
 }
 
@@ -1647,23 +1647,23 @@ function brush_copy_dir($src, $dest, $overwrite = FALSE) {
       brush_op('brush_delete_dir', $dest, TRUE);
     }
     else {
-      return brush_set_error('BRUSH_DESTINATION_EXISTS', dt('Destination directory !dest already exists.', array('!dest' => $dest)));
+      return brush_set_error('BRUSH_DESTINATION_EXISTS', bt('Destination directory !dest already exists.', array('!dest' => $dest)));
     }
   }
   // $src readable?
   if (!brush_op('is_readable', $src)) {
-    return brush_set_error('BRUSH_SOURCE_NOT_EXISTS', dt('Source directory !src is not readable or does not exist.', array('!src' => $src)));
+    return brush_set_error('BRUSH_SOURCE_NOT_EXISTS', bt('Source directory !src is not readable or does not exist.', array('!src' => $src)));
   }
   // $dest writable?
   if (!brush_op('is_writable', dirname($dest))) {
-    return brush_set_error('BRUSH_DESTINATION_NOT_WRITABLE', dt('Destination directory !dest is not writable.', array('!dest' => dirname($dest))));
+    return brush_set_error('BRUSH_DESTINATION_NOT_WRITABLE', bt('Destination directory !dest is not writable.', array('!dest' => dirname($dest))));
   }
   // Try to do a recursive copy.
   if (@brush_op('_brush_recursive_copy', $src, $dest)) {
     return TRUE;
   }
 
-  return brush_set_error('BRUSH_COPY_DIR_FAILURE', dt('Unable to copy !src to !dest.', array('src' => $src, 'dest' => $dest)));
+  return brush_set_error('BRUSH_COPY_DIR_FAILURE', bt('Unable to copy !src to !dest.', array('src' => $src, 'dest' => $dest)));
 }
 
 /**
@@ -1719,16 +1719,16 @@ function brush_move_dir($src, $dest, $overwrite = FALSE) {
       brush_op('brush_delete_dir', $dest, TRUE);
     }
     else {
-      return brush_set_error('BRUSH_DESTINATION_EXISTS', dt('Destination directory !dest already exists.', array('!dest' => $dest)));
+      return brush_set_error('BRUSH_DESTINATION_EXISTS', bt('Destination directory !dest already exists.', array('!dest' => $dest)));
     }
   }
   // $src readable?
   if (!brush_op('is_readable', $src)) {
-    return brush_set_error('BRUSH_SOURCE_NOT_EXISTS', dt('Source directory !src is not readable or does not exist.', array('!src' => $src)));
+    return brush_set_error('BRUSH_SOURCE_NOT_EXISTS', bt('Source directory !src is not readable or does not exist.', array('!src' => $src)));
   }
   // $dest writable?
   if (!brush_op('is_writable', dirname($dest))) {
-    return brush_set_error('BRUSH_DESTINATION_NOT_WRITABLE', dt('Destination directory !dest is not writable.', array('!dest' => dirname($dest))));
+    return brush_set_error('BRUSH_DESTINATION_NOT_WRITABLE', bt('Destination directory !dest is not writable.', array('!dest' => dirname($dest))));
   }
   // Try rename. It will fail if $src and $dest are not in the same partition.
   if (@brush_op('rename', $src, $dest)) {
@@ -1747,7 +1747,7 @@ function brush_move_dir($src, $dest, $overwrite = FALSE) {
     return TRUE;
   }
 
-  return brush_set_error('BRUSH_MOVE_DIR_FAILURE', dt('Unable to move !src to !dest.', array('!src' => $src, '!dest' => $dest)));
+  return brush_set_error('BRUSH_MOVE_DIR_FAILURE', bt('Unable to move !src to !dest.', array('!src' => $src, '!dest' => $dest)));
 }
 
 /**
@@ -1761,10 +1761,10 @@ function brush_mkdir($path) {
       }
       else {
         if (is_writable(dirname($path))) {
-          brush_set_error('BRUSH_CREATE_DIR_FAILURE', dt('Unable to create !dir.', array('!dir' => preg_replace('/\w+\/\.\.\//', '', $path))));
+          brush_set_error('BRUSH_CREATE_DIR_FAILURE', bt('Unable to create !dir.', array('!dir' => preg_replace('/\w+\/\.\.\//', '', $path))));
         }
         else {
-          brush_set_error('BRUSH_DESTINATION_NOT_WRITABLE', dt('Unable to write in !dir. Please check directory permissions.', array('!dir' => realpath(dirname($path)))));
+          brush_set_error('BRUSH_DESTINATION_NOT_WRITABLE', bt('Unable to write in !dir. Please check directory permissions.', array('!dir' => realpath(dirname($path)))));
         }
       }
     }
@@ -1921,15 +1921,15 @@ function brush_prepare_backup_dir($subdir = NULL) {
   $backdrop_root .= '/';
 
   if ((!empty($backdrop_root)) && (strpos($backup_parent, $backdrop_root) === 0)) {
-    return brush_set_error('BRUSH_PM_BACKUP_FAILED', dt('It\'s not allowed to store backups inside the Backdrop root directory.'));
+    return brush_set_error('BRUSH_PM_BACKUP_FAILED', bt('It\'s not allowed to store backups inside the Backdrop root directory.'));
   }
   if (!file_exists($backup_parent)) {
     if (!brush_mkdir($backup_parent)) {
-      return brush_set_error('BRUSH_PM_BACKUP_FAILED', dt('Unable to create backup directory !dir.', array('!dir' => $backup_parent)));
+      return brush_set_error('BRUSH_PM_BACKUP_FAILED', bt('Unable to create backup directory !dir.', array('!dir' => $backup_parent)));
     }
   }
   if (!is_writable($backup_parent)) {
-    return brush_set_error('BRUSH_PM_BACKUP_FAILED', dt('Backup directory !dir is not writable.', array('!dir' => $backup_parent)));
+    return brush_set_error('BRUSH_PM_BACKUP_FAILED', bt('Backup directory !dir is not writable.', array('!dir' => $backup_parent)));
   }
 
   brush_mkdir($backup_dir);
@@ -2125,9 +2125,9 @@ function brush_remote_command() {
     $args = brush_get_arguments();
 
     if (!brush_get_context('BRUSH_SIMULATE')) {
-      brush_print(dt("You are about to execute '!command' on all of the following targets:", array('!command' => implode(" ", $args))));
+      brush_print(bt("You are about to execute '!command' on all of the following targets:", array('!command' => implode(" ", $args))));
       foreach ($site_list as $one_destination => $one_record) {
-        brush_print(dt('  !target', array('!target' => $one_destination)));
+        brush_print(bt('  !target', array('!target' => $one_destination)));
       }
 
       if (brush_confirm('Continue? ') === FALSE) {
@@ -2200,12 +2200,12 @@ function brush_do_multiple_command($command, $source_record, $destination_record
     }
 
     if (!brush_get_context('BRUSH_SIMULATE')) {
-      brush_print(dt('You are about to !command between all of the following targets:', array('!command' => $command)));
+      brush_print(bt('You are about to !command between all of the following targets:', array('!command' => $command)));
       $i = 0;
       foreach ($source_list as $one_source) {
         $one_target = $target_list[$i];
         ++$i;
-        brush_print(dt('  !source will overwrite !target', array('!source' => brush_sitealias_alias_record_to_spec($one_source) . $source_path, '!target' => brush_sitealias_alias_record_to_spec($one_target) . $destination_path)));
+        brush_print(bt('  !source will overwrite !target', array('!source' => brush_sitealias_alias_record_to_spec($one_source) . $source_path, '!target' => brush_sitealias_alias_record_to_spec($one_target) . $destination_path)));
       }
 
       if (brush_confirm('Continue? ') === FALSE) {
@@ -2222,9 +2222,9 @@ function brush_do_multiple_command($command, $source_record, $destination_record
       $source_spec = brush_sitealias_alias_record_to_spec($one_source);
       $target_spec = brush_sitealias_alias_record_to_spec($one_target);
 
-      brush_log(dt('Begin do_multiple !command via backend invoke', array('!command' => $command)));
+      brush_log(bt('Begin do_multiple !command via backend invoke', array('!command' => $command)));
       $values = brush_backend_invoke_args($command, array($source_spec . $source_path, $target_spec . $destination_path), $data, 'GET', TRUE);
-      brush_log(dt('Backend invoke is complete'));
+      brush_log(bt('Backend invoke is complete'));
     }
   }
 
@@ -2269,9 +2269,9 @@ function brush_do_command_redispatch($command, $args = array(), $remote_host = N
     }
   }
   // Call through to backend invoke.
-  brush_log(dt('Begin redispatch via backend invoke'));
+  brush_log(bt('Begin redispatch via backend invoke'));
   $values = brush_backend_invoke_args($command, $args, $data, 'GET', TRUE, $brush_path, $remote_host, $remote_user);
-  brush_log(dt('Backend invoke is complete'));
+  brush_log(bt('Backend invoke is complete'));
 
   return $values;
 }
@@ -2530,19 +2530,19 @@ function _brush_log_backdrop_messages() {
 function brush_format_size($size, $langcode = NULL) {
   if ($size < BRUSH_BACKDROP_KILOBYTE) {
     // format_plural() not always available.
-    return dt('@count bytes', array('@count' => $size));
+    return bt('@count bytes', array('@count' => $size));
   }
   else {
     $size = $size / BRUSH_BACKDROP_KILOBYTE; // Convert bytes to kilobytes.
     $units = array(
-      dt('@size KB', array(), array('langcode' => $langcode)),
-      dt('@size MB', array(), array('langcode' => $langcode)),
-      dt('@size GB', array(), array('langcode' => $langcode)),
-      dt('@size TB', array(), array('langcode' => $langcode)),
-      dt('@size PB', array(), array('langcode' => $langcode)),
-      dt('@size EB', array(), array('langcode' => $langcode)),
-      dt('@size ZB', array(), array('langcode' => $langcode)),
-      dt('@size YB', array(), array('langcode' => $langcode)),
+      bt('@size KB', array(), array('langcode' => $langcode)),
+      bt('@size MB', array(), array('langcode' => $langcode)),
+      bt('@size GB', array(), array('langcode' => $langcode)),
+      bt('@size TB', array(), array('langcode' => $langcode)),
+      bt('@size PB', array(), array('langcode' => $langcode)),
+      bt('@size EB', array(), array('langcode' => $langcode)),
+      bt('@size ZB', array(), array('langcode' => $langcode)),
+      bt('@size YB', array(), array('langcode' => $langcode)),
     );
     foreach ($units as $unit) {
       if (round($size, 2) >= BRUSH_BACKDROP_KILOBYTE) {
@@ -2748,7 +2748,7 @@ function brush_clear_error() {
  */
 function brush_user_abort($msg = NULL) {
   brush_set_context('BRUSH_USER_ABORT', TRUE);
-  brush_log($msg ? $msg : dt('Aborting.'), 'cancel');
+  brush_log($msg ? $msg : bt('Aborting.'), 'cancel');
   return FALSE;
 }
 

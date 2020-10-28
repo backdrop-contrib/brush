@@ -48,7 +48,7 @@ function brush_check_module_dependencies($modules, $module_info) {
     if (!empty($unmet_dependencies)) {
       $status[$key]['error'] = array(
           'code' => 'BRUSH_PM_ENABLE_DEPENDENCY_NOT_FOUND',
-          'message' => dt('Module !module cannot be enabled because it depends on the following modules which could not be found: !unmet_dependencies', array('!module' => $module, '!unmet_dependencies' => implode(',', $unmet_dependencies)))
+          'message' => bt('Module !module cannot be enabled because it depends on the following modules which could not be found: !unmet_dependencies', array('!module' => $module, '!unmet_dependencies' => implode(',', $unmet_dependencies)))
       );
     }
     else {
@@ -60,7 +60,7 @@ function brush_check_module_dependencies($modules, $module_info) {
         if (!is_null($incompatibility)) {
           $status[$key]['error'] = array(
             'code' => 'BRUSH_PM_ENABLE_DEPENDENCY_VERSION_MISMATCH',
-            'message' => dt('Module !module cannot be enabled because it depends on !dependency !required_version but !current_version is available', array('!module' => $module, '!dependency' => $dependency_name, '!required_version' => $incompatibility, '!current_version' => $current_version))
+            'message' => bt('Module !module cannot be enabled because it depends on !dependency !required_version but !current_version is available', array('!module' => $module, '!dependency' => $dependency_name, '!required_version' => $incompatibility, '!current_version' => $current_version))
           );
         }
       }

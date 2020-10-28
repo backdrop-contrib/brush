@@ -40,12 +40,12 @@ function hook_brush_command() {
  * or by returning FALSE as its function result, then the rollback
  * mechanism is called.  To fail with an error, call brush_set_error:
  *
- *   return brush_set_error('MY_ERROR_CODE', dt('Error message.'));
+ *   return brush_set_error('MY_ERROR_CODE', bt('Error message.'));
  *
  * To allow the user to confirm or cancel a command, use brush_confirm
  * and brush_user_abort:
  *
- *   if (!brush_confirm(dt('Are you sure?'))) {
+ *   if (!brush_confirm(bt('Are you sure?'))) {
  *     return brush_user_abort();
  *   }
  *
@@ -211,7 +211,7 @@ function hook_brush_pm_download_destination_alter(&$project, $release) {
  * @see brush_upgrade_project_map().
  */
 function hook_brush_upgrade_project_map_alter(&$project_map) {
-  $project_map['warning']['hook'] = dt("You need to take special action before upgrading this module. See http://mysite.com/mypage for more information.");
+  $project_map['warning']['hook'] = bt("You need to take special action before upgrading this module. See http://mysite.com/mypage for more information.");
 }
 
 /**
@@ -221,7 +221,7 @@ function hook_brush_upgrade_project_map_alter(&$project_map) {
  */
 function hook_brush_sql_sync_sanitize($source) {
   brush_sql_register_post_sync_op('my-sanitize-id',
-    dt('Reset passwords and email addresses in user table'),
+    bt('Reset passwords and email addresses in user table'),
     "update users set pass = MD5('password'), mail = concat('user+', uid, '@localhost') where uid > 0;");
 }
 

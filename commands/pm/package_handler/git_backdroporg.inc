@@ -14,12 +14,12 @@ function package_handler_validate() {
   $success = brush_shell_exec('git --version');
   brush_set_context('BRUSH_DEBUG', $debug);
   if (!$success) {
-    return brush_set_error('BRUSH_SHELL_COMMAND_NOT_FOUND', dt('git executable not found.'));
+    return brush_set_error('BRUSH_SHELL_COMMAND_NOT_FOUND', bt('git executable not found.'));
   }
   // Check git_deploy is enabled. Only for bootstrapped sites.
   if (brush_get_context('BRUSH_BOOTSTRAP_PHASE') >= BRUSH_BOOTSTRAP_BACKDROP_FULL) {
     if (!module_exists('git_deploy')) {
-      brush_log(dt('git package handler needs git_deploy module enabled to work properly.'), 'warning');
+      brush_log(bt('git package handler needs git_deploy module enabled to work properly.'), 'warning');
     }
   }
 }
@@ -83,13 +83,13 @@ function package_handler_download_project(&$request, $release) {
   $command .= ' ' . brush_escapeshellarg($repository);
   $command .= ' ' . brush_escapeshellarg($request['full_project_path']);
   if (!brush_shell_exec($command)) {
-    return brush_set_error('BRUSH_PM_GIT_CHECKOUT_PROBLEMS', dt('Unable to clone project !name from git.drupal.org.', array('!name' => $request['name'])));
+    return brush_set_error('BRUSH_PM_GIT_CHECKOUT_PROBLEMS', bt('Unable to clone project !name from git.drupal.org.', array('!name' => $request['name'])));
   }
 
   // Check if the 'tag' from the release feed is a tag or a branch.
   // If the tag exists, git will return it
   if (!brush_shell_cd_and_exec($request['full_project_path'], 'git tag -l ' . brush_escapeshellarg($tag))) {
-    return brush_set_error('BRUSH_PM_GIT_CHECKOUT_PROBLEMS', dt('Unable to clone project !name from git.drupal.org.', array('!name' => $request['name'])));
+    return brush_set_error('BRUSH_PM_GIT_CHECKOUT_PROBLEMS', bt('Unable to clone project !name from git.drupal.org.', array('!name' => $request['name'])));
   }
   $output = brush_shell_exec_output();
 
@@ -180,11 +180,11 @@ function package_handler_post_download($project) {
       // We need the submodule relative path.
       $command[] = substr($project['full_project_path'], strlen($superproject) + 1);
       if (!brush_shell_cd_and_exec($superproject, implode(' ', $command))) {
-        return brush_set_error('BRUSH_PM_GIT_CHECKOUT_PROBLEMS', dt('Unable to add !name as a git submodule of !super.', array('!name' => $project['name'], '!super' => $superproject)));
+        return brush_set_error('BRUSH_PM_GIT_CHECKOUT_PROBLEMS', bt('Unable to add !name as a git submodule of !super.', array('!name' => $project['name'], '!super' => $superproject)));
       }
     }
     else {
-      return brush_set_error('BRUSH_PM_GIT_SUBMODULE_PROBLEMS', dt('Unable to create !project as a git submodule: !dir is not in a Git repository.', array('!project' => $project['name'], '!dir' => dirname($project['full_project_path']))));
+      return brush_set_error('BRUSH_PM_GIT_SUBMODULE_PROBLEMS', bt('Unable to create !project as a git submodule: !dir is not in a Git repository.', array('!project' => $project['name'], '!dir' => dirname($project['full_project_path']))));
     }
   }
 }

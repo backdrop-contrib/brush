@@ -360,7 +360,7 @@ function _brush_sitealias_load_alias($alias, $alias_path_context = NULL) {
     // Only aliases--those named entities that begin with '@'--can be loaded this way.
     // We also skip any alias that has already been loaded.
     if ((substr($alias,0,1) == '@') && !array_key_exists($alias,$all_site_aliases)) {
-      brush_log(dt('Load alias !alias', array('!alias' => $alias)));
+      brush_log(bt('Load alias !alias', array('!alias' => $alias)));
       $aliasname = substr($alias,1);
       $result = _brush_sitealias_find_and_load_alias($aliasname, $alias_path_context);
       if (!empty($result)) {
@@ -461,7 +461,7 @@ function _brush_sitealias_find_and_load_alias($aliasname, $alias_path_context = 
         $aliases = $options = array();
         // silently ignore files we can't include
         if ((@include $filename) === FALSE) {
-          brush_log(dt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), 'bootstrap');
+          brush_log(bt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), 'bootstrap');
           continue;
         }
         unset($options['site-aliases']); // maybe unnecessary
@@ -1478,7 +1478,7 @@ function brush_sitealias_evaluate_path($path, &$additional_options, $local_only 
 
   if (!empty($site_alias_settings)) {
     if ($local_only && array_key_exists('remote-host', $site_alias_settings)) {
-      return brush_set_error('BRUSH_REMOTE_SITE_IN_LOCAL_CONTEXT', dt("A remote site alias was used in a context where only a local alias is appropriate."));
+      return brush_set_error('BRUSH_REMOTE_SITE_IN_LOCAL_CONTEXT', bt("A remote site alias was used in a context where only a local alias is appropriate."));
     }
 
     // Apply any options from this alias that might affect our rsync

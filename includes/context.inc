@@ -145,10 +145,10 @@ function brush_load_config($context) {
 function brush_load_config_file($context, $config) {
   if (file_exists($config)) {
     $options = $aliases = $command_specific = $override = array();
-    brush_log(dt('Loading brushrc "!config" into "!context" scope.', array('!config' => realpath($config), '!context' => $context)), 'bootstrap');
+    brush_log(bt('Loading brushrc "!config" into "!context" scope.', array('!config' => realpath($config), '!context' => $context)), 'bootstrap');
     $ret = @include_once($config);
     if ($ret === FALSE) {
-      brush_log(dt('Cannot open brushrc "!config", ignoring.', array('!config' => realpath($config))), 'warning');
+      brush_log(bt('Cannot open brushrc "!config", ignoring.', array('!config' => realpath($config))), 'warning');
       return FALSE;
     }
     if (!empty($options) || !empty($aliases) || !empty($command_specific) || !empty($override)) {
@@ -579,7 +579,7 @@ function brush_save_config($context) {
 
     $fp = fopen($filename, "w+");
     if (!$fp) {
-      return brush_set_error('BRUSH_PERM_ERROR', dt('Brushrc (!filename) could not be written', array('!filename' => $filename)));
+      return brush_set_error('BRUSH_PERM_ERROR', bt('Brushrc (!filename) could not be written', array('!filename' => $filename)));
     }
     else {
       fwrite($fp, "<?php\n");
@@ -590,7 +590,7 @@ function brush_save_config($context) {
       }
       fwrite($fp, "\n");
       fclose($fp);
-      brush_log(dt('Brushrc file (!filename) was written successfully', array('!filename' => $filename)));
+      brush_log(bt('Brushrc file (!filename) was written successfully', array('!filename' => $filename)));
       return TRUE;
     }
 

@@ -24,10 +24,10 @@ function brush_core_rsync($source, $destination, $additional_options = array()) 
   $destination_path = $destination_settings['evaluated-path'];
 
   if (!isset($source_settings)) {
-    return brush_set_error('BRUSH_BAD_PATH', dt('Could not evaluate source path !path.', array('!path' => $source)));
+    return brush_set_error('BRUSH_BAD_PATH', bt('Could not evaluate source path !path.', array('!path' => $source)));
   }
   if (!isset($destination_settings)) {
-    return brush_set_error('BRUSH_BAD_PATH', dt('Could not evaluate destination path !path.', array('!path' => $destination)));
+    return brush_set_error('BRUSH_BAD_PATH', bt('Could not evaluate destination path !path.', array('!path' => $destination)));
   }
     
   // Check to see if this is an rsync multiple command (multiple sources and multiple destinations)
@@ -43,8 +43,8 @@ function brush_core_rsync($source, $destination, $additional_options = array()) 
     }
     // Prompt for confirmation. This is destructive.
     if (!brush_get_context('BRUSH_SIMULATE')) {
-      brush_print(dt("You will destroy data from !target and replace with data from !source", array('!source' => $source_path, '!target' => $destination_path)));
-      if (!brush_confirm(dt('Do you really want to continue?'))) {
+      brush_print(bt("You will destroy data from !target and replace with data from !source", array('!source' => $source_path, '!target' => $destination_path)));
+      if (!brush_confirm(bt('Do you really want to continue?'))) {
         // was: return brush_set_error('CORE_SYNC_ABORT', 'Aborting.');
         return brush_user_abort();
       }
@@ -256,7 +256,7 @@ function brush_core_call_rsync($source, $destination, $additional_options = arra
   }
   
   if (!$result) {
-    brush_set_error('BRUSH_RSYNC_FAILED', dt("Could not rsync from !source to !dest", array('!source' => $source, '!dest' => $destination)));
+    brush_set_error('BRUSH_RSYNC_FAILED', bt("Could not rsync from !source to !dest", array('!source' => $source, '!dest' => $destination)));
   }
 
   return $result;

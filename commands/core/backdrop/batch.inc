@@ -174,7 +174,7 @@ function _brush_batch_worker() {
 
 
     if ((memory_get_usage() * 2) >= brush_memory_limit()) {
-      brush_log(dt("Batch process has consumed in excess of 50% of available memory. Starting new thread"), "batch");
+      brush_log(bt("Batch process has consumed in excess of 50% of available memory. Starting new thread"), "batch");
       // Record elapsed wall clock time.
       $current_set['elapsed'] = round((microtime(TRUE) - $current_set['start']) * 1000, 2);
       break;

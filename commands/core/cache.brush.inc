@@ -61,7 +61,7 @@ function brush_cache_clear($type = NULL) {
       foreach ($alltables as $table) {
         cache_clear_all('*', $table, TRUE);
       }
-      brush_print(dt('Cache cleared.'));
+      brush_print(bt('Cache cleared.'));
       break;
     case 6:
     case 7:
@@ -69,18 +69,18 @@ function brush_cache_clear($type = NULL) {
       $types = brush_cache_clear_types();
       // Check if the provided type ($type) is a valid cache type.
       if ($type && !key_exists($type, $types)) {
-        return brush_set_error(dt("'!type' cache is not a valid cache type", array('!type' => $type)));
+        return brush_set_error(bt("'!type' cache is not a valid cache type", array('!type' => $type)));
       }
 
       if ($type) {
         brush_op($types[$type]);
-        brush_log(dt("'!name' cache was cleared", array('!name' => $type)), 'success');
+        brush_log(bt("'!name' cache was cleared", array('!name' => $type)), 'success');
       }
       else {
         $choice = brush_choice($types, 'Enter a number to choose which cache to clear.', '!key');
         if ($choice !== FALSE) {
           call_user_func($types[$choice]);
-          brush_log(dt("'!name' cache was cleared", array('!name' => $choice)), 'success');
+          brush_log(bt("'!name' cache was cleared", array('!name' => $choice)), 'success');
         }
       }
       break;
@@ -97,7 +97,7 @@ function brush_cache_clear($type = NULL) {
  */
 function brush_cache_get($cid = NULL, $bin = NULL) {
   if (!$cid) {
-    brush_log(dt('You must specify a cache id to fetch.'), 'error');
+    brush_log(bt('You must specify a cache id to fetch.'), 'error');
     return;
   }
 
@@ -121,7 +121,7 @@ function brush_cache_get($cid = NULL, $bin = NULL) {
     }
   }
   else {
-    brush_log(dt('The !cid object in the !bin cache bin was not found.', array('!cid' => $cid, '!bin' => $bin)), 'error');
+    brush_log(bt('The !cid object in the !bin cache bin was not found.', array('!cid' => $cid, '!bin' => $bin)), 'error');
   }
 }
 
@@ -139,12 +139,12 @@ function brush_cache_get($cid = NULL, $bin = NULL) {
  */
 function brush_cache_set($cid = NULL, $data = '', $bin = NULL, $expire = CACHE_PERMANENT) {
   if (!$cid) {
-    brush_log(dt('You must specify a cache id to set.'), 'error');
+    brush_log(bt('You must specify a cache id to set.'), 'error');
     return;
   }
 
   if ($data === '') {
-    brush_log(dt('The data to set must be non-empty.'), 'error');
+    brush_log(bt('The data to set must be non-empty.'), 'error');
     return;
   }
 

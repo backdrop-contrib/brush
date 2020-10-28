@@ -18,11 +18,11 @@ class brush_pm_version_control_svn implements brush_pm_version_control {
     if (call_user_func_array('brush_shell_cd_and_exec', $args)) {
       $output = preg_grep('/^[ ACDMRX?!~][ CM][ L][ +][ SX][ K]/', brush_shell_exec_output());
       if (!empty($output)) {
-        return brush_set_error('BRUSH_PM_SVN_LOCAL_CHANGES', dt("The SVN working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
+        return brush_set_error('BRUSH_PM_SVN_LOCAL_CHANGES', bt("The SVN working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
       }
     }
     else {
-      return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', dt("Brush was unable to get the svn status on !path.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
+      return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', bt("Brush was unable to get the svn status on !path.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
     }
 
     // Check for incoming updates
@@ -32,11 +32,11 @@ class brush_pm_version_control_svn implements brush_pm_version_control {
     if (call_user_func_array('brush_shell_cd_and_exec', $args)) {
       $output = preg_grep('/\*/', brush_shell_exec_output());
       if (!empty($output)) {
-        return brush_set_error('BRUSH_PM_SVN_REMOTE_CHANGES', dt("The SVN working copy at !path appears to be out of date with the repository (see below). Please run 'svn update' to pull down changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
+        return brush_set_error('BRUSH_PM_SVN_REMOTE_CHANGES', bt("The SVN working copy at !path appears to be out of date with the repository (see below). Please run 'svn update' to pull down changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
       }
     }
     else {
-      return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', dt("Brush was unable to get the svn remote status on !path. Check that you have connectivity to the repository.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
+      return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', bt("Brush was unable to get the svn remote status on !path. Check that you have connectivity to the repository.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
     }
     return TRUE;
   }
@@ -48,11 +48,11 @@ class brush_pm_version_control_svn implements brush_pm_version_control {
     if (brush_shell_exec('svn revert '. brush_get_option('svnrevertparams') .' '. $project['full_project_path'])) {
       $output = brush_shell_exec_output();
       if (!empty($output)) {
-        return brush_set_error('BRUSH_PM_SVN_LOCAL_CHANGES', dt("The SVN working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
+        return brush_set_error('BRUSH_PM_SVN_LOCAL_CHANGES', bt("The SVN working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
       }
     }
     else {
-      return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', dt("Brush was unable to get the svn status on !path. Check that you have Subversion \ninstalled and that this directory is a subversion working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
+      return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', bt("Brush was unable to get the svn status on !path. Check that you have Subversion \ninstalled and that this directory is a subversion working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
     }
   }
 
@@ -98,11 +98,11 @@ class brush_pm_version_control_svn implements brush_pm_version_control {
           }
         }
         if (!empty($errors)) {
-          return brush_set_error('BRUSH_PM_SVN_SYNC_PROBLEMS', dt("Problems were encountered adding or removing files to/from this SVN working copy.\nThe specific errors are below:\n!errors", array('!errors' => $errors)));
+          return brush_set_error('BRUSH_PM_SVN_SYNC_PROBLEMS', bt("Problems were encountered adding or removing files to/from this SVN working copy.\nThe specific errors are below:\n!errors", array('!errors' => $errors)));
         }
       }
       else {
-        return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', dt("Brush was unable to get the svn status on !path. Check that you have Subversion \ninstalled and that this directory is a subversion working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
+        return brush_set_error('BRUSH_PM_SVN_NOT_FOUND', bt("Brush was unable to get the svn status on !path. Check that you have Subversion \ninstalled and that this directory is a subversion working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
       }
       return TRUE;
     }
@@ -115,17 +115,17 @@ class brush_pm_version_control_svn implements brush_pm_version_control {
     if (brush_get_option('svncommit')) {
       $message = brush_get_option('svnmessage');
       if (empty($message)) {
-        $message = dt("Brush automatic commit: \n") . implode(' ', $_SERVER['argv']);
+        $message = bt("Brush automatic commit: \n") . implode(' ', $_SERVER['argv']);
       }
       if (brush_shell_exec('svn commit '. brush_get_option('svncommitparams') .' -m "'. $message .'" '. $project['full_project_path'])) {
-        brush_log(dt('Project committed to Subversion successfully'), 'ok');
+        brush_log(bt('Project committed to Subversion successfully'), 'ok');
       }
       else {
-        brush_set_error('BRUSH_PM_SVN_COMMIT_PROBLEMS', dt("Problems were encountered committing your changes to Subversion.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
+        brush_set_error('BRUSH_PM_SVN_COMMIT_PROBLEMS', bt("Problems were encountered committing your changes to Subversion.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
       }
     }
     else {
-      brush_print(dt("You should consider committing the new code to your Subversion repository.\nIf this version becomes undesireable, use Subversion to roll back."));
+      brush_print(bt("You should consider committing the new code to your Subversion repository.\nIf this version becomes undesireable, use Subversion to roll back."));
     }
   }
 

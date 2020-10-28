@@ -108,7 +108,7 @@ function sql_brush_sql_sync_sanitize($site) {
 
   if (!empty($user_table_updates)) {
     $sanitize_query = "update users set " . implode(', ', $user_table_updates) . " where uid > 0;";
-    brush_sql_register_post_sync_op('user-email', dt('Reset !message in user table', array('!message' => implode(' and ', $message_list))), $sanitize_query);
+    brush_sql_register_post_sync_op('user-email', bt('Reset !message in user table', array('!message' => implode(' and ', $message_list))), $sanitize_query);
   }
 
 }
@@ -145,15 +145,15 @@ function brush_sql_sync($source = NULL, $destination = NULL) {
 
     if (empty($source_db_url)) {
       if (empty($source_settings)) {
-        return brush_set_error('BRUSH_ALIAS_NOT_FOUND', dt('Error: no alias record could be found for !source', array('!source' => $source)));
+        return brush_set_error('BRUSH_ALIAS_NOT_FOUND', bt('Error: no alias record could be found for !source', array('!source' => $source)));
       }
-      return brush_set_error('BRUSH_DATABASE_NOT_FOUND', dt('Error: no database record could be found for !source', array('!source' => $source)));
+      return brush_set_error('BRUSH_DATABASE_NOT_FOUND', bt('Error: no database record could be found for !source', array('!source' => $source)));
     }
     if (empty($target_db_url)) {
       if (empty($destination_settings)) {
-        return brush_set_error('BRUSH_ALIAS_NOT_FOUND', dt('Error: no alias record could be found for !destination', array('!destination' => $destination)));
+        return brush_set_error('BRUSH_ALIAS_NOT_FOUND', bt('Error: no alias record could be found for !destination', array('!destination' => $destination)));
       }
-      return brush_set_error('BRUSH_DATABASE_NOT_FOUND', dt('Error: no database record could be found for !destination', array('!destination' => $destination)));
+      return brush_set_error('BRUSH_DATABASE_NOT_FOUND', bt('Error: no database record could be found for !destination', array('!destination' => $destination)));
     }
 
     // Set up the result file and the remote file.
@@ -218,12 +218,12 @@ function brush_sql_sync($source = NULL, $destination = NULL) {
     if (isset($cache)) {
       if (file_exists($local_file) && (filesize($local_file) > 0)) {
         if ((time() - filemtime($local_file)) < ($cache * 60 * 60)) {
-          brush_log(dt('Modification time of local dump file !file is less than !cache hours old. Use the --no-cache option to force a refresh.', array('!file' => $local_file, '!cache' => $cache)), 'warning');
+          brush_log(bt('Modification time of local dump file !file is less than !cache hours old. Use the --no-cache option to force a refresh.', array('!file' => $local_file, '!cache' => $cache)), 'warning');
           $no_dump = TRUE;
           $no_sync = TRUE;
         }
         else {
-          brush_log(dt('Local sql cache file exists but is greater than !cache hours old.', array('!cache' => $cache)));
+          brush_log(bt('Local sql cache file exists but is greater than !cache hours old.', array('!cache' => $cache)));
         }
       }
       else {
@@ -241,18 +241,18 @@ function brush_sql_sync($source = NULL, $destination = NULL) {
       // Check to see if we are using a temporary file in a situation
       // where the user did not specify "--temp".
       if (($source_db_url['dump-is-temp'] || $target_db_url['dump-is-temp']) && (!isset($use_temp_files)) && (isset($source_db_url['remote-host'])  || isset($target_db_url['remote-host']))) {
-        brush_print(dt('WARNING:  Using temporary files to store and transfer sql-dump.  It is recommended that you specify --source-dump and --target-dump options on the command line, or set \'%dump\' or \'%dump-dir\' in the path-aliases section of your site alias records. This facilitates fast file transfer via rsync.'));
+        brush_print(bt('WARNING:  Using temporary files to store and transfer sql-dump.  It is recommended that you specify --source-dump and --target-dump options on the command line, or set \'%dump\' or \'%dump-dir\' in the path-aliases section of your site alias records. This facilitates fast file transfer via rsync.'));
       }
 
       if (array_key_exists('tables', $table_selection) && (count($table_selection['tables']) > 0)) {
         brush_print();
-        brush_print(dt('  Only the following tables will be transferred: !list', array('!list' => implode(',', $table_selection['tables']))));
+        brush_print(bt('  Only the following tables will be transferred: !list', array('!list' => implode(',', $table_selection['tables']))));
       }
       elseif (!empty($table_selection)) {
         $skip_tables_list = implode(',', $table_selection['skip'] + $table_selection['structure']);
         if(!empty($skip_tables_list)) {
           brush_print();
-          brush_print(dt('  The following tables will be skipped: !list', array('!list' => $skip_tables_list)));
+          brush_print(bt('  The following tables will be skipped: !list', array('!list' => $skip_tables_list)));
         }
       }
 
@@ -261,16 +261,16 @@ function brush_sql_sync($source = NULL, $destination = NULL) {
       // and the normal confirmation below.
       if (array_key_exists('site-list', $destination_settings)) {
         brush_print();
-        brush_print(dt('You are about to sync the database from !source, overwriting all of the following targets:', array('!source' => $source)));
+        brush_print(bt('You are about to sync the database from !source, overwriting all of the following targets:', array('!source' => $source)));
         foreach ($destination_settings['site-list'] as $one_destination) {
-          brush_print(dt('  !target', array('!target' => $one_destination)));
+          brush_print(bt('  !target', array('!target' => $one_destination)));
         }
       }
       else {
         brush_print();
         $txt_source = (isset($source_db_url['remote-host']) ? $source_db_url['remote-host'] . '/' : '') . $source_db_url['database'];
         $txt_destination = (isset($target_db_url['remote-host']) ? $target_db_url['remote-host'] . '/' : '') . $target_db_url['database'];
-        brush_print(dt("You will destroy data from !target and replace with data from !source.", array('!source' => $txt_source, '!target' => $txt_destination)));
+        brush_print(bt("You will destroy data from !target and replace with data from !source.", array('!source' => $txt_source, '!target' => $txt_destination)));
       }
 
       // If any sanitization operations are to be done, then get the
@@ -290,8 +290,8 @@ function brush_sql_sync($source = NULL, $destination = NULL) {
 
       // TODO: actually make the backup if desired.
       brush_print();
-      brush_print(dt("You might want to make a backup first, using the sql-dump command.\n"));
-      if (!brush_confirm(dt('Do you really want to continue?'))) {
+      brush_print(bt("You might want to make a backup first, using the sql-dump command.\n"));
+      if (!brush_confirm(bt('Do you really want to continue?'))) {
         return brush_user_abort();
       }
     }
@@ -458,10 +458,10 @@ function brush_sql_post_sql_sync($source = NULL, $destination = NULL) {
           brush_print();
           brush_print($messages);
           if (brush_get_option('confirm-sanitizations', FALSE)) {
-            if (!brush_confirm(dt('Do you really want to sanitize?'))) {
+            if (!brush_confirm(bt('Do you really want to sanitize?'))) {
               // Do not abort or return FALSE; that would trigger a rollback.
               // Just skip the sanitizations and signal that all is ok.
-              brush_log(dt('Sanitizations skipped.'), 'ok');
+              brush_log(bt('Sanitizations skipped.'), 'ok');
               return TRUE;
             }
           }

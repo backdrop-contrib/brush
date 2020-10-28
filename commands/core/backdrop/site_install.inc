@@ -23,7 +23,7 @@ function brush_core_site_install_version($profile, array $additional_form_option
       'install_settings_form' => array(
         'driver' => $db_spec['driver'],
         $db_spec['driver'] => $db_spec,
-        'op' => dt('Save and continue'),
+        'op' => bt('Save and continue'),
       ),
       'install_configure_form' => array(
         'site_name' => brush_get_option('site-name', 'Site-Install'),
@@ -41,7 +41,7 @@ function brush_core_site_install_version($profile, array $additional_form_option
           2 => TRUE,
         ),
         'clean_url' => brush_get_option('clean-url', TRUE),
-        'op' => dt('Save and continue'),
+        'op' => bt('Save and continue'),
       ),
     ),
   );
@@ -55,6 +55,6 @@ function brush_core_site_install_version($profile, array $additional_form_option
     $current = $value;
   }
 
-  brush_log(dt('Starting Backdrop installation. This takes a few seconds ...'), 'ok');
+  brush_log(bt('Starting Backdrop installation. This takes a few seconds ...'), 'ok');
   install_backdrop($settings);
 }

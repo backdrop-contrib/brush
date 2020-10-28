@@ -42,7 +42,7 @@ function brush_pm_updatecode() {
           'title' => $extension->info['name'],
           'existing_version' => 'Unknown',
           'status' => BRUSH_PM_REQUESTED_PROJECT_NOT_PACKAGED,
-          'status_msg' => dt('Project was not packaged by backdrop.org but obtained from !vcs. You need to enable !vcs_deploy module', array('!vcs' => $extension->vcs))
+          'status_msg' => bt('Project was not packaged by backdrop.org but obtained from !vcs. You need to enable !vcs_deploy module', array('!vcs' => $extension->vcs))
         );
         // The user may have requested to update a project matching this
         // extension. If it was by coincidence or error we don't mind as we've
@@ -103,7 +103,7 @@ function brush_pm_updatecode() {
   }
 
   // Table headers.
-  $rows[] = array(dt('Name'), dt('Installed version'), dt('Proposed version'), dt('Status'));
+  $rows[] = array(bt('Name'), bt('Installed version'), bt('Proposed version'), bt('Status'));
 
   // Process releases, notifying user of status and
   // building a list of proposed updates.
@@ -126,9 +126,9 @@ function brush_pm_updatecode() {
   $tmpfile = brush_tempnam('pm-updatecode.');
 
   $last = pm_update_last_check();
-  brush_print(dt('Update information last refreshed: ') . ($last  ? format_date($last) : dt('Never')));
+  brush_print(bt('Update information last refreshed: ') . ($last  ? format_date($last) : bt('Never')));
   brush_print();
-  brush_print(dt("Update status information on all installed and enabled Backdrop projects:"));
+  brush_print(bt("Update status information on all installed and enabled Backdrop projects:"));
   brush_print_table($rows, TRUE, array(3 => 40), $tmpfile);
   $contents = file_get_contents($tmpfile);
   brush_print($contents);
@@ -147,7 +147,7 @@ function brush_pm_updatecode() {
   // Prevent update of core if --no-core was specified.
   if (isset($updateable['backdrop']) && brush_get_option('no-core', FALSE)) {
     unset($updateable['backdrop']);
-    brush_print(dt('Skipping core update (--no-core specified).'));
+    brush_print(bt('Skipping core update (--no-core specified).'));
   }
 
   // If there are any locked projects that were not requested, then remove them.
@@ -167,7 +167,7 @@ function brush_pm_updatecode() {
 
   // Do no updates in simulated mode.
   if (brush_get_context('BRUSH_SIMULATE')) {
-    return brush_log(dt('No action taken in simulated mode.'), 'ok');
+    return brush_log(bt('No action taken in simulated mode.'), 'ok');
     return TRUE;
   }
 
@@ -187,12 +187,12 @@ function brush_pm_updatecode() {
     else {
       $core_update_available = TRUE;
       if ($backdrop_project['status'] == UPDATE_NOT_SECURE) {
-        brush_print(dt("NOTE: A security update for the Backdrop core is available."));
+        brush_print(bt("NOTE: A security update for the Backdrop core is available."));
       }
       else {
-        brush_print(dt("NOTE: A code update for the Backdrop core is available."));
+        brush_print(bt("NOTE: A code update for the Backdrop core is available."));
       }
-      brush_print(dt("Backdrop core will be updated after all of the non-core modules are updated.\n"));
+      brush_print(bt("Backdrop core will be updated after all of the non-core modules are updated.\n"));
     }
   }
 
@@ -204,10 +204,10 @@ function brush_pm_updatecode() {
       return FALSE;
     }
     if ($security_only) {
-      return brush_log(dt('No security updates available.'), 'ok');
+      return brush_log(bt('No security updates available.'), 'ok');
     }
     else {
-      return brush_log(dt('No code updates available.'), 'ok');
+      return brush_log(bt('No code updates available.'), 'ok');
     }
   }
 
@@ -234,21 +234,21 @@ function _pm_update_core(&$project, $tmpfile) {
   brush_include_engine('package_handler', brush_get_option('package-handler', 'wget'));
   $backdrop_root = brush_get_context('BRUSH_BACKDROP_ROOT');
 
-  brush_print(dt('Code updates will be made to Backdrop core.'));
-  brush_print(dt("Note: Updating core can potentially break your site. It is NOT recommended to update production sites without prior testing."));
+  brush_print(bt('Code updates will be made to Backdrop core.'));
+  brush_print(bt("Note: Updating core can potentially break your site. It is NOT recommended to update production sites without prior testing."));
   brush_print();
   if (brush_get_option('notes', FALSE)) {
     brush_print('Obtaining release notes for above projects...');
     _brush_pm_releasenotes(array('backdrop'), TRUE, $tmpfile);
   }
-  if(!brush_confirm(dt('Do you really want to continue?'))) {
-    brush_print(dt('Rolling back all changes. Run again with --no-core to update modules only.'));
+  if(!brush_confirm(bt('Do you really want to continue?'))) {
+    brush_print(bt('Rolling back all changes. Run again with --no-core to update modules only.'));
     return brush_user_abort();
   }
 
   // We need write permission on $backdrop_root.
   if (!is_writable($backdrop_root)) {
-    return brush_set_error('BRUSH_PATH_NO_WRITABLE', dt('Backdrop root path is not writable.'));
+    return brush_set_error('BRUSH_PATH_NO_WRITABLE', bt('Backdrop root path is not writable.'));
   }
 
   // Update core.
@@ -311,14 +311,14 @@ function pm_update_packages($update_info, $tmpfile) {
   // We print the list of the projects that need to be updated.
   if (isset($status[UPDATE_NOT_SECURE])) {
     if (isset($status[UPDATE_NOT_CURRENT])) {
-      $title = (dt('Security and code updates will be made to the following projects:'));
+      $title = (bt('Security and code updates will be made to the following projects:'));
     }
     else {
-      $title = (dt('Security updates will be made to the following projects:'));
+      $title = (bt('Security updates will be made to the following projects:'));
     }
   }
   else {
-    $title = (dt('Code updates will be made to the following projects:'));
+    $title = (bt('Code updates will be made to the following projects:'));
   }
   $print = "$title " . (substr($print, 0, strlen($print)-2));
   brush_print($print);
@@ -333,27 +333,27 @@ function pm_update_packages($update_info, $tmpfile) {
   // We print some warnings before the user confirms the update.
   brush_print();
   if (brush_get_option('no-backup', FALSE)) {
-    brush_print(dt("Note: You have selected to not store backups."));
+    brush_print(bt("Note: You have selected to not store backups."));
   }
   else {
-    brush_print(dt("Note: A backup of your project will be stored to backups directory if it is not managed by a supported version control system."));
-    brush_print(dt('Note: If you have made any modifications to any file that belongs to one of these projects, you will have to migrate those modifications after updating.'));
+    brush_print(bt("Note: A backup of your project will be stored to backups directory if it is not managed by a supported version control system."));
+    brush_print(bt('Note: If you have made any modifications to any file that belongs to one of these projects, you will have to migrate those modifications after updating.'));
   }
-  if(!brush_confirm(dt('Do you really want to continue with the update process?'))) {
+  if(!brush_confirm(bt('Do you really want to continue with the update process?'))) {
     return brush_user_abort();
   }
 
   // Now we start the actual updating.
   foreach($update_info as $project) {
     if (empty($project['path'])) {
-      return brush_set_error('BRUSH_PM_UPDATING_NO_PROJECT_PATH', dt('The !project project path is not available, perhaps the !type is enabled but has been deleted from disk.', array('!project' => $project['name'], '!type' => $project['project_type'])));
+      return brush_set_error('BRUSH_PM_UPDATING_NO_PROJECT_PATH', bt('The !project project path is not available, perhaps the !type is enabled but has been deleted from disk.', array('!project' => $project['name'], '!type' => $project['project_type'])));
     }
-    brush_log(dt('Starting to update !project code at !dir...', array('!project' => $project['title'], '!dir' => $project['path'])));
+    brush_log(bt('Starting to update !project code at !dir...', array('!project' => $project['title'], '!dir' => $project['path'])));
     // Create the projects directory and base (parent) directory.
     $project['full_project_path'] = $backdrop_root . '/' . $project['path'];
     // Check that the directory exists, and is where we expect it to be.
     if (stripos($project['path'], $project['project_type']) === FALSE || !is_dir($project['full_project_path'])) {
-      return brush_set_error('BRUSH_PM_UPDATING_PATH_NOT_FOUND', dt('The !project directory could not be found within the !types directory at !full_project_path, perhaps the project is enabled but has been deleted from disk.', array('!project' => $project['name'], '!type' => $project['project_type'], '!full_project_path' => $project['full_project_path'])));
+      return brush_set_error('BRUSH_PM_UPDATING_PATH_NOT_FOUND', bt('The !project directory could not be found within the !types directory at !full_project_path, perhaps the project is enabled but has been deleted from disk.', array('!project' => $project['name'], '!type' => $project['project_type'], '!full_project_path' => $project['full_project_path'])));
     }
     if (!$version_control = brush_pm_include_version_control($project['full_project_path'])) {
       return FALSE;
@@ -408,7 +408,7 @@ function pm_update_project($project, $version_control) {
   brush_set_context('BRUSH_PM_UPDATED', $updated);
 
   if (!package_handler_update_project($project, $project['releases'][$project['candidate_version']])) {
-    return brush_set_error('BRUSH_PM_UPDATING_FAILED', dt('Updating project !project failed. Attempting to roll back to previously installed version.', array('!project' => $project['name'])));
+    return brush_set_error('BRUSH_PM_UPDATING_FAILED', bt('Updating project !project failed. Attempting to roll back to previously installed version.', array('!project' => $project['name'])));
   }
 
   // If the version control engine is a proper vcs we also need to remove
@@ -425,7 +425,7 @@ function pm_update_project($project, $version_control) {
  * Run the post-update hooks after updatecode is complete for one project.
  */
 function pm_update_complete($project, $version_control) {
-  brush_print(dt('Project !project was updated successfully. Installed version is now !version.', array('!project' => $project['name'], '!version' => $project['candidate_version'])));
+  brush_print(bt('Project !project was updated successfully. Installed version is now !version.', array('!project' => $project['name'], '!version' => $project['candidate_version'])));
   brush_command_invoke_all('pm_post_update', $project['name'], $project['releases'][$project['candidate_version']]);
   $version_control->post_update($project);
 }
@@ -433,7 +433,7 @@ function pm_update_complete($project, $version_control) {
 function brush_pm_updatecode_rollback() {
   $projects = array_reverse(brush_get_context('BRUSH_PM_UPDATED', array()));
   foreach($projects as $project) {
-    brush_log(dt('Rolling back update of !project code ...', array('!project' => $project['title'])));
+    brush_log(bt('Rolling back update of !project code ...', array('!project' => $project['title'])));
 
     // Check we have a version control system, and it clears it's pre-flight.
     if (!$version_control = brush_pm_include_version_control($project['path'])) {
@@ -465,23 +465,23 @@ function pm_project_filter(&$update_info, &$rows, $security_only) {
     }
     switch($project['status']) {
       case BRUSH_PM_REQUESTED_UPDATE:
-        $status = dt('Specified version available');
+        $status = bt('Specified version available');
         $project['updateable'] = TRUE;
         break;
       case BRUSH_PM_REQUESTED_CURRENT:
-        $status = dt('Specified version already installed');
+        $status = bt('Specified version already installed');
         break;
       case BRUSH_PM_REQUESTED_PROJECT_NOT_PACKAGED:
         $status = $project['status_msg'];
         break;
       case BRUSH_PM_REQUESTED_VERSION_NOT_FOUND:
-        $status = dt('Specified version not found');
+        $status = bt('Specified version not found');
         break;
       case BRUSH_PM_REQUESTED_PROJECT_NOT_FOUND:
-        $status = dt('Specified project not found');
+        $status = bt('Specified project not found');
         break;
       case BRUSH_PM_REQUESTED_PROJECT_NOT_UPDATEABLE:
-        $status = dt('Project has no enabled extensions and can\'t be updated');
+        $status = bt('Project has no enabled extensions and can\'t be updated');
         break;
       default:
         $status = pm_update_filter($project);

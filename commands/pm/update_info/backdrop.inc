@@ -4,30 +4,30 @@ function pm_update_filter(&$project) {
   $update = FALSE;
   switch($project['status']) {
     case UPDATE_CURRENT:
-      $status = dt('Up to date');
+      $status = bt('Up to date');
       $project['candidate_version'] = $project['recommended'];
       break;
     case UPDATE_NOT_CURRENT:
-      $status = dt('Update available');
+      $status = bt('Update available');
       pm_release_recommended($project);
       break;
     case UPDATE_NOT_SECURE:
-      $status = dt('SECURITY UPDATE available');
+      $status = bt('SECURITY UPDATE available');
       pm_release_recommended($project);
       break;
     case UPDATE_REVOKED:
-      $status = dt('Installed version REVOKED');
+      $status = bt('Installed version REVOKED');
       pm_release_recommended($project);
       break;
     case UPDATE_NOT_SUPPORTED:
-      $status = dt('Installed version not supported');
+      $status = bt('Installed version not supported');
       pm_release_recommended($project);
       break;
     case UPDATE_NOT_CHECKED:
-      $status = dt('Unable to check status');
+      $status = bt('Unable to check status');
       break;
     default:
-      $status = dt('Unknown');
+      $status = bt('Unknown');
       break;
   }
   return $status;
@@ -41,9 +41,9 @@ function pm_update_last_check() {
  * Command callback. Refresh update status information.
  */
 function _pm_refresh() {
-  brush_print(dt("Refreshing update status information ..."));
+  brush_print(bt("Refreshing update status information ..."));
   update_refresh();
-  brush_print(dt("Done."));
+  brush_print(bt("Done."));
 }
 
 /**
@@ -129,13 +129,13 @@ function pm_get_project_info($projects) {
     $url = UPDATE_DEFAULT_URL. "/$project_name/". brush_backdrop_major_version() . '.x';
     $xml = backdrop_http_request($url);
     if (isset($xml->error)) {
-      brush_set_error(dt(
+      brush_set_error(bt(
         'HTTP Request to @request has failed. @error',
         array('@request' => $xml->request, '@error' => $xml->error)
       ));
     }
     elseif (!$info = update_parse_xml($xml->data)) {
-      brush_set_error(dt(
+      brush_set_error(bt(
         'No release history found for @project_name',
         array('@project_name' => $project_name)
       ));

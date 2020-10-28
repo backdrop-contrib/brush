@@ -217,7 +217,7 @@ function update_main() {
 
   // Print a list of pending updates for this module and get confirmation.
   if (sizeof($pending)) {
-    brush_print(dt('The following updates are pending:'));
+    brush_print(bt('The following updates are pending:'));
     brush_print();
     foreach ($pending as $module => $updates) {
       if (isset($updates['start']))  {
@@ -232,14 +232,14 @@ function update_main() {
       }
     }
 
-    if (!brush_confirm(dt('Do you wish to run all pending updates?'))) {
+    if (!brush_confirm(bt('Do you wish to run all pending updates?'))) {
       return brush_user_abort();
     }
 
     brush_update_batch($start);
   }
   else {
-    brush_log(dt("No database updates required"), 'success');
+    brush_log(bt("No database updates required"), 'success');
   }
 
 }

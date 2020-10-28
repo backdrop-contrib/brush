@@ -11,9 +11,9 @@
 function docs_brush_help($section) {
   switch ($section) {
     case 'meta:docs:title':
-      return dt('Documentation commands');
+      return bt('Documentation commands');
     case 'meta:docs:summary':
-      return dt('Show information on various brush topics.');
+      return bt('Show information on various brush topics.');
   }
 }
 
@@ -164,7 +164,7 @@ function brush_docs_errorcodes() {
 
 Brush error codes are alphanumeric constants that represent an unrecoverable error condition that may arise during the execution of some command.  They are set by the following function:
 
-  return brush_set_error('BRUSH_ERROR_CODE', dt('Error message.'));
+  return brush_set_error('BRUSH_ERROR_CODE', bt('Error message.'));
 
 In general, any brush command that calls brush_set_error is expected to also return FALSE as its function result.  The brush_set_error function returns FALSE to make it easy to exit with an error code.  Error codes are returned as part of the brush backend invoke process, which is used by brush API functions such as brush_invoke_process.  An example of how to test for a specific error code is shown below:
 

@@ -55,7 +55,7 @@ function brush_test_clean() {
 function brush_test_run_validate($specs = NULL) {
   if (!brush_get_option('uri')) {
     // No longer needed?
-    // return brush_set_error(dt("You must specify this site's URL using the --uri parameter."));
+    // return brush_set_error(bt("You must specify this site's URL using the --uri parameter."));
   }
 }
 
@@ -137,7 +137,7 @@ function simpletest_brush_run_test($class) {
     $args = array(':test_id' => $test_id);
     $result = db_query("SELECT * FROM {simpletest} WHERE test_id = :test_id AND status IN ('exception', 'fail') ORDER BY test_class, message_id", $args);
     foreach($result as $record) {
-      brush_set_error('BRUSH_TEST_FAIL', dt("Test !function failed: !message", array('!function' => $record->function, '!message' => $record->message)));
+      brush_set_error('BRUSH_TEST_FAIL', bt("Test !function failed: !message", array('!function' => $record->function, '!message' => $record->message)));
     }
   }
 }
@@ -157,7 +157,7 @@ function simpletest_brush_test_groups($tests) {
 
 // Print a listing of all available tests
 function brush_test_list($groups) {
-  $rows[] = array(dt('Command'), dt('Description'));
+  $rows[] = array(bt('Command'), bt('Description'));
   $rows[] = array('-------', '-----------');
   foreach ($groups as $group_name => $group_tests) {
     foreach ($group_tests as $test_class => $test_info) {

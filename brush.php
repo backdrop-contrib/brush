@@ -95,7 +95,7 @@ function brush_main() {
         brush_enforce_requirement_brush_dependencies($command);
 
         if ($bootstrap_result && empty($command['bootstrap_errors'])) {
-          brush_log(dt("Found command: !command (commandfile=!commandfile)", array('!command' => $command['command'], '!commandfile' => $command['commandfile'])), 'bootstrap');
+          brush_log(bt("Found command: !command (commandfile=!commandfile)", array('!command' => $command['command'], '!commandfile' => $command['commandfile'])), 'bootstrap');
 
           $command_found = TRUE;
           // Dispatch the command(s).
@@ -109,7 +109,7 @@ function brush_main() {
           if (brush_get_context('BRUSH_DEBUG') && !brush_get_context('BRUSH_QUIET')) {
             brush_print_timers();
           }
-          brush_log(dt('Peak memory usage was !peak', array('!peak' => brush_format_size(memory_get_peak_usage()))), 'memory');
+          brush_log(bt('Peak memory usage was !peak', array('!peak' => brush_format_size(memory_get_peak_usage()))), 'memory');
           break;
         }
       }
@@ -126,10 +126,10 @@ function brush_main() {
       foreach ($command['bootstrap_errors'] as $key => $error) {
         brush_set_error($key, $error);
       }
-      brush_set_error('BRUSH_COMMAND_NOT_EXECUTABLE', dt("The brush command '!args' could not be executed.", array('!args' => $args)));
+      brush_set_error('BRUSH_COMMAND_NOT_EXECUTABLE', bt("The brush command '!args' could not be executed.", array('!args' => $args)));
     }
     elseif (!empty($args)) {
-      brush_set_error('BRUSH_COMMAND_NOT_FOUND', dt("The brush command '!args' could not be found.", array('!args' => $args)));
+      brush_set_error('BRUSH_COMMAND_NOT_FOUND', bt("The brush command '!args' could not be found.", array('!args' => $args)));
     }
     // Set errors that ocurred in the bootstrap phases.
     $errors = brush_get_context('BRUSH_BOOTSTRAP_ERRORS', array());
@@ -167,13 +167,13 @@ function brush_shutdown() {
   if (!brush_get_context('BRUSH_EXECUTION_COMPLETED', FALSE) && !brush_get_context('BRUSH_USER_ABORT', FALSE)) {
     $php_error_message = '';
     if ($error = error_get_last()) {
-      $php_error_message = "\n" . dt('Error: !message in !file, line !line', array('!message' => $error['message'], '!file' => $error['file'], '!line' => $error['line']));
+      $php_error_message = "\n" . bt('Error: !message in !file, line !line', array('!message' => $error['message'], '!file' => $error['file'], '!line' => $error['line']));
     }
     // We did not reach the end of the brush_main function,
     // this generally means somewhere in the code a call to exit(),
     // was made. We catch this, so that we can trigger an error in
     // those cases.
-    brush_set_error("BRUSH_NOT_COMPLETED", dt("Brush command terminated abnormally due to an unrecoverable error.!message", array('!message' => $php_error_message)));
+    brush_set_error("BRUSH_NOT_COMPLETED", bt("Brush command terminated abnormally due to an unrecoverable error.!message", array('!message' => $php_error_message)));
     // Attempt to give the user some advice about how to fix the problem
     _brush_postmortem();
   }
@@ -226,19 +226,19 @@ function brush_backdrop_login($brush_user) {
   $user = is_numeric($brush_user) ? user_load($brush_user) : user_load_by_name($brush_user);
   if (empty($user)) {
     if (is_numeric($brush_user)) {
-      $message = dt('Could not login with user ID #@user.', array('@user' => $brush_user));
+      $message = bt('Could not login with user ID #@user.', array('@user' => $brush_user));
       if ($brush_user === 0) {
-        $message .= ' ' . dt('This is typically caused by importing a MySQL database dump from a faulty tool which re-numbered the anonymous user ID in the users table. See !link for help recovering from this situation.', array('!link' => 'http://drupal.org/node/1029506'));
+        $message .= ' ' . bt('This is typically caused by importing a MySQL database dump from a faulty tool which re-numbered the anonymous user ID in the users table. See !link for help recovering from this situation.', array('!link' => 'http://drupal.org/node/1029506'));
       }
     }
     else {
-      $message = dt('Could not login with user account `@user\'.', array('@user' => $brush_user));
+      $message = bt('Could not login with user account `@user\'.', array('@user' => $brush_user));
     }
     return brush_set_error('BACKDROP_USER_LOGIN_FAILED', $message);
   }
   else {
     $name = $user->name ? $user->name : state_get('anonymous', t('Anonymous'));
-    brush_log(dt('Successfully logged into Backdrop as !name', array('!name' => $name . " (uid=$user->uid)")), 'bootstrap');
+    brush_log(bt('Successfully logged into Backdrop as !name', array('!name' => $name . " (uid=$user->uid)")), 'bootstrap');
   }
 
   return TRUE;

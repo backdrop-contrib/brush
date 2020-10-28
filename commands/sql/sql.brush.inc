@@ -10,9 +10,9 @@
 function sql_brush_help($section) {
   switch ($section) {
     case 'meta:sql:title':
-      return dt('SQL commands');
+      return bt('SQL commands');
     case 'meta:sql:summary':
-      return dt('Examine and modify your Backdrop database.');
+      return bt('Examine and modify your Backdrop database.');
   }
 }
 
@@ -231,7 +231,7 @@ function brush_sql_dump_execute() {
   // Avoid the php memory of the $output array in brush_shell_exec().
   if (!$return = brush_op_system($exec)) {
     if ($file) {
-      brush_log(dt('Database dump saved to !path', array('!path' => $file)), 'success');
+      brush_log(bt('Database dump saved to !path', array('!path' => $file)), 'success');
     }
   }
   else {
@@ -514,7 +514,7 @@ function _brush_sql_query($query, $db_spec = NULL, $filename = NULL) {
 }
 
 function brush_sql_drop() {
-  if (!brush_confirm(dt('Do you really want to drop all tables?'))) {
+  if (!brush_confirm(bt('Do you really want to drop all tables?'))) {
     return brush_user_abort();
   }
   brush_sql_bootstrap_further();
@@ -583,7 +583,7 @@ function _brush_sql_drop($db_spec = NULL) {
     }
   }
   else {
-    brush_log(dt('No tables to drop.'), 'ok');
+    brush_log(bt('No tables to drop.'), 'ok');
   }
   return TRUE;
 }
@@ -597,7 +597,7 @@ function brush_sql_cli() {
  * Command callback. Run's the sanitization operations on the current database.
  */
 function brush_sql_sanitize() {
-  if (!brush_confirm(dt('Do you really want to sanitize the current database?'))) {
+  if (!brush_confirm(bt('Do you really want to sanitize the current database?'))) {
     return brush_user_abort();
   }
   brush_sql_bootstrap_further();
@@ -845,9 +845,9 @@ function _brush_sql_get_invalid_url_msg($db_spec = NULL) {
   switch (brush_backdrop_major_version()) {
     case 5:
     case 6:
-      return dt('Unable to parse DB connection string');
+      return bt('Unable to parse DB connection string');
    default:
-     return dt('Unable to parse DB connection array');
+     return bt('Unable to parse DB connection array');
   }
 }
 
@@ -895,7 +895,7 @@ function _brush_sql_get_post_sync_messages() {
 
   $options = brush_get_context('post-sync-ops');
   if (!empty($options)) {
-    $messages = dt('The following post-sync operations will be done on the destination:') . "\n";
+    $messages = bt('The following post-sync operations will be done on the destination:') . "\n";
 
     foreach($options as $id => $data) {
       $messages .= "  * " . $data['message'] . "\n";
@@ -931,7 +931,7 @@ function brush_sql_empty_db($db_spec = NULL) {
     // of the tables in the database (presuming it exists...).
     // If we cannot do either operation, then fail with an error.
     if (!_brush_sql_drop($db_spec)) {
-      return brush_set_error(dt('Could not drop and create database: @name', array('@name' => $db_name)));
+      return brush_set_error(bt('Could not drop and create database: @name', array('@name' => $db_name)));
     }
   }
   return TRUE;

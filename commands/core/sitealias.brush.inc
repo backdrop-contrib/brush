@@ -8,7 +8,7 @@
 function sitealias_brush_help($section) {
   switch ($section) {
     case 'brush:site-alias':
-      return dt('Print an alias record.');
+      return bt('Print an alias record.');
   }
 }
 
@@ -143,7 +143,7 @@ function brush_sitealias_print() {
 	  brush_print($alias_record[$component]);
 	}
 	else {
-	  brush_set_error('BRUSH_NO_SUCH_ELEMENT', dt('The element @component was not found in the alias record for @site.', array('@component' => $component, '@site' => $site)));
+	  brush_set_error('BRUSH_NO_SUCH_ELEMENT', bt('The element @component was not found in the alias record for @site.', array('@component' => $component, '@site' => $site)));
 	}
       }
       else {

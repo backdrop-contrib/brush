@@ -89,11 +89,11 @@ function _brush_invoke_args($command, $args, $defined_in_commandfile) {
   // has passed or started at the time it was discovered.
   $func = 'brush_' . $hook . '_init';
   if (function_exists($func)) {
-    brush_log(dt("Calling brush command init function: !func", array('!func' => $func)), 'bootstrap');
+    brush_log(bt("Calling brush command init function: !func", array('!func' => $func)), 'bootstrap');
     call_user_func_array($func, $args);
     _brush_log_backdrop_messages();
     if (brush_get_error()) {
-      brush_log(dt('The command @command could not be initialized.', array('@command' => $command)), 'error');
+      brush_log(bt('The command @command could not be initialized.', array('@command' => $command)), 'error');
       return FALSE;
     }
   }
@@ -121,7 +121,7 @@ function _brush_invoke_args($command, $args, $defined_in_commandfile) {
         $oldfunc = $func;
         $func = sprintf("brush_%s", $var_hook);
         if (($oldfunc != $func) && (function_exists($oldfunc))) {
-          brush_log(dt("The brush command hook naming conventions changed in March 2010; the function !oldfunc must be renamed to !func in order to be called.", array('!oldfunc' => $oldfunc, '!func' => $func)), "error");
+          brush_log(bt("The brush command hook naming conventions changed in March 2010; the function !oldfunc must be renamed to !func in order to be called.", array('!oldfunc' => $oldfunc, '!func' => $func)), "error");
         }
       }
       if (function_exists($func)) {
@@ -160,15 +160,15 @@ function _brush_invoke_args($command, $args, $defined_in_commandfile) {
     if (($defined_in_commandfile . "_" == substr($hook . "_",0,strlen($defined_in_commandfile)+ 1))) {
       $default_command_hook = sprintf("brush_%s", $hook);
     }
-    brush_log(dt("No hook functions were found for !command.", array('!command' => $command)), 'warning');
-    brush_log(dt("The primary brush_invoke() hook for !command is !default_func().  Please implement this function.  Run with --show-invoke to see all available hooks.", array('!command' => $command, '!default_func' => $default_command_hook)), 'warning');
+    brush_log(bt("No hook functions were found for !command.", array('!command' => $command)), 'warning');
+    brush_log(bt("The primary brush_invoke() hook for !command is !default_func().  Please implement this function.  Run with --show-invoke to see all available hooks.", array('!command' => $command, '!default_func' => $default_command_hook)), 'warning');
   }
   if (brush_get_option('show-invoke')) {
     // We show all available hooks up to and including the one that failed (or all, if there were no failures)
-    brush_log(dt("Available brush_invoke() hooks for !command: !available", array('!command' => $command, '!available' => "\n" . implode("\n", $all_available_hooks))), 'ok');
+    brush_log(bt("Available brush_invoke() hooks for !command: !available", array('!command' => $command, '!available' => "\n" . implode("\n", $all_available_hooks))), 'ok');
   }
   if (brush_get_option('show-invoke') && !empty($available_rollbacks)) {
-    brush_log(dt("Available rollback hooks for !command: !rollback", array('!command' => $command, '!rollback' => "\n" . implode("\n", $available_rollbacks))), 'ok');
+    brush_log(bt("Available rollback hooks for !command: !rollback", array('!command' => $command, '!rollback' => "\n" . implode("\n", $available_rollbacks))), 'ok');
   }
 
   // something went wrong, we need to undo
@@ -177,7 +177,7 @@ function _brush_invoke_args($command, $args, $defined_in_commandfile) {
       // Optionally ask for confirmation, --yes and --no are ignored from here on as we are about to finish this process.
       brush_set_context('BRUSH_AFFIRMATIVE', FALSE);
       brush_set_context('BRUSH_NEGATIVE', FALSE);
-      $rollback = brush_confirm(dt('Do you want to rollback? (manual cleanup might be required otherwise)'));
+      $rollback = brush_confirm(bt('Do you want to rollback? (manual cleanup might be required otherwise)'));
     }
 
     if ($rollback) {
@@ -186,7 +186,7 @@ function _brush_invoke_args($command, $args, $defined_in_commandfile) {
         if (function_exists($rb_func)) {
           call_user_func_array($rb_func, $args);
           _brush_log_backdrop_messages();
-          brush_log(dt("Changes made in !func have been rolled back.", array('!func' => $func)), 'rollback');
+          brush_log(bt("Changes made in !func have been rolled back.", array('!func' => $func)), 'rollback');
         }
       }
     }
@@ -230,14 +230,14 @@ function brush_dispatch($command, $arguments = array()) {
 
     // Print a warning if someone tries to use a deprecated alias.
     if (isset($command['deprecated'])) {
-      brush_log(dt('Warning: The command name "!deprecated" is deprecated.  Please use a recommended form instead (!recommended).', array('!deprecated' => $command['deprecated-name'], '!recommended' => implode(',', array_merge(array($command['command']), $command['aliases'])))), 'warning');
+      brush_log(bt('Warning: The command name "!deprecated" is deprecated.  Please use a recommended form instead (!recommended).', array('!deprecated' => $command['deprecated-name'], '!recommended' => implode(',', array_merge(array($command['command']), $command['aliases'])))), 'warning');
     }
     // Call the callback function of the active command.
     $return = call_user_func_array($command['callback'], $command['arguments']);
   }
 
   // Add a final log entry, just so a timestamp appears.
-  brush_log(dt('Command dispatch complete'), 'notice');
+  brush_log(bt('Command dispatch complete'), 'notice');
 
   return $return;
 }
@@ -746,7 +746,7 @@ function brush_command_translate(&$command) {
  *   String or array.
  */
 function _brush_command_translate($source) {
-  return is_array($source) ? call_user_func_array('dt', $source) : dt($source);
+  return is_array($source) ? call_user_func_array('dt', $source) : bt($source);
 }
 
 /**
@@ -827,7 +827,7 @@ function brush_command() {
 
   foreach (brush_command_implements("brush_init") as $name) {
     $func = $name . '_brush_init';
-    brush_log(dt("Initializing brush commandfile: !name", array('!name' => $name)), 'bootstrap');
+    brush_log(bt("Initializing brush commandfile: !name", array('!name' => $name)), 'bootstrap');
     call_user_func_array($func, $args);
     _brush_log_backdrop_messages();
   }
@@ -1110,7 +1110,7 @@ function brush_filename_blacklist() {
 function brush_command_include($command) {
   $include_files = brush_command_get_includes($command);
   foreach($include_files as $filename => $commandfile) {
-    brush_log(dt('Including !filename', array('!filename' => $filename)), 'bootstrap');
+    brush_log(bt('Including !filename', array('!filename' => $filename)), 'bootstrap');
     include_once($filename);
   }
 }
@@ -1280,7 +1280,7 @@ function brush_enforce_requirement_bootstrap_phase(&$command) {
   }
   // TODO: provide description text for each bootstrap level so we can give
   // the user something more helpful and specific here.
-  $command['bootstrap_errors']['BRUSH_COMMAND_INSUFFICIENT_BOOTSTRAP'] = dt('Command !command needs a higher bootstrap level to run - you will need invoke brush from a more functional Backdrop environment to run this command.', array('!command' => $command['command']));
+  $command['bootstrap_errors']['BRUSH_COMMAND_INSUFFICIENT_BOOTSTRAP'] = bt('Command !command needs a higher bootstrap level to run - you will need invoke brush from a more functional Backdrop environment to run this command.', array('!command' => $command['command']));
 }
 
 /**
@@ -1310,7 +1310,7 @@ function brush_enforce_requirement_backdrop_dependencies(&$command) {
   if (!empty($command['backdrop dependencies'])) {
     foreach ($command['backdrop dependencies'] as $dependency) {
       if(!function_exists('module_exists') || !module_exists($dependency)) {
-        $command['bootstrap_errors']['BRUSH_COMMAND_DEPENDENCY_ERROR'] = dt('Command !command needs the following modules installed/enabled to run: !dependencies.', array('!command' => $command['command'], '!dependencies' => implode(', ', $command['backdrop dependencies'])));
+        $command['bootstrap_errors']['BRUSH_COMMAND_DEPENDENCY_ERROR'] = bt('Command !command needs the following modules installed/enabled to run: !dependencies.', array('!command' => $command['command'], '!dependencies' => implode(', ', $command['backdrop dependencies'])));
         return FALSE;
       }
     }
@@ -1338,7 +1338,7 @@ function brush_enforce_requirement_brush_dependencies(&$command) {
           '!command' => $command['command'],
           '!dependency' => "$dependency.brush.inc",
         );
-        $command['bootstrap_errors']['BRUSH_COMMAND_DEPENDENCY_ERROR'] = dt('Command !command needs the following brush command file to run: !dependency.', $dt_args);
+        $command['bootstrap_errors']['BRUSH_COMMAND_DEPENDENCY_ERROR'] = bt('Command !command needs the following brush command file to run: !dependency.', $dt_args);
         return FALSE;
       }
     }
@@ -1371,7 +1371,7 @@ function brush_enforce_requirement_core(&$command) {
   }
   $versions = array_pop($core);
   if (!empty($core)) {
-    $versions = implode(', ', $core) . dt(' or ') . $versions;
+    $versions = implode(', ', $core) . bt(' or ') . $versions;
   }
-  $command['bootstrap_errors']['BRUSH_COMMAND_CORE_VERSION_ERROR'] = dt('Command !command requires Backdrop core version !versions to run.', array('!command' => $command['command'], '!versions' => $versions));
+  $command['bootstrap_errors']['BRUSH_COMMAND_CORE_VERSION_ERROR'] = bt('Command !command requires Backdrop core version !versions to run.', array('!command' => $command['command'], '!versions' => $versions));
 }

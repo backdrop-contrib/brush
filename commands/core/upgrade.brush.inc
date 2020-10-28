@@ -66,7 +66,7 @@ function upgrade_brush_command() {
 function upgrade_brush_help($section) {
   switch ($section) {
     case 'brush:site-upgrade':
-      return dt("Execute a major version upgrade for Backdrop core and enabled contrib modules. Command will download next version of Backdrop and all available contrib modules that have releases. It prepares a settings.php for the target site, and copies the prior version's database to the target site. Finally, updatedb is run. The intent is for developers to keep re-running this command until they are satisfied with the resulting site. Run this command from within your source site (D6). Note that this command uses pm-download and sql-sync internally so most options for those commands are valid here too.");
+      return bt("Execute a major version upgrade for Backdrop core and enabled contrib modules. Command will download next version of Backdrop and all available contrib modules that have releases. It prepares a settings.php for the target site, and copies the prior version's database to the target site. Finally, updatedb is run. The intent is for developers to keep re-running this command until they are satisfied with the resulting site. Run this command from within your source site (D6). Note that this command uses pm-download and sql-sync internally so most options for those commands are valid here too.");
   }
 }
 
@@ -76,19 +76,19 @@ function upgrade_brush_help($section) {
  */
 function brush_upgrade_site_upgrade_validate($target_key = NULL) {
   if (empty($target_key)) {
-    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Missing argument: target'));
+    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', bt('Missing argument: target'));
   }
 
   if (!$target_alias = brush_sitealias_get_record($target_key)) {
-    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Site alias not found: @target-key. See example.brushrc.php.', array('@target-key' => $target_key)));
+    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', bt('Site alias not found: @target-key. See example.brushrc.php.', array('@target-key' => $target_key)));
   }
 
   if (!file_exists(dirname($target_alias['root']))) {
-    brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Parent directory for site alias root not found: @root; this folder must exist before running site-upgrade. See example.brushrc.php.', array('@root' => dirname($target_alias['root']))));
+    brush_set_error('BRUSH_UPGRADE_NO_TARGET', bt('Parent directory for site alias root not found: @root; this folder must exist before running site-upgrade. See example.brushrc.php.', array('@root' => dirname($target_alias['root']))));
   }
 
   if (realpath($target_alias['root']) == realpath(BACKDROP_ROOT)) {
-    brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt('Target site alias must have a different Backdrop root directory than the source site.  Both are at @root.', array('@root' => $target_alias['root'])));
+    brush_set_error('BRUSH_UPGRADE_NO_TARGET', bt('Target site alias must have a different Backdrop root directory than the source site.  Both are at @root.', array('@root' => $target_alias['root'])));
   }
 }
 
@@ -108,7 +108,7 @@ function brush_upgrade_site_upgrade($target_key) {
   $target_version = $source_version + 1;
   $target_alias = brush_sitealias_get_record($target_key);
   if (empty($target_alias)) {
-    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', dt("Could not find target site for upgrade: !target", array("!target" => $target_key)));
+    return brush_set_error('BRUSH_UPGRADE_NO_TARGET', bt("Could not find target site for upgrade: !target", array("!target" => $target_key)));
   }
 
   $destination_core = $target_alias['root'];
@@ -192,13 +192,13 @@ function brush_upgrade_site_upgrade($target_key) {
       $project_releases = $result['object'];
       foreach ($project_download_list as $project => $extension_list) {
         if (!array_key_exists($project, $project_releases)) {
-          brush_log(dt('The project !project has no releases in version !version', array('!project' => $project, '!version' => $target_version)), 'warning');
+          brush_log(bt('The project !project has no releases in version !version', array('!project' => $project, '!version' => $target_version)), 'warning');
           $unavailable_extensions = array_merge($unavailable_extensions, $extension_list);
           $ready_to_upgrade = FALSE;
         }
         else {
           if (empty($project_releases[$project]['recommended'])) {
-            brush_log(dt('The project !project has no recommended release in version !version', array('!project' => $project, '!version' => $target_version)), 'warning');
+            brush_log(bt('The project !project has no recommended release in version !version', array('!project' => $project, '!version' => $target_version)), 'warning');
             $ready_to_upgrade = 'maybe';
           }
         }
@@ -207,7 +207,7 @@ function brush_upgrade_site_upgrade($target_key) {
 
     // Print out some messages about projects that migrated  to core, or modules that will require special processing.
     if (!empty($in_core)) {
-      brush_log(dt('The following contrib modules were enabled in your Backdrop site, but are now standard in core: !in_core.  These modules may need to be reconfigured after the upgrade is complete.', array('!in_core' => implode(', ', $in_core))), 'ok');
+      brush_log(bt('The following contrib modules were enabled in your Backdrop site, but are now standard in core: !in_core.  These modules may need to be reconfigured after the upgrade is complete.', array('!in_core' => implode(', ', $in_core))), 'ok');
     }
     foreach ($special_warning as $project => $warning) {
       if ($warning === TRUE) {
@@ -217,7 +217,7 @@ function brush_upgrade_site_upgrade($target_key) {
         $warning = 'So far there is no indication of when a migration path will be provided.  Check !project_page for updates.';
         $ready_to_upgrade = 'maybe';
       }
-      brush_log(dt("You are using the project !project, which requires data migration or other special processing.  $warning", array('!project' => $project, '!project_page' => 'http://drupal.org/project/' . $project, '!source' => $special_projects['source'])), 'warning');
+      brush_log(bt("You are using the project !project, which requires data migration or other special processing.  $warning", array('!project' => $project, '!project_page' => 'http://drupal.org/project/' . $project, '!source' => $special_projects['source'])), 'warning');
     }
   }
 
@@ -225,12 +225,12 @@ function brush_upgrade_site_upgrade($target_key) {
 
   // Summarize whether or not there is a good chance that the site can be upgraded.
   if ($ready_to_upgrade !== TRUE) {
-    brush_log(dt("Based on the contrib modules enabled in this site, it is possible that the site-upgrade command might fail.  See warnings above."), (($ready_to_upgrade === FALSE) ? 'warning' : 'notice'));
+    brush_log(bt("Based on the contrib modules enabled in this site, it is possible that the site-upgrade command might fail.  See warnings above."), (($ready_to_upgrade === FALSE) ? 'warning' : 'notice'));
   }
   // Check to see what we should do if the target Backdrop folder already exists.
   $options = array(
-    'replace' => dt("Delete the existing site and start over."),
-    'reuse' => dt("Re-use the existing code, re-import the database from the source site and run updatedb again."),
+    'replace' => bt("Delete the existing site and start over."),
+    'reuse' => bt("Re-use the existing code, re-import the database from the source site and run updatedb again."),
   );
   $selection = NULL;
   foreach ($options as $option => $msg) {
@@ -239,7 +239,7 @@ function brush_upgrade_site_upgrade($target_key) {
     }
   }
   if (!isset($selection) && (file_exists($destination_core))) {
-    $selection = brush_choice($options, dt("Backdrop site already exists at !root.  Would you like to:", array('!root' => $destination_core)));
+    $selection = brush_choice($options, bt("Backdrop site already exists at !root.  Would you like to:", array('!root' => $destination_core)));
     if (!$selection) {
       return brush_user_abort();
     }
@@ -301,14 +301,14 @@ function brush_upgrade_site_upgrade($target_key) {
     if (!brush_get_context('BRUSH_SIMULATE')) {
       // In theory, if the sql-sync worked, this should never be empty.
       if (empty($modify_site['uri'])) {
-        return brush_set_error('BRUSH_UPGRADE_DATABASE_SPEC_UNKNOWN', dt('Failed to look up database spec for @target', array('@target' => $target_key)));
+        return brush_set_error('BRUSH_UPGRADE_DATABASE_SPEC_UNKNOWN', bt('Failed to look up database spec for @target', array('@target' => $target_key)));
       }
       $modify_site_conf_path = dirname(conf_path()) . '/' . $modify_site['uri'];
       $modify_site_settings = $modify_site_conf_path . '/settings.php';
       brush_log('set up a fake site by copying ' . $settings_destination . ' to ' . $modify_site_settings);
       if (!file_exists($modify_site_settings)) {
         if ((brush_mkdir($modify_site_conf_path) === FALSE) || brush_op('copy', $settings_destination, $modify_site_settings) !== TRUE) {
-          return brush_set_error('BRUSH_UPGRADE_COULD_NOT_DISABLE', dt("Could not create a temporary multisite "));
+          return brush_set_error('BRUSH_UPGRADE_COULD_NOT_DISABLE', bt("Could not create a temporary multisite "));
         }
       }
     }
@@ -324,13 +324,13 @@ function brush_upgrade_site_upgrade($target_key) {
   // STEP 2:  Call updatedb for Backdrop core.
 
   // Run update.php in a subshell. It is run on @target site whereas this request was on @self.
-  brush_log(dt('About to perform updatedb for Backdrop core on !target', array('!target' => $target_key)), 'ok');
+  brush_log(bt('About to perform updatedb for Backdrop core on !target', array('!target' => $target_key)), 'ok');
   // When we call brush_invoke_sitealias_args in #interactive mode, the result code comes from brush_op_system, where 0 == success.
   $result = brush_invoke_sitealias_args($target_alias, 'updatedb', array(), array('yes' => TRUE, '#interactive' => TRUE)) == 0;
   if ($result === FALSE) {
-    return brush_set_error('BRUSH_BACKDROP_CORE_UPGRADE_FAILED', dt("The call to updatedb failed for Backdrop core.  This may be caused by a contrib module that is not yet ready for upgrade.  Try running site-upgrade again with '--uninstall={module list}' to remove all contrib extensions prior to upgrade.  Add modules back in until the problematic one is isolated.  Please report problems in the issue queue of the module that is causing problems."));
+    return brush_set_error('BRUSH_BACKDROP_CORE_UPGRADE_FAILED', bt("The call to updatedb failed for Backdrop core.  This may be caused by a contrib module that is not yet ready for upgrade.  Try running site-upgrade again with '--uninstall={module list}' to remove all contrib extensions prior to upgrade.  Add modules back in until the problematic one is isolated.  Please report problems in the issue queue of the module that is causing problems."));
   }
-  brush_log(dt('updatedb complete for Backdrop core'), 'ok');
+  brush_log(bt('updatedb complete for Backdrop core'), 'ok');
 
   // If we moved our modules out of the way, bring them back now.
   _brush_upgrade_restore_preserved_modules();
@@ -469,13 +469,13 @@ function brush_upgrade_project_map($target_version) {
         'content' => 'cck',
       ),
       'warning' => array(
-        'token' => dt('In Backdrop, the contrib token module handles UI, as well as field and profile tokens; all other functionality has been migrated to core.'),
+        'token' => bt('In Backdrop, the contrib token module handles UI, as well as field and profile tokens; all other functionality has been migrated to core.'),
         'cck' => TRUE,
-        'content_taxonomy' => dt('The project page for this module (!project_page) says that an upgrade path will be provided for this module at a future time.'),
-        'date:date_api' => dt("The d6 version of the date_api module in the date project defines a table called date_formats, which is also defined by system/system.install schema in d7.  If this problem has not been fixed yet, then the updatedb function will fail, and it will not be possible to upgrade to d7.  If this happens, disable and uninstall the date_api module before running site-upgrade (i.e. add '--uninstall=date_api' to site-upgrade call).  See http://drupal.org/node/1013034."),
+        'content_taxonomy' => bt('The project page for this module (!project_page) says that an upgrade path will be provided for this module at a future time.'),
+        'date:date_api' => bt("The d6 version of the date_api module in the date project defines a table called date_formats, which is also defined by system/system.install schema in d7.  If this problem has not been fixed yet, then the updatedb function will fail, and it will not be possible to upgrade to d7.  If this happens, disable and uninstall the date_api module before running site-upgrade (i.e. add '--uninstall=date_api' to site-upgrade call).  See http://drupal.org/node/1013034."),
         'field_taxonomy' => FALSE,
-        'filefield' => dt('Data migration for this module will be provided by the Content Migrate submodule of cck.  Enable content_migrate after upgrading; see http://drupal.org/node/781088.'),
-        'imagefield' => dt('Data migration for this module will be provided by the Content Migrate submodule of cck.  Enable content_migrate after upgrading; see http://drupal.org/node/781088.'),
+        'filefield' => bt('Data migration for this module will be provided by the Content Migrate submodule of cck.  Enable content_migrate after upgrading; see http://drupal.org/node/781088.'),
+        'imagefield' => bt('Data migration for this module will be provided by the Content Migrate submodule of cck.  Enable content_migrate after upgrading; see http://drupal.org/node/781088.'),
         'taxonomy_delegate' => FALSE,
         'taxonomy_intro' => FALSE,
         'term_fields' => FALSE,
@@ -502,17 +502,17 @@ function brush_upgrade_site_upgrade_prepare() {
     config_set('system.core', 'admin_theme', 'seven');
   }
   else {
-    brush_log(dt("Admin theme is already set to 'seven'."), 'ok');
+    brush_log(bt("Admin theme is already set to 'seven'."), 'ok');
   }
 
   // Disable all contrib modules per Upgrade.txt.
-  brush_log(dt("Disabling !list", array('!list' => implode(", ", $contrib_extensions))), 'ok');
+  brush_log(bt("Disabling !list", array('!list' => implode(", ", $contrib_extensions))), 'ok');
   call_user_func_array('brush_pm_disable', $contrib_extensions);
   if (brush_get_error()) return FALSE; // Early exit if we see an error.
 
   // Uninstall any modules specified via the --uninstall flag.
   if (!empty($uninstall_extensions)) {
-    brush_log(dt("Uninstalling !list", array('!list' => implode(", ", $uninstall_extensions))), 'ok');
+    brush_log(bt("Uninstalling !list", array('!list' => implode(", ", $uninstall_extensions))), 'ok');
     call_user_func_array('brush_pm_uninstall', $uninstall_extensions);
     if (brush_get_error()) return FALSE; // Early exit if we see an error.
   }
@@ -531,7 +531,7 @@ function brush_upgrade_site_upgrade_modules() {
 
   if (!empty($project_download_list)) {
     // Download our contrib extensions.
-    brush_log(dt('Download projects: !projects', array('!projects' => $project_download_list)), 'ok');
+    brush_log(bt('Download projects: !projects', array('!projects' => $project_download_list)), 'ok');
     brush_set_option('destination', NULL);
     // User has already been prompted; if there is no recommended release,
     // we will just take the most recent.
@@ -540,12 +540,12 @@ function brush_upgrade_site_upgrade_modules() {
   }
 
   // Run updatedb to update all of the contrib extensions.
-  brush_log(dt('About to perform updatedb for extensions'), 'ok');
+  brush_log(bt('About to perform updatedb for extensions'), 'ok');
   $result = brush_invoke_process_args('updatedb', array(), array('yes' => TRUE, '#interactive' => TRUE));
   if ($result === FALSE) {
-    return brush_set_error('BRUSH_BACKDROP_CONTRIB_UPGRADE_FAILED', dt("The call to updatedb failed for the enabled contrib modules.  Try running site-upgrade again with '--uninstall={module list}' to remove all contrib extensions prior to upgrade.  Add modules back in until the problematic one is isolated.  Please report problems in the issue queue of the module that is causing problems."));
+    return brush_set_error('BRUSH_BACKDROP_CONTRIB_UPGRADE_FAILED', bt("The call to updatedb failed for the enabled contrib modules.  Try running site-upgrade again with '--uninstall={module list}' to remove all contrib extensions prior to upgrade.  Add modules back in until the problematic one is isolated.  Please report problems in the issue queue of the module that is causing problems."));
   }
-  brush_log(dt('updatedb complete for extensions'), 'ok');
+  brush_log(bt('updatedb complete for extensions'), 'ok');
 
   // Finally, enable the modules that site-upgrade previously disabled.
   // We will set the option --resolve-dependencies to pick up new modules
@@ -571,7 +571,7 @@ function brush_upgrade_download_backdrop($target_version, $destination_core) {
   brush_set_option('version-control', 'backup');
 
   if (brush_get_context('BRUSH_SIMULATE')) {
-    brush_log(dt("Simulated download of backdrop-!version", array('!version' => $target_version)));
+    brush_log(bt("Simulated download of backdrop-!version", array('!version' => $target_version)));
   }
   else {
     brush_pm_download('backdrop-' . $target_version);
@@ -579,7 +579,7 @@ function brush_upgrade_download_backdrop($target_version, $destination_core) {
 
     // Check and see if there is a Backdrop site at the target.
     if (!file_exists($destination_core . '/includes/bootstrap.inc')) {
-      return brush_set_error('BRUSH_UPGRADE_NO_BACKDROP', dt('Backdrop could not be downloaded to the target directory, @root.  Move existing content out of the way first.', array('@root' => $target_alias['root'])));
+      return brush_set_error('BRUSH_UPGRADE_NO_BACKDROP', bt('Backdrop could not be downloaded to the target directory, @root.  Move existing content out of the way first.', array('@root' => $target_alias['root'])));
     }
   }
 }
@@ -595,14 +595,14 @@ function brush_upgrade_copy_settings(&$target_alias, $settings_destination) {
   $settings_source = conf_path() . '/settings.php';
   if (!file_exists($settings_destination_folder)) {
     if (!brush_op('mkdir', $settings_destination_folder) && !brush_get_context('BRUSH_SIMULATE')) {
-      return brush_set_error('BRUSH_UPGRADE_MKDIR_FAILED', dt('Failed to create directory @settings_destination', array('@settings_destination' => $settings_destination_folder)));
+      return brush_set_error('BRUSH_UPGRADE_MKDIR_FAILED', bt('Failed to create directory @settings_destination', array('@settings_destination' => $settings_destination_folder)));
     }
   }
 
   // Copy settings.php to target.
   if (!file_exists($settings_destination)) {
     if (!brush_op('copy', $settings_source, $settings_destination) && !brush_get_context('BRUSH_SIMULATE')) {
-      return brush_set_error('BRUSH_UPGRADE_COPY_FAILED', dt('Failed to copy @source to  @dest', array('@source' => $settings_source, 'dest' => $settings_destination)));
+      return brush_set_error('BRUSH_UPGRADE_COPY_FAILED', bt('Failed to copy @source to  @dest', array('@source' => $settings_source, 'dest' => $settings_destination)));
     }
   }
   // Append new $db_url with new DB name in target's settings.php.
@@ -626,7 +626,7 @@ function brush_upgrade_fix_db_url(&$target_alias, $settings_destination) {
   $database_name = $target_alias_databases['default']['default']['database'];
   if (empty($database_name)) {
     $database_name = str_replace("@", "", $target_alias['name']) . "db";
-    brush_log(dt("No database name specified; defaulting to !dbname", array("!dbname" => $database_name)), 'notice');
+    brush_log(bt("No database name specified; defaulting to !dbname", array("!dbname" => $database_name)), 'notice');
   }
 
   $append = "\n# Added by brush site-upgrade.";
@@ -675,10 +675,10 @@ function _brush_upgrade_preserve_modules($destination_core) {
       $result = brush_move_dir($moduledir, $preserved_moduledir, TRUE);
       if ($result) {
         $modules_preserve['list'][$moduledir] = $preserved_moduledir;
-        brush_log(dt('Move !src to !dest prior to updatedb on Backdrop core.', array('!src' => $moduledir, '!dest' => $preserved_moduledir)), 'ok');
+        brush_log(bt('Move !src to !dest prior to updatedb on Backdrop core.', array('!src' => $moduledir, '!dest' => $preserved_moduledir)), 'ok');
       }
       else {
-        return brush_set_error('BRUSH_MODULE_PRESERVE_FAILED', dt('Failed to move !src to !dest.', array('!src' => $moduledir, '!dest' => $preserved_moduledir)));
+        return brush_set_error('BRUSH_MODULE_PRESERVE_FAILED', bt('Failed to move !src to !dest.', array('!src' => $moduledir, '!dest' => $preserved_moduledir)));
       }
     }
   }

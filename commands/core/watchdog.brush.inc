@@ -6,11 +6,11 @@
 function watchdog_brush_help($section) {
   switch ($section)  {
     case 'brush:watchdog-list':
-      return dt('Show available message types and severity levels. A prompt will ask for a choice to show watchdog messages.');
+      return bt('Show available message types and severity levels. A prompt will ask for a choice to show watchdog messages.');
     case 'brush:watchdog-show':
-      return dt('Show watchdog messages. Arguments and options can be combined to configure which messages to show.');
+      return bt('Show watchdog messages. Arguments and options can be combined to configure which messages to show.');
     case 'brush:watchdog-delete':
-      return dt('Delete watchdog messages. Arguments or options must be provided to specify which messages to delete.');
+      return bt('Delete watchdog messages. Arguments or options must be provided to specify which messages to delete.');
   }
 }
 
@@ -73,18 +73,18 @@ function watchdog_brush_command() {
  * Command callback.
  */
 function brush_core_watchdog_list() {
-  $options['-- types --'] = dt('== message types ==');
+  $options['-- types --'] = bt('== message types ==');
   $types = core_watchdog_message_types();
   foreach ($types as $type) {
     $options[] = $type;
   }
-  $options['-- levels --'] = dt('== severity levels ==');
+  $options['-- levels --'] = bt('== severity levels ==');
   brush_include_engine('backdrop', 'environment');
   $severities = core_watchdog_severity_levels();
   foreach ($severities as $key => $value) {
     $options[] = "$value($key)";
   }
-  $option = brush_choice($options, dt('Select a message type or severity level.'));
+  $option = brush_choice($options, bt('Select a message type or severity level.'));
   if ($option === FALSE) {
     return brush_user_abort();
   }
@@ -120,7 +120,7 @@ function brush_core_watchdog_show_one($wid) {
   $rsc = brush_db_select('watchdog', '*', 'wid = :wid', array(':wid' => $wid), 0, 1);
   $result = brush_db_fetch_object($rsc);
   if (!$result) {
-    return brush_set_error(dt('Watchdog message #!wid not found.', array('!wid' => $wid)));
+    return brush_set_error(bt('Watchdog message #!wid not found.', array('!wid' => $wid)));
   }
   $result = core_watchdog_format_result($result, TRUE);
   foreach ($result as $key => $value) {
@@ -146,22 +146,22 @@ function brush_core_watchdog_show_many($filter = NULL) {
 
   $where = core_watchdog_query($type, $severity, $filter);
   if ($where === FALSE) {
-    return brush_log(dt('Aborting.'));
+    return brush_log(bt('Aborting.'));
   }
   $rsc = brush_db_select('watchdog', '*', $where['where'], $where['args'], 0, $count, 'wid', 'DESC');
   if ($rsc === FALSE) {
-    return brush_log(dt('Aborting.'));
+    return brush_log(bt('Aborting.'));
   }
-  $header = array(dt('Id'), dt('Date'), dt('Severity'), dt('Type'), dt('Message'));
+  $header = array(bt('Id'), bt('Date'), bt('Severity'), bt('Type'), bt('Message'));
   while ($result = brush_db_fetch_object($rsc)) {
     $row = core_watchdog_format_result($result, $full);
     $table[] = array($row->wid, $row->date, $row->severity, $row->type, $row->message);
   }
   if (empty($table)) {
-    return brush_log(dt('No log messages available.'), 'ok');
+    return brush_log(bt('No log messages available.'), 'ok');
   }
   else {
-    brush_log(dt('Most recent !count watchdog log messages:', array('!count' => $count)));
+    brush_log(bt('Most recent !count watchdog log messages:', array('!count' => $count)));
     if ($tail) {
       $table = array_reverse($table);
     }
@@ -249,7 +249,7 @@ function core_watchdog_format_result($result, $full = FALSE) {
       $result->username = $account->name;
     }
     else {
-      $result->username = dt('Anonymous');
+      $result->username = bt('Anonymous');
     }
     unset($result->uid);
     $message_length = PHP_INT_MAX;
@@ -267,43 +267,43 @@ function core_watchdog_format_result($result, $full = FALSE) {
  */
 function brush_core_watchdog_delete($arg = NULL) {
   if ($arg == 'all') {
-    brush_print(dt('All watchdog messages will be deleted.'));
-    if (!brush_confirm(dt('Do you really want to continue?'))) {
+    brush_print(bt('All watchdog messages will be deleted.'));
+    if (!brush_confirm(bt('Do you really want to continue?'))) {
       return brush_user_abort();
     }
     brush_db_delete('watchdog');
-    brush_log(dt('All watchdog messages have been deleted.'), 'ok');
+    brush_log(bt('All watchdog messages have been deleted.'), 'ok');
   }
   else if (is_numeric($arg)) {
-    brush_print(dt('Watchdog message #!wid will be deleted.', array('!wid' => $arg)));
-    if(!brush_confirm(dt('Do you really want to continue?'))) {
+    brush_print(bt('Watchdog message #!wid will be deleted.', array('!wid' => $arg)));
+    if(!brush_confirm(bt('Do you really want to continue?'))) {
       return brush_user_abort();
     }
     $affected_rows = brush_db_delete('watchdog', 'wid=:wid', array(':wid' => $arg));
     if ($affected_rows == 1) {
-      brush_log(dt('Watchdog message #!wid has been deleted.', array('!wid' => $arg)), 'ok');
+      brush_log(bt('Watchdog message #!wid has been deleted.', array('!wid' => $arg)), 'ok');
     }
     else {
-      return brush_set_error(dt('Watchdog message #!wid does not exist.', array('!wid' => $arg)));
+      return brush_set_error(bt('Watchdog message #!wid does not exist.', array('!wid' => $arg)));
     }
   }
   else {
     $type = brush_get_option('type');
     $severity = brush_get_option('severity');
     if ((is_null($arg))&&(is_null($type))&&(is_null($severity))) {
-      return brush_set_error(dt('No options provided.'));
+      return brush_set_error(bt('No options provided.'));
     }
     $where = core_watchdog_query($type, $severity, $arg, 'OR');
     if ($where === FALSE) {
       // Brush set error was already called by core_watchdog_query
       return FALSE;
     }
-    brush_print(dt('All messages with !where will be deleted.', array('!where' => preg_replace("/message LIKE %$arg%/", "message body containing '$arg'" , strtr($where['where'], $where['args'])))));
-    if(!brush_confirm(dt('Do you really want to continue?'))) {
+    brush_print(bt('All messages with !where will be deleted.', array('!where' => preg_replace("/message LIKE %$arg%/", "message body containing '$arg'" , strtr($where['where'], $where['args'])))));
+    if(!brush_confirm(bt('Do you really want to continue?'))) {
       return brush_user_abort();
     }
     $affected_rows = brush_db_delete('watchdog', $where['where'], $where['args']);
-    brush_log(dt('!affected_rows watchdog messages have been deleted.', array('!affected_rows' => $affected_rows)), 'ok');
+    brush_log(bt('!affected_rows watchdog messages have been deleted.', array('!affected_rows' => $affected_rows)), 'ok');
   }
 }
 
@@ -328,7 +328,7 @@ function core_watchdog_query($type = NULL, $severity = NULL, $filter = NULL, $cr
     $types = core_watchdog_message_types();
     if (array_search($type, $types) === FALSE) {
       $msg = "Unrecognized message type: !type.\nRecognized types are: !types.";
-      return brush_set_error('WATCHDOG_UNRECOGNIZED_TYPE', dt($msg, array('!type' => $type, '!types' => implode(', ', $types))));
+      return brush_set_error('WATCHDOG_UNRECOGNIZED_TYPE', bt($msg, array('!type' => $type, '!types' => implode(', ', $types))));
     }
     $conditions[] = "type = :type";
     $args[':type'] = $type;
@@ -350,7 +350,7 @@ function core_watchdog_query($type = NULL, $severity = NULL, $filter = NULL, $cr
         $levels[] = "$value($key)";
       }
       $msg = "Unknown severity level: !severity.\nValid severity levels are: !levels.";
-      return brush_set_error(dt($msg, array('!severity' => $severity, '!levels' => implode(', ', $levels))));
+      return brush_set_error(bt($msg, array('!severity' => $severity, '!levels' => implode(', ', $levels))));
     }
     $conditions[] = 'severity = :severity';
     $args[':severity'] = $level;

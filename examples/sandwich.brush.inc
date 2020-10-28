@@ -84,7 +84,7 @@ function sandwich_brush_command() {
 function sandwich_brush_help($section) {
   switch ($section) {
     case 'brush:make-me-a-sandwich':
-      return dt("This command will make you a delicious sandwich, just how you like it.");
+      return bt("This command will make you a delicious sandwich, just how you like it.");
     // The 'title' meta item is used to name a group of
     // commands in `brush help`.  If a title is not defined,
     // the default is "All commands in ___", with the
@@ -95,12 +95,12 @@ function sandwich_brush_help($section) {
     // to not define a title unless the file defines a lot
     // of commands.
     case 'meta:sandwich:title':
-      return dt("Sandwich commands");
+      return bt("Sandwich commands");
     // The 'summary' meta item is displayed in `brush help --filter`,
     // and is used to give a general idea what the commands in this
     // command file do, and what they have in common.
     case 'meta:sandwich:summary':
-      return dt("Automates your sandwich-making business workflows.");
+      return bt("Automates your sandwich-making business workflows.");
   }
 }
 
@@ -116,7 +116,7 @@ function sandwich_brush_help($section) {
 function brush_sandwich_make_me_a_sandwich_validate() {
   $name = posix_getpwuid(posix_geteuid());
   if ($name['name'] !== 'root') {
-    return brush_set_error('MAKE_IT_YOUSELF', dt('What? Make your own sandwich.'));
+    return brush_set_error('MAKE_IT_YOUSELF', bt('What? Make your own sandwich.'));
   }
 }
 
@@ -153,7 +153,7 @@ function brush_sandwich_make_me_a_sandwich($filling = 'ascii') {
     $list = implode(' and ', explode(',', $spreads));
     $str_spreads = ' with just a dash of ' . $list;
   }
-  $msg = dt('Okay. Enjoy this !filling sandwich!str_spreads.',
+  $msg = bt('Okay. Enjoy this !filling sandwich!str_spreads.',
             array('!filling' => $filling, '!str_spreads' => $str_spreads)
          );
   brush_print("\n" . $msg . "\n");

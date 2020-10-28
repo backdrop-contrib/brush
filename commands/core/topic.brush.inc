@@ -58,7 +58,7 @@ function brush_topic_core_topic($topic_name = NULL) {
       $choices[$key] = $topic['description'];
     }
     natcasesort($choices);
-    if (!$topic_name = brush_choice($choices, dt('Choose a topic'), '!value (!key)')) {
+    if (!$topic_name = brush_choice($choices, bt('Choose a topic'), '!value (!key)')) {
       return;
     }
   }

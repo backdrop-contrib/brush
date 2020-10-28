@@ -24,11 +24,11 @@ class brush_pm_version_control_bzr implements brush_pm_version_control {
     if (call_user_func_array('brush_shell_cd_and_exec', $args)) {
       $output = preg_grep('/^[\sRCP][\sNDKM][\s\*]/', brush_shell_exec_output());
       if (!empty($output)) {
-        return brush_set_error('BRUSH_PM_BZR_LOCAL_CHANGES', dt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
+        return brush_set_error('BRUSH_PM_BZR_LOCAL_CHANGES', bt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
       }
     }
     else {
-      return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', dt("Brush was unable to get the bzr status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
+      return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', bt("Brush was unable to get the bzr status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
     }
     return TRUE;
   }
@@ -40,11 +40,11 @@ class brush_pm_version_control_bzr implements brush_pm_version_control {
     if (brush_shell_exec('bzr revert %s', $project['full_project_path'])) {
       $output = brush_shell_exec_output();
       if (!empty($output)) {
-        return brush_set_error('BRUSH_PM_BZR_LOCAL_CHANGES', dt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
+        return brush_set_error('BRUSH_PM_BZR_LOCAL_CHANGES', bt("The Bazaar working copy at !path appears to have uncommitted changes (see below). Please commit or revert these changes before continuing:\n!output", array('!path' => $project['full_project_path'], '!output' => implode("\n", $output))));
       }
     }
     else {
-      return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', dt("Brush was unable to get the Bazaar status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
+      return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', bt("Brush was unable to get the Bazaar status on !path. Check that you have Bazaar \ninstalled and that this directory is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!path' => $project['full_project_path'], '!errors' => implode("\n", brush_shell_exec_output()))));
     }
   }
 
@@ -97,11 +97,11 @@ class brush_pm_version_control_bzr implements brush_pm_version_control {
           }
         }
         if (!empty($errors)) {
-          return brush_set_error('BRUSH_PM_BZR_SYNC_PROBLEMS', dt("Problems were encountered adding or removing files to/from Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => $errors)));
+          return brush_set_error('BRUSH_PM_BZR_SYNC_PROBLEMS', bt("Problems were encountered adding or removing files to/from Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => $errors)));
         }
       }
       else {
-        return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', dt("Brush was unable to get the bzr status. Check that you have Bazaar \ninstalled and that the site is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
+        return brush_set_error('BRUSH_PM_BZR_NOT_FOUND', bt("Brush was unable to get the bzr status. Check that you have Bazaar \ninstalled and that the site is a Bazaar working copy.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
       }
       return TRUE;
     }
@@ -114,17 +114,17 @@ class brush_pm_version_control_bzr implements brush_pm_version_control {
     if (brush_get_option('bzrcommit')) {
       $message = brush_get_option('bzrmessage');
       if (empty($message)) {
-        $message = dt("Brush automatic commit.\nProject: @name @type\nCommand: @arguments", array('@name' => $project['name'], '@type' => $project['project_type'], '@arguments' => implode(' ', $_SERVER['argv'])));
+        $message = bt("Brush automatic commit.\nProject: @name @type\nCommand: @arguments", array('@name' => $project['name'], '@type' => $project['project_type'], '@arguments' => implode(' ', $_SERVER['argv'])));
       }
       if (brush_shell_exec('bzr commit --message=%s %s', $message, $project['full_project_path'])) {
-        brush_log(dt('Project committed to Bazaar successfully'), 'ok');
+        brush_log(bt('Project committed to Bazaar successfully'), 'ok');
       }
       else {
-        brush_set_error('BRUSH_PM_BZR_COMMIT_PROBLEMS', dt("Problems were encountered committing your changes to Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
+        brush_set_error('BRUSH_PM_BZR_COMMIT_PROBLEMS', bt("Problems were encountered committing your changes to Bazaar.\nThe specific errors are below:\n!errors", array('!errors' => implode("\n", brush_shell_exec_output()))));
       }
     }
     else {
-      brush_print(dt("You should consider committing the new code to your Bazaar repository.\nIf this version becomes undesireable, use Bazaar to roll back."));
+      brush_print(bt("You should consider committing the new code to your Bazaar repository.\nIf this version becomes undesireable, use Bazaar to roll back."));
     }
   }
 

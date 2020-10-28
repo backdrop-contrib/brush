@@ -8,9 +8,9 @@
 function user_brush_help($section) {
   switch ($section) {
     case 'meta:user:title':
-      return dt('User commands');
+      return bt('User commands');
     case 'meta:user:summary':
-      return dt('Add, modify and delete users.');
+      return bt('Add, modify and delete users.');
   }
 }
 
@@ -216,7 +216,7 @@ function brush_user_add_role($role, $users = '') {
     if ($rid = brush_db_result($rid_query)) {
       brush_op('user_multiple_role_edit', $uids, 'add_role', $rid);
       foreach($uids as $uid) {
-        brush_log(dt("Added the %role role to uid %uid", array('%role' => $role, '%uid' => $uid)), 'success');
+        brush_log(bt("Added the %role role to uid %uid", array('%role' => $role, '%uid' => $uid)), 'success');
       }
     }
     else {
@@ -239,7 +239,7 @@ function brush_user_remove_role($role, $users = '') {
     if ($rid = brush_db_result($rid_query)) {
       brush_op('user_multiple_role_edit', $uids, 'remove_role', $rid);
       foreach($uids as $uid) {
-        brush_log(dt("Removed the %role role from uid %uid", array('%role' => $role, '%uid' => $uid)), 'success');
+        brush_log(bt("Removed the %role role from uid %uid", array('%role' => $role, '%uid' => $uid)), 'success');
       }
     }
     else {

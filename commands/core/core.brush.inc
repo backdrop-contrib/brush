@@ -274,7 +274,7 @@ function core_brush_engine_backdrop() {
  */
 function brush_core_updatedb() {
   if (brush_get_context('BRUSH_SIMULATE')) {
-    brush_log(dt('updatedb command does not support --simulate option.'), 'ok');
+    brush_log(bt('updatedb command does not support --simulate option.'), 'ok');
     return TRUE;
   }
 
@@ -293,7 +293,7 @@ function brush_core_updatedb() {
     // Call to undefined function field_read_fields() in field_sql_storage.install line 17
   }
 
-  brush_log(dt('Finished performing updates.'), 'ok');
+  brush_log(bt('Finished performing updates.'), 'ok');
 }
 
 /**
@@ -311,28 +311,28 @@ function brush_core_updatedb() {
 function core_brush_help($section) {
   switch ($section) {
     case 'meta:core:title':
-      return dt("Core brush commands");
+      return bt("Core brush commands");
     case 'brush:help':
-      return dt("Brush provides an extensive help system that describes both brush commands and topics of general interest.  Use `brush help --filter` to present a list of command categories to view, and `brush topic` for a list of topics that go more in-depth on how to use and extend brush.");
+      return bt("Brush provides an extensive help system that describes both brush commands and topics of general interest.  Use `brush help --filter` to present a list of command categories to view, and `brush topic` for a list of topics that go more in-depth on how to use and extend brush.");
     case 'brush:php-script':
-      return dt("Runs the given php script(s) after a full Backdrop bootstrap. A useful alternative to eval command when your php is lengthy or you can't be bothered to figure out bash quoting. If you plan to share a script with others, consider making a full brush command instead, since that's more self-documenting.  Brush provides commandline options to the script via brush_get_option('option-name'), and commandline arguments can be accessed either via brush_get_arguments(), which returns all arguments in an array, or brush_shift(), which removes the next argument from the list and returns it.");
+      return bt("Runs the given php script(s) after a full Backdrop bootstrap. A useful alternative to eval command when your php is lengthy or you can't be bothered to figure out bash quoting. If you plan to share a script with others, consider making a full brush command instead, since that's more self-documenting.  Brush provides commandline options to the script via brush_get_option('option-name'), and commandline arguments can be accessed either via brush_get_arguments(), which returns all arguments in an array, or brush_shift(), which removes the next argument from the list and returns it.");
     case 'brush:rsync':
-      return dt("Sync the entire backdrop directory or a subdirectory to a <destination> using ssh. Excludes reserved files and directories for supported VCSs. Useful for pushing copies of your tree to a staging server, or retrieving a files directory from a remote site. Relative paths start from the Backdrop root directory if a site alias is used; otherwise they start from the current working directory.");
+      return bt("Sync the entire backdrop directory or a subdirectory to a <destination> using ssh. Excludes reserved files and directories for supported VCSs. Useful for pushing copies of your tree to a staging server, or retrieving a files directory from a remote site. Relative paths start from the Backdrop root directory if a site alias is used; otherwise they start from the current working directory.");
     case 'brush:backdrop-directory':
-      return dt("Return the filesystem path for modules/themes and other key folders. Used by `cli` command for handy commands `cdd` and `lsd`. If you want to use this command directly, you usually want to prefix the command with cd and enclose the command invocation in backticks. See Examples below.");
+      return bt("Return the filesystem path for modules/themes and other key folders. Used by `cli` command for handy commands `cdd` and `lsd`. If you want to use this command directly, you usually want to prefix the command with cd and enclose the command invocation in backticks. See Examples below.");
     case 'brush:core-cli':
-      return dt("Enter a new shell optimized for brush use. All .bashrc customizations are still available.");
+      return bt("Enter a new shell optimized for brush use. All .bashrc customizations are still available.");
     case 'error:BRUSH_BACKDROP_DB_ERROR':
-      $message = dt("Brush was not able to start (bootstrap) the Backdrop database.\n");
-      $message .= dt("Hint: This error often occurs when Brush is trying to bootstrap a site that has not been installed or does not have a configured database.\n");
-      $message .= dt("\nDrop was attempting to connect to : \n!credentials\n", array('!credentials' => _core_site_credentials()));
-      $message .= dt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your brushrc.php file.\n");
+      $message = bt("Brush was not able to start (bootstrap) the Backdrop database.\n");
+      $message .= bt("Hint: This error often occurs when Brush is trying to bootstrap a site that has not been installed or does not have a configured database.\n");
+      $message .= bt("\nDrop was attempting to connect to : \n!credentials\n", array('!credentials' => _core_site_credentials()));
+      $message .= bt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your brushrc.php file.\n");
       return $message;
     case 'error:BRUSH_BACKDROP_BOOTSTRAP_ERROR':
-      $message = dt("Brush was not able to start (bootstrap) Backdrop.\n");
-      $message .= dt("Hint: This error can only occur once the database connection has already been successfully initiated, therefore this error generally points to a site configuration issue, and not a problem connecting to the database.\n");
-      $message .= dt("\nDrop was attempting to connect to : \n!credentials\n", array('!credentials' => _core_site_credentials()));
-      $message .= dt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your brushrc.php file.\n");
+      $message = bt("Brush was not able to start (bootstrap) Backdrop.\n");
+      $message .= bt("Hint: This error can only occur once the database connection has already been successfully initiated, therefore this error generally points to a site configuration issue, and not a problem connecting to the database.\n");
+      $message .= bt("\nDrop was attempting to connect to : \n!credentials\n", array('!credentials' => _core_site_credentials()));
+      $message .= bt("You can select another site with a working database setup by specifying the URI to use with the --uri parameter on the command line or \$options['uri'] in your brushrc.php file.\n");
       return $message;
       break;
   }
@@ -420,12 +420,12 @@ function _core_site_status_table($project = '') {
           $status_table['Database password'] = $creds['pass'];
         }
         if ($phase > BRUSH_BOOTSTRAP_BACKDROP_DATABASE) {
-          $status_table['Database'] = dt('Connected');
+          $status_table['Database'] = bt('Connected');
           if ($phase > BRUSH_BOOTSTRAP_BACKDROP_FULL) {
-            $status_table['Backdrop bootstrap'] = dt('Successful');
+            $status_table['Backdrop bootstrap'] = bt('Successful');
             if ($phase == BRUSH_BOOTSTRAP_BACKDROP_LOGIN) {
               global $user;
-              $username =  ($user->uid) ? $user->name : dt('Anonymous');
+              $username =  ($user->uid) ? $user->name : bt('Anonymous');
               $status_table['Backdrop user'] = $username;
             }
           }
@@ -447,7 +447,7 @@ function _core_site_status_table($project = '') {
   }
   $status_table['Brush alias files'] = implode(' ', brush_get_context('brush-alias-files'));
 
-  // None of the Status keys are in dt(); this helps with machine-parsing of status?
+  // None of the Status keys are in bt(); this helps with machine-parsing of status?
   $path_names['root'] = 'Backdrop root';
   $path_names['site'] = 'Site path';
   $path_names['install_profile'] = 'Install profile';
@@ -518,10 +518,10 @@ function _brush_core_config_php_ini_files() {
  */
 function brush_core_cron() {
   if (backdrop_cron_run()) {
-    brush_log(dt('Cron run successfully.'), 'success');
+    brush_log(bt('Cron run successfully.'), 'success');
   }
   else {
-    return brush_set_error('BRUSH_CRON_FAILED', dt('Cron run failed.'));
+    return brush_set_error('BRUSH_CRON_FAILED', bt('Cron run failed.'));
   }
 }
 
@@ -561,7 +561,7 @@ function brush_core_status() {
 
 // Command callback. Show all global options. Exposed via topic command.
 function brush_core_global_options() {
-  brush_print(dt('These options are applicable to most brush commands.'));
+  brush_print(bt('These options are applicable to most brush commands.'));
   brush_print();
   $fake = brush_global_options_command(FALSE);
   $global_option_rows = brush_format_help_section($fake, 'options');
@@ -610,7 +610,7 @@ function brush_core_php_script() {
         $searchpath[] = $path;
       }
     }
-    brush_log(dt('Searching for scripts in ') . implode(',', $searchpath), 'debug');
+    brush_log(bt('Searching for scripts in ') . implode(',', $searchpath), 'debug');
 
     if (!isset($script)) {
       // List all available scripts.
@@ -635,7 +635,7 @@ function brush_core_php_script() {
         $all[] = $script_filename;
       }
       if (!$found) {
-        return brush_set_error('BRUSH_TARGET_NOT_FOUND', dt('Unable to find any of the following: @files', array('@files' => implode(', ', $all))));
+        return brush_set_error('BRUSH_TARGET_NOT_FOUND', bt('Unable to find any of the following: @files', array('@files' => implode(', ', $all))));
       }
     }
   }
@@ -774,7 +774,7 @@ function brush_core_backdrop_directory($target = 'root') {
     brush_print($path);
   }
   else {
-    return brush_set_error('BRUSH_TARGET_NOT_FOUND', dt("Target '!target' not found.", array('!target' => $target)));
+    return brush_set_error('BRUSH_TARGET_NOT_FOUND', bt("Target '!target' not found.", array('!target' => $target)));
   }
 
   return TRUE;
@@ -784,7 +784,7 @@ function brush_core_backdrop_directory($target = 'root') {
  * Called for `brush version` or `brush --version`
  */
 function brush_core_version() {
-  brush_print(dt("brush version !version", array('!version' => BRUSH_VERSION)));
+  brush_print(bt("brush version !version", array('!version' => BRUSH_VERSION)));
   brush_print_pipe(BRUSH_VERSION);
   // Next check to see if there is a newer brush.
   if (!brush_get_context('BRUSH_PIPE') && !brush_get_option('self-update', TRUE)) {
@@ -824,10 +824,10 @@ function brush_core_find_project_path($target) {
 function brush_core_cli() {
   // Do not allow cli to start recursively, or from backend invoke.
   if (brush_get_option('in-cli', FALSE)) {
-    return brush_set_error('BRUSH_CLI_NOT_REENTRANT', dt('Already in brush core-cli; press control-d to exit.'));
+    return brush_set_error('BRUSH_CLI_NOT_REENTRANT', bt('Already in brush core-cli; press control-d to exit.'));
   }
   if (brush_get_context('BRUSH_BACKEND') || brush_get_context('BRUSH_AFFIRMATIVE') || brush_get_context('BRUSH_NEGATIVE')) {
-    return brush_set_error('BRUSH_CLI_INTERACTIVE_ERROR', dt('Cannot run brush core-cli from non-interactive mode; aborting.'));
+    return brush_set_error('BRUSH_CLI_INTERACTIVE_ERROR', bt('Cannot run brush core-cli from non-interactive mode; aborting.'));
   }
 
   // We set interactive mode if we are about to run a bash subshell.
@@ -1077,14 +1077,14 @@ EOD;
         }
       }
       elseif ($is_shell_builtin && ($key != "help")) {
-        brush_set_error('BRUSH_OVERRIDE_BUILTIN', dt("Cannot override shell builtin function !builtin", array('!builtin' => $key)));
+        brush_set_error('BRUSH_OVERRIDE_BUILTIN', bt("Cannot override shell builtin function !builtin", array('!builtin' => $key)));
       }
       if (!$conflict) {
         $bashrc_data .= "function $key() {\n  $brush_command \$BACKDROP_SITE $key \"\$@\"\n}\n";
       }
       elseif (in_array($key, $cli_contextual_commands)) {
         if ($is_shell_builtin) {
-          $warning = dt("Warning: overriding shell built-in command !builtin.  This could cause unpredictable results with shell scripts.", array('!builtin' => $key));
+          $warning = bt("Warning: overriding shell built-in command !builtin.  This could cause unpredictable results with shell scripts.", array('!builtin' => $key));
           brush_log($warning, 'warning');
           $bashrc_data .= "# $warning\n";
         }

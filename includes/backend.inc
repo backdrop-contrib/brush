@@ -202,7 +202,7 @@ function _brush_backend_integrate($data) {
   }
   // Output will either be printed, or buffered to the brush_backend_output command.
   if (brush_cmp_error('BRUSH_APPLICATION_ERROR') && !empty($data['output'])) {
-    brush_set_error("BRUSH_APPLICATION_ERROR", dt("Output from failed command :\n !output", array('!output' => $data['output'])));
+    brush_set_error("BRUSH_APPLICATION_ERROR", bt("Output from failed command :\n !output", array('!output' => $data['output'])));
   }
   else {
     print ($data['output']);
@@ -392,16 +392,16 @@ function brush_backend_invoke_sitealias($site_record, $command, $args, $data = a
  *   If the command was completed, this will return an associative array containing the data from brush_backend_output().
  */
 function _brush_backend_invoke($cmd, $data = null, $integrate = TRUE) {
-  brush_log(dt('Running: !cmd', array('!cmd' => $cmd)), 'command');
+  brush_log(bt('Running: !cmd', array('!cmd' => $cmd)), 'command');
   if (array_key_exists('#interactive', $data)) {
-    brush_log(dt("executing !cmd", array('!cmd' => $cmd)));
+    brush_log(bt("executing !cmd", array('!cmd' => $cmd)));
     return brush_op_system($cmd);
   }
   else {
     $proc = _brush_proc_open($cmd, $data);
 
     if (($proc['code'] == BRUSH_APPLICATION_ERROR) && $integrate) {
-      brush_set_error('BRUSH_APPLICATION_ERROR', dt("The external command could not be executed due to an application error."));
+      brush_set_error('BRUSH_APPLICATION_ERROR', bt("The external command could not be executed due to an application error."));
     }
 
     if ($proc['output']) {
@@ -410,7 +410,7 @@ function _brush_backend_invoke($cmd, $data = null, $integrate = TRUE) {
         return $values;
       }
       else {
-        return brush_set_error('BRUSH_FRAMEWORK_ERROR', dt("The command could not be executed successfully (returned: !return, code: %code)", array("!return" => $proc['output'], "%code" =>  $proc['code'])));
+        return brush_set_error('BRUSH_FRAMEWORK_ERROR', bt("The command could not be executed successfully (returned: !return, code: %code)", array("!return" => $proc['output'], "%code" =>  $proc['code'])));
       }
     }
   }

@@ -14,12 +14,12 @@ function package_handler_validate() {
   $success = brush_shell_exec('cvs --version');
   brush_set_context('BRUSH_DEBUG', $debug);
   if (!$success) {
-    return brush_set_error('BRUSH_SHELL_COMMAND_NOT_FOUND', dt('cvs executable not found.'));
+    return brush_set_error('BRUSH_SHELL_COMMAND_NOT_FOUND', bt('cvs executable not found.'));
   }
   // Check cvs_deploy is enabled. Only for bootstrapped sites.
   if (brush_get_context('BRUSH_BOOTSTRAP_PHASE') >= BRUSH_BOOTSTRAP_BACKDROP_FULL) {
     if (!module_exists('cvs_deploy')) {
-      brush_log(dt('cvs package handler needs cvs_deploy module enabled to work properly.'), 'warning');
+      brush_log(bt('cvs package handler needs cvs_deploy module enabled to work properly.'), 'warning');
     }
   }
 }
@@ -40,7 +40,7 @@ function package_handler_download_project(&$project, $release) {
       return TRUE;
     }
     else {
-      return brush_set_error('BRUSH_PM_CVS_CHECKOUT_PROBLEMS', dt("Unable to check out !project to !destination from cvs.drupal.org", array('!project' => $project['name'], '!destination' => $project['full_project_path'])));
+      return brush_set_error('BRUSH_PM_CVS_CHECKOUT_PROBLEMS', bt("Unable to check out !project to !destination from cvs.drupal.org", array('!project' => $project['name'], '!destination' => $project['full_project_path'])));
     }
   }
 }
@@ -62,7 +62,7 @@ function package_handler_update_project(&$project, $release) {
     return TRUE;
   }
   else {
-    return brush_set_error('BRUSH_PM_CVS_UPDATE_PROBLEMS', dt("Unable to update !project from cvs.drupal.org", array('!project' => $project['name'])));
+    return brush_set_error('BRUSH_PM_CVS_UPDATE_PROBLEMS', bt("Unable to update !project from cvs.drupal.org", array('!project' => $project['name'])));
   }
 }
 
@@ -134,7 +134,7 @@ function brush_pm_cvs(&$project, $release) {
   // CVS only accepts relative paths. We will cd in the checkout path right
   // before running the cvs command.
   if (!brush_shell_cd_and_exec($project['base_project_path'], implode(' ', $command))) {
-    return brush_set_error('BRUSH_PM_UNABLE_CHECKOUT', dt('Unable to !op !project from cvs.drupal.org.', array('!op' => $cvsmethod, '!project' => $project['name'])));
+    return brush_set_error('BRUSH_PM_UNABLE_CHECKOUT', bt('Unable to !op !project from cvs.drupal.org.', array('!op' => $cvsmethod, '!project' => $project['name'])));
   }
 }
 

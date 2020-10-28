@@ -22,7 +22,7 @@ function package_handler_validate() {
   }
   brush_set_context('BRUSH_DEBUG', $debug);
   if (!$success) {
-    return brush_set_error('BRUSH_SHELL_COMMAND_NOT_FOUND', dt('wget nor curl executables found.'));
+    return brush_set_error('BRUSH_SHELL_COMMAND_NOT_FOUND', bt('wget nor curl executables found.'));
   }
 }
 
