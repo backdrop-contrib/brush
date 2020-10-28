@@ -56,7 +56,7 @@ function config_brush_command() {
     ),
     'aliases' => array('cset','vset'),
   );
-  $items['config_clear'] = array(
+  $items['config-clear'] = array(
     'description' => "Delete a single value from a config file.",
     'arguments' => array(
       'config-name' => 'The configuration object name, for example "system.core".',
