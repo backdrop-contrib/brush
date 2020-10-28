@@ -40,33 +40,32 @@ function config_brush_command() {
     'aliases' => array('cget','vget'),
   );
   $items['config-set'] = array(
-    'description' => "Set a Configuration key.",
+    'description' => "Set a configuration key.",
     'arguments' => array(
-      'name' => 'The name of a variable or the first few letters of its name.',
-      'value' => 'The value to assign to the variable.',
+      'config-name' => 'The config object name, for example "system.core".',
+      'key' => 'The config key, for example "site_slogan".',
+      'value' => 'The value to assign to the config key.',
     ),
     'options' => array(
       'yes' => 'Skip confirmation if only one variable name matches.',
       'always-set' => 'Always skip confirmation.',
     ),
     'examples' => array(
-      'brush vset --yes preprocess_css 1' => 'Set the preprocess_css variable to true. Skip confirmation if variable already exists.',
-      'brush vset --always-set site_offline 1' => 'Take the site offline; Skips confirmation even if site_offline variable does not exist.',
-      'brush vset pr 1' => 'Choose from a list of variables beginning with "pr" to set to true.',
+      'brush config-set --yes preprocess_css 1' => 'Set the preprocess_css variable to true.',
     ),
     'aliases' => array('cset','vset'),
   );
   $items['config-delete'] = array(
-    'description' => "Delete a variable.",
+    'description' => "Delete a configuration object.",
     'arguments' => array(
-      'name' => 'The name of a variable or the first few letters of its name.',
+      'config-name' => 'The config object name, for example "system.core".',
+      'key' => 'A config key to clear, for example "site_frontpage".',
     ),
     'options' => array(
       'yes' => 'Skip confirmation if only one variable name matches.',
     ),
     'examples' => array(
-      'brush vdel user_pictures' => 'Delete the user_pictures variable.',
-      'brush vdel u' => 'Choose from a list of variables beginning with "u" to delete.',
+      'brush config-delete system.core site_frontpage' => 'Delete the site_frontpage variable.',
     ),
     'aliases' => array('cdel','vdel'),
   );
@@ -258,9 +257,8 @@ function brush_config_get() {
       // Wildcard argument.
       elseif($args['0'][0] == '*' && substr($args['0'],-1) == '*') {
         $search = str_replace( '\*', '.*?', preg_quote($args['0'], '/' ));
-        $result = preg_grep( '/^' . $search . '$/i', array_keys($config) );
-        if (!empty($result)) {
-          $found_key = array_shift($result);
+        $results = preg_grep( '/^' . $search . '$/i', array_keys($config) );
+        if (!empty($results)) {
           $rows = array();
           // The first row serves as table header.
           $rows[] = array(
@@ -273,21 +271,23 @@ function brush_config_get() {
           else {
             $title = $config_name.'.json';
           }
-          foreach ($config as $variable => $value) {
-            if ($variable == $found_key) {
-              if (is_array($value)) {
-                $value = json_encode($value);
+          foreach ($results as $result) {
+            foreach ($config as $variable => $value) {
+              if ($variable == $result) {
+                if (is_array($value)) {
+                  $value = json_encode($value);
+                }
+                $rows[] = array(
+                  $variable,
+                  $value,
+                );
               }
-              $rows[] = array(
-                $variable,
-                $value,
-              );
-              brush_print();
-              brush_print($title);
-              brush_print_table($rows, TRUE);
-              $printed = TRUE;
             }
           }
+          brush_print();
+          brush_print($title);
+          brush_print_table($rows, TRUE);
+          $printed = TRUE;
         }
       }
     }
