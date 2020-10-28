@@ -53,7 +53,6 @@ function config_brush_command() {
     'examples' => array(
       'brush config-set --yes preprocess_css 1' => 'Set the preprocess_css variable to true.',
       'brush cset system.core watchdog_enabled_severity_levels \'{"0":0,"1":1}\'' => 'Set severity of logs to Emergency & Alert. See /admin/config/development/logging.',
-      'brush cset system.core watchdog_enabled_severity_levels \'{"0":0,"1":1}\'' => 'Set severity of logs to Emergency & Alert. See /admin/config/development/logging.',
     ),
     'aliases' => array('cset','vset'),
   );
