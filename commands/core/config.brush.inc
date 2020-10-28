@@ -24,7 +24,7 @@ function config_brush_command() {
   $items['config-get'] = array(
     'description' => 'Get a list of some or all site variables and values.',
     'arguments' => array(
-      'config-name' => 'The config object name, for example "system.core".',
+      'config-name' => 'The configuration object name, for example "system.core".',
       'key' => 'The config key, for example "clean_url".',
     ),
     'examples' => array(
@@ -42,7 +42,7 @@ function config_brush_command() {
   $items['config-set'] = array(
     'description' => "Set a configuration key.",
     'arguments' => array(
-      'config-name' => 'The config object name, for example "system.core".',
+      'config-name' => 'The configuration object name, for example "system.core".',
       'key' => 'The config key, for example "site_slogan".',
       'value' => 'The value to assign to the config key. Arrays can be input as JSON strings.',
     ),
@@ -56,17 +56,17 @@ function config_brush_command() {
     ),
     'aliases' => array('cset','vset'),
   );
-  $items['config-delete'] = array(
-    'description' => "Delete a configuration object.",
+  $items['config_clear'] = array(
+    'description' => "Delete a single value from a config file.",
     'arguments' => array(
-      'config-name' => 'The config object name, for example "system.core".',
-      'key' => 'A config key to clear, for example "site_frontpage".',
+      'config-name' => 'The configuration object name, for example "system.core".',
+      'key' => 'A configuration key to clear, for example "site_frontpage".',
     ),
     'options' => array(
       'yes' => 'Skip confirmation if only one variable name matches.',
     ),
     'examples' => array(
-      'brush config-delete system.core site_frontpage' => 'Delete the site_frontpage variable.',
+      'brush config_clear system.core site_frontpage' => 'Delete the site_frontpage variable.',
     ),
     'aliases' => array('cdel','vdel'),
   );
@@ -167,12 +167,12 @@ function brush_config_get() {
         $title = $config_name.'.json';
       }
       $config = $config_storage->read($config_name);
-      foreach ($config as $variable => $value) {
+      foreach ($config as $key => $value) {
         if (is_array($value)) {
           $value = json_encode($value);
         }
         $rows[] = array(
-          $variable,
+          $key,
           $value,
         );
       }
@@ -200,14 +200,15 @@ function brush_config_get() {
           else {
             $title = $config_name.'.json';
           }
-          foreach ($config as $variable => $value) {
-            if ($args[1]) { // If $variable key provided
-              if ($variable == $args[1]) {
+          foreach ($config as $key => $value) {
+            if ($args[1]) {
+
+              if ($key == $args[1]) {
                 if (is_array($value)) {
                   $value = json_encode($value);
                 }
                 $rows[] = array(
-                  $variable,
+                  $key,
                   $value,
                 );
               }
@@ -217,15 +218,20 @@ function brush_config_get() {
                 $value = json_encode($value);
               }
               $rows[] = array(
-                $variable,
+                $key,
                 $value,
               );
             }
           }
-          $printed = FALSE;
+          if (empty($rows)) {
+            return brush_set_error('BRUSH_config_ERROR', bt('No configuration found for !name', array('!name' => $args[1])));
+          }
+          else {
+            $printed = FALSE;
+          }
         }
       }
-       // $args[0] without dot is probably $variable key.
+       // $args[0] without dot is probably $key.
        elseif (array_key_exists($args[0], $config)) {
         $rows = array();
         // The first row serves as table header.
@@ -239,13 +245,13 @@ function brush_config_get() {
         else {
           $title = $config_name.'.json';
         }
-        foreach ($config as $variable => $value) {
-          if ($variable == $args[0]) {
+        foreach ($config as $key => $value) {
+          if ($key == $args[0]) {
             if (is_array($value)) {
               $value = json_encode($value);
             }
             $rows[] = array(
-              $variable,
+              $key,
               $value,
             );
             brush_print();
@@ -273,13 +279,13 @@ function brush_config_get() {
             $title = $config_name.'.json';
           }
           foreach ($results as $result) {
-            foreach ($config as $variable => $value) {
-              if ($variable == $result) {
+            foreach ($config as $key => $value) {
+              if ($key == $result) {
                 if (is_array($value)) {
                   $value = json_encode($value);
                 }
                 $rows[] = array(
-                  $variable,
+                  $key,
                   $value,
                 );
               }
@@ -306,7 +312,7 @@ function brush_config_get() {
     }
   }
   else {
-    brush_set_error('No configuration found for '.$args[0]);
+    brush_set_error('BRUSH_config_ERROR', bt('No configuration found for !name', array('!name' => $args[0])));
   }
 }
 
@@ -373,40 +379,39 @@ function brush_config_set() {
  * Command callback.
  * Delete a variable.
  */
-function brush_config_delete() {
-  $args = func_get_args();
-  if (!isset($args[0])) {
-    brush_set_error('BRUSH_config_ERROR', bt('No variable specified'));
-  }
-  // Look for similar variable names.
-  $result = brush_config_like($args[0]);
+ function brush_config_clear() {
+   $args = func_get_args();
+   $config_name = $args[0];
+   if (!isset($config_name)) {
+     return brush_set_error('BRUSH_config_ERROR', bt('No configuration name specified.'));
+   }
+   elseif (strpos($config_name, '.') == FALSE) {
+     return brush_set_error('BRUSH_config_ERROR', bt('No configuration found for !name', array('!name' => $config_name)));
+   }
+   $key = $args[1];
+   if (!isset($key)) {
+     return brush_set_error('BRUSH_config_ERROR', bt('No configuration key specified.'));
+   }
 
-  $options = array();
-  while ($name = brush_db_result($result)) {
-    $options[] = $name;
-  }
-
-  if (count($options) == 0) {
-    brush_print(bt('!name not found.', array('!name' => $args[0])));
-    return '';
-  }
-
-  if ((count($options) == 1) && brush_get_context('BRUSH_AFFIRMATIVE')) {
-    brush_op('variable_del', $args[0]);
-    brush_log(bt('!name was deleted.', array('!name' => $args[0])), 'success');
-    return '';
-  }
-  else {
-    $choice = brush_choice($options, 'Enter a number to choose which variable to delete.');
-    if ($choice !== FALSE) {
-      $choice = $options[$choice];
-      brush_op('variable_del', $choice);
-      brush_log(bt('!choice was deleted.', array('!choice' => $choice)), 'success');
-    }
-  }
-}
-
-// Query for similar variable names.
-function brush_config_like($arg) {
-  return brush_db_select('variable', 'name', 'name LIKE :keyword', array(':keyword' => $arg . '%'), NULL, NULL, 'name');
-}
+   $config_dir = config_get_config_directory();
+   $config_storage = new ConfigFileStorage($config_dir);
+   // Clean up the incorrectly entered $config_name
+   if (substr($config_name, -5) == '.json') {
+     $config_name = substr($config_name, 0, -5);
+   }
+   if ($config = $config_storage->read($config_name)) {
+     if (isset($config[$key])) {
+       $choice = brush_choice(array('1' => 'Yes'), bt('Are you sure you want to clear "!name"?', array('!name' => $key)));
+       if ($choice == '1') {
+         config_clear($config_name, $key);
+         brush_print(bt('Configuration key "!name" has been succesfully cleared.', array('!name' => $key)));
+       }
+     }
+     else {
+       return brush_set_error('BRUSH_config_ERROR', bt('No configuration found for !name', array('!name' => $key)));
+     }
+   }
+   else {
+     return brush_set_error('BRUSH_config_ERROR', bt('No configuration found for !name', array('!name' => $config_name)));
+   }
+ }
