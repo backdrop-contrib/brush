@@ -14,7 +14,7 @@ function config_brush_command() {
     ),
     'examples' => array(
       'brush config-list' => 'List all configuration files.',
-      'brush config-list user' => 'List all configuration files beginning with the string "user".',
+      'brush config-list user' => 'List all configuration files containing the string "user" in their names.',
     ),
     'options' => array(
       'pipe' => 'Use var_export() to emit executable PHP. Useful for pasting into code.',
@@ -30,8 +30,9 @@ function config_brush_command() {
     'examples' => array(
       'brush config-get' => 'List all variables and values.',
       'brush config-get system.core' => 'List all variables in "system.core.json" file.',
-      'brush config-get system.core clean_url' => 'List value of the "clean_url" variable in "system.core.json" file.',
-      'brush config-get clean_url' => 'List value of the "clean_url" variable in "system.core.json" file.',
+      'brush config-get system.core clean_url' => 'Display value of "clean_url" key in "system.core.json" file.',
+      'brush cget entity_type' => 'List values of the "entity_type" key in all configuration files.',
+      'brush cget *entity*' => 'List variables whose keys contain string "entity".',
     ),
     'options' => array(
       'pipe' => 'Use var_export() to emit executable PHP. Useful for pasting into code.',
@@ -157,21 +158,36 @@ function brush_config_get() {
   $config_storage = new ConfigFileStorage($config_dir);
   $args = func_get_args();
 
-  if ($args['0']) { // If $config_name provided
-    $rows[] = array(
-      'Configuration variable',
-      'Value',
-    );
-    $key_found == FALSE;
-    foreach ($config_storage->listAll() as $config_name) {
-      $config = $config_storage->read($config_name);
-      if ($args['0'] == $config_name) {
-        $title = config_get_info($config_name)['label'].' ('.$config_name.'.json)';
-        foreach ($config as $variable => $value) {
-          if ($args['1']) { // If $variable provided
-            if ($variable == $args['1']) {
+  foreach ($config_storage->listAll() as $config_name) {
+    $config = $config_storage->read($config_name);
+    if ($args['0']) {
+      if (strpos($args['0'], '.') !== FALSE) { // each $config_name contains dot.
+        // Clean up the incorrectly entered $config_name
+        if (substr($args['0'], -5) == '.json') {
+          $args['0'] = substr($args['0'], 0, -5);
+        }
+        if ($args['0'] == $config_name) {
+          if (config_get_info($config_name)['label']) {
+            $title = config_get_info($config_name)['label'].' ('.$config_name.'.json)';
+          }
+          else {
+            $title = $config_name.'.json';
+          }
+          foreach ($config as $variable => $value) {
+            if ($args['1']) { // If $variable key provided
+              if ($variable == $args['1']) {
+                if (is_array($value)) {
+                  $value = json_encode($value);
+                }
+                $rows[] = array(
+                  $variable,
+                  $value,
+                );
+              }
+            }
+            else {
               if (is_array($value)) {
-                $value = 'array('.implode(", ", $value).')';
+                $value = json_encode($value);
               }
               $rows[] = array(
                 $variable,
@@ -179,49 +195,93 @@ function brush_config_get() {
               );
             }
           }
-          else {
-            if (is_array($value)) {
-              $value = 'array('.implode(", ", $value).')';
-            }
-            $rows[] = array(
-              $variable,
-              $value,
-            );
-          }
+          $printed = FALSE;
         }
       }
-      // $args['0'] found in $config_name, probably it's a configuration value.
-      if (array_key_exists($args['0'], $config)) {
-        $key_found = TRUE;
-        $title = config_get_info($config_name)['label'].' ('.$config_name.'.json)';
+       // $args['0'] without dot is probably $variable key.
+       elseif (array_key_exists($args['0'], $config)) {
+        $rows = array();
+        // The first row serves as table header.
+        $rows[] = array(
+          'Configuration variable',
+          'Value',
+        );
+        if (config_get_info($config_name)['label']) {
+          $title = config_get_info($config_name)['label'].' ('.$config_name.'.json)';
+        }
+        else {
+          $title = $config_name.'.json';
+        }
         foreach ($config as $variable => $value) {
           if ($variable == $args['0']) {
             if (is_array($value)) {
-              $value = 'array('.implode(", ", $value).')';
+              $value = json_encode($value);
             }
             $rows[] = array(
               $variable,
               $value,
             );
+            brush_print();
+            brush_print($title);
+            brush_print_table($rows, TRUE);
+            $printed = TRUE;
           }
         }
-        brush_print();
-        brush_print($title);
-        brush_print_table($rows, TRUE);
+      }
+      // Wildcard argument.
+      elseif($args['0'][0] == '*' && substr($args['0'],-1) == '*') {
+        $search = str_replace( '\*', '.*?', preg_quote($args['0'], '/' ));
+        $result = preg_grep( '/^' . $search . '$/i', array_keys($config) );
+        if (!empty($result)) {
+          $found_key = array_shift($result);
+          $rows = array();
+          // The first row serves as table header.
+          $rows[] = array(
+            'Configuration variable',
+            'Value',
+          );
+          if (config_get_info($config_name)['label']) {
+            $title = config_get_info($config_name)['label'].' ('.$config_name.'.json)';
+          }
+          else {
+            $title = $config_name.'.json';
+          }
+          foreach ($config as $variable => $value) {
+            if ($variable == $found_key) {
+              if (is_array($value)) {
+                $value = json_encode($value);
+              }
+              $rows[] = array(
+                $variable,
+                $value,
+              );
+              brush_print();
+              brush_print($title);
+              brush_print_table($rows, TRUE);
+              $printed = TRUE;
+            }
+          }
+        }
       }
     }
-    if ($key_found == FALSE) {
-      if ($title) {
-        brush_print();
-        brush_print($title);
-        brush_print_table($rows, TRUE);
-      }
-      else {
-        brush_set_error('No configuration found for '.$args['0']);
-      }
-    }  
+  }
+  if (isset($printed)) {
+    if ($printed == FALSE) {
+      brush_print();
+      brush_print($title);
+      $header = array(
+        'Configuration variable',
+        'Value',
+      );
+      array_unshift($rows, $header);
+      brush_print_table($rows, TRUE);
+    }
+  }
+  else {
+    brush_set_error('No configuration found for '.$args['0']);
   }
 }
+
 
 /**
  * Command callback.
