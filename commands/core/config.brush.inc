@@ -40,7 +40,7 @@ function config_brush_command() {
     'aliases' => array('cget','vget'),
   );
   $items['config-set'] = array(
-    'description' => "Set a configuration variable.",
+    'description' => "Set a Configuration key.",
     'arguments' => array(
       'name' => 'The name of a variable or the first few letters of its name.',
       'value' => 'The value to assign to the variable.',
@@ -158,6 +158,33 @@ function brush_config_get() {
   $config_storage = new ConfigFileStorage($config_dir);
   $args = func_get_args();
 
+  if (!$args['0']) {
+    foreach ($config_storage->listAll() as $config_name) {
+      if (config_get_info($config_name)['label']) {
+        $title = config_get_info($config_name)['label'].' ('.$config_name.'.json)';
+      }
+      else {
+        $title = $config_name.'.json';
+      }
+      $config = $config_storage->read($config_name);
+      foreach ($config as $variable => $value) {
+        if (is_array($value)) {
+          $value = json_encode($value);
+        }
+        $rows[] = array(
+          $variable,
+          $value,
+        );
+      }
+      brush_print();
+      brush_print($title);
+      brush_print_table($rows, TRUE);
+      unset($rows);
+    }
+    $printed = TRUE;
+  }
+
+
   foreach ($config_storage->listAll() as $config_name) {
     $config = $config_storage->read($config_name);
     if ($args['0']) {
@@ -203,7 +230,7 @@ function brush_config_get() {
         $rows = array();
         // The first row serves as table header.
         $rows[] = array(
-          'Configuration variable',
+          'Configuration key',
           'Value',
         );
         if (config_get_info($config_name)['label']) {
@@ -237,7 +264,7 @@ function brush_config_get() {
           $rows = array();
           // The first row serves as table header.
           $rows[] = array(
-            'Configuration variable',
+            'Configuration key',
             'Value',
           );
           if (config_get_info($config_name)['label']) {
@@ -270,7 +297,7 @@ function brush_config_get() {
       brush_print();
       brush_print($title);
       $header = array(
-        'Configuration variable',
+        'Configuration key',
         'Value',
       );
       array_unshift($rows, $header);
