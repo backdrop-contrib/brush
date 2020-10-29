@@ -13,8 +13,8 @@ function config_brush_command() {
       'name' => 'A string to filter the configuration files by.',
     ),
     'examples' => array(
-      'brush config-list' => 'List all configuration files.',
-      'brush config-list user' => 'List all configuration files containing the string "user" in their names.',
+      'brush clist' => 'List all configuration files.',
+      'brush clist user' => 'List all configuration files containing the string "user" in their names.',
     ),
     'options' => array(
       'pipe' => 'Use var_export() to emit executable PHP. Useful for pasting into code.',
@@ -25,12 +25,13 @@ function config_brush_command() {
     'description' => 'Get a list of some or all site variables and values.',
     'arguments' => array(
       'config-name' => 'The configuration object name, for example "system.core".',
-      'key' => 'The config key, for example "clean_url".',
+      'key' => 'A string to filter a single configuration key by, for example "clean_url".',
+      '*key*' => 'A wildcard string to filter multiple configuration keys by.',
     ),
     'examples' => array(
-      'brush config-get' => 'List all variables and values.',
-      'brush config-get system.core' => 'List all variables in "system.core.json" file.',
-      'brush config-get system.core clean_url' => 'Display value of "clean_url" key in "system.core.json" file.',
+      'brush cget' => 'List all variables and values.',
+      'brush cget system.core' => 'List all variables in "system.core.json" file.',
+      'brush cget system.core clean_url' => 'Display value of "clean_url" key in "system.core.json" file.',
       'brush cget entity_type' => 'List values of the "entity_type" key in all configuration files.',
       'brush cget *entity*' => 'List variables whose keys contain string "entity".',
     ),
@@ -51,7 +52,7 @@ function config_brush_command() {
       'always-set' => 'Always skip confirmation.',
     ),
     'examples' => array(
-      'brush config-set --yes preprocess_css 1' => 'Set the preprocess_css variable to true.',
+      'brush cset --yes preprocess_css 1' => 'Set the preprocess_css variable to true.',
       'brush cset system.core watchdog_enabled_severity_levels \'{"0":0,"1":1}\'' => 'Set severity of logs to Emergency & Alert. See /admin/config/development/logging.',
     ),
     'aliases' => array('cset','vset'),
@@ -66,7 +67,7 @@ function config_brush_command() {
       'yes' => 'Skip confirmation if only one variable name matches.',
     ),
     'examples' => array(
-      'brush config_clear system.core site_frontpage' => 'Delete the site_frontpage variable.',
+      'brush cdel system.core site_frontpage' => 'Delete the site_frontpage variable.',
     ),
     'aliases' => array('cdel','vdel'),
   );
