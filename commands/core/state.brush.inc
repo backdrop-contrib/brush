@@ -4,7 +4,6 @@
  * Implementation of hook_brush_command().
  *
  *
- * @return
  *   An associative array describing your command(s).
  */
 function state_brush_command() {
@@ -90,7 +89,7 @@ function brush_state_get() {
   }
   // Normal argument.
   else {
-    if (!empty($states[$args[0]])) {
+    if (isset($states[$args[0]])) {
       $rows[] = array($args[0], $states[$args[0]]);
       brush_print_table($rows, TRUE);
     }
@@ -98,6 +97,7 @@ function brush_state_get() {
       brush_set_error('BRUSH_config_ERROR', bt('No state key found for !name', array('!name' => $args[0])));
     }
   }
+  return null;
 }
 
 /**
@@ -116,16 +116,17 @@ function brush_state_set() {
   $states = &backdrop_static('states');
   if (isset($states[$args[0]])) {
     state_set($args[0], $args[1]);
-    brush_print(bt('State key "!name" has been succesfully updated.', array('!name' => $args[0])));
+    brush_print(bt('State key "!name" has been successfully updated.', array('!name' => $args[0])));
   }
   // Key not found.
   else {
     $choice = brush_choice(array('1' => 'Yes'), bt('State "!name" not found. Do you want to create a new key for it?', array('!name' => $args[0])));
     if ($choice == '1') {
       state_set($args[0], $args[1]);
-      brush_print(bt('State key !name has been succesfully created.', array('!name' => $args[0])));
+      brush_print(bt('State key !name has been successfully created.', array('!name' => $args[0])));
     }
   }
+  return null;
 }
 
 /**
@@ -142,7 +143,7 @@ function brush_state_delete() {
     $choice = brush_choice(array('1' => 'Yes'), bt('Are you sure you want to delete the "!name" state key?', array('!name' => $args[0])));
     if ($choice == '1') {
       state_del($args[0]);
-      brush_print(bt('The !name state key has been succesfully deleted.', array('!name' => $args[0])));
+      brush_print(bt('The !name state key has been successfully deleted.', array('!name' => $args[0])));
     }
   }
   else {
