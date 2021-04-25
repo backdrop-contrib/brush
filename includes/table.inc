@@ -200,7 +200,7 @@ class Console_Table
         $this->_padding      = $padding;
 
         // Include Color2.php only if PEAR & console_color2 are installed.
-        require_once 'System.php';
+        #require_once 'System.php';
         if (class_exists('System')) {
           include_once 'PEAR/Registry.php';
           $reg = new PEAR_Registry;
