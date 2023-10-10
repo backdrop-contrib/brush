@@ -1,5 +1,16 @@
+IMPORTANT!
+----------
+
+Brush has been retired in favor of (Bee)[https://github.com/backdrop-contrib/bee]. However, considering Brush has all features that pre-Composer era Drush did, which are still missing in Bee, and some users might still be using Brush, please note of the following facts:
+
+1. Brush won't properly function on PHP 8.x. and later.
+2. Expect no further bug fixes.
+3. Issues have been closed because of #2.
+4. PRoject will be archived in read-only state.
+
 DESCRIPTION
 -----------
+
 Brush is a command line shell and Unix scripting interface for Backdrop CMS. Brush core ships with lots of useful commands for interacting with code like modules/themes/profiles. Similarly, it runs update.php, executes sql queries and DB migrations, and misc utilities like run cron or clear cache.
 
 Brush is build on top of completely refactored pre-Symfony, pre-Composer Drupal era Drush, namely version [4.6.0](https://github.com/drush-ops/drush/releases/tag/4.6.0). As alternatives to Brush, you may like to consider using:
