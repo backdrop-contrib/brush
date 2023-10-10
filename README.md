@@ -5,8 +5,7 @@ Brush has been retired in favor of [Bee](https://github.com/backdrop-contrib/bee
 
 1. Brush won't properly function on PHP 8.x. and later.
 2. Expect no further bug fixes.
-3. Issues have been closed because of #2.
-4. PRoject will be archived in read-only state.
+3. Project will be archived in a read-only state.
 
 DESCRIPTION
 -----------
