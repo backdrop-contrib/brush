@@ -1,7 +1,7 @@
 IMPORTANT!
 ----------
 
-Brush has been retired in favor of (Bee)[https://github.com/backdrop-contrib/bee]. However, considering Brush has all features that pre-Composer era Drush did, which are still missing in Bee, and some users might still be using Brush, please note of the following facts:
+Brush has been retired in favor of [Bee](https://github.com/backdrop-contrib/bee). However, considering Brush has all features that pre-Composer era Drush did, which are still missing in Bee, and some users might still be using Brush, please note of the following facts:
 
 1. Brush won't properly function on PHP 8.x. and later.
 2. Expect no further bug fixes.
